@@ -8,7 +8,7 @@ on:
 
 env:
   S3_BUCKET_NAME: miniprojectdeploy
-  RESOURCE_PATH: ./src/main/resources/application.yml
+  RESOURCE_PATH: ./src/main/resources/application-prod.yml
   CODE_DEPLOY_APPLICATION_NAME: mini-code-deploy
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: miniBE
 
@@ -30,8 +30,8 @@ jobs:
         uses: microsoft/variable-substitution@v1
         with:
           files: ${{ env.RESOURCE_PATH }} 
-        env:
-          override.value: ${{ secrets.DI_FROM_SECRET }} 
+        #env:
+        #  override.value: ${{ secrets.DI_FROM_SECRET }} 
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
