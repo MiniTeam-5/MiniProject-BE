@@ -2,11 +2,9 @@ name: DEPLOY
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
       
-    # 이부분은 위의 trigger가 없어도 수동으로 동작 할 수 있게끔 해주는 역할을 합니다.
-    workflow_dispatch:
+  workflow_dispatch:
 
 env:
   S3_BUCKET_NAME: miniprojectdeploy
