@@ -6,11 +6,11 @@ server:
       force: true
 
 spring:
-  # datasource:
-  #   url: jdbc:mariadb://${rds.hostname}:${rds.port}/${rds.db.name}?allowPublicKeyRetrieval=true&useSSL=false
-  #   driver-class-name: org.mariadb.jdbc.Driver
-  #   username: ${rds.username}
-  #   password: ${rds.password}
+  datasource:
+    url: jdbc:mariadb://13.125.178.254:3306/miniproject?allowPublicKeyRetrieval=true&useSSL=false
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: mook
+    password: 1234
   jpa:
     open-in-view: false
     hibernate:
