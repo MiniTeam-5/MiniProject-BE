@@ -7,10 +7,10 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mariadb://13.125.178.254:3306/miniproject?allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mariadb://${RDS_HOSTNAME}:${RDS_PORT}/${RDS_DB_NAME}?allowPublicKeyRetrieval=true&useSSL=false
     driver-class-name: org.mariadb.jdbc.Driver
-    username: mook
-    password: 1234
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     open-in-view: false
     hibernate:
