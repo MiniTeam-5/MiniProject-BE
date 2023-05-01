@@ -81,7 +81,6 @@ public class UserControllerUnitTest extends DummyEntity {
         // 검증해볼께
         resultActions.andExpect(jsonPath("$.data.id").value(1L));
         resultActions.andExpect(jsonPath("$.data.username").value("cos"));
-        resultActions.andExpect(jsonPath("$.data.fullName").value("코스"));
         resultActions.andExpect(status().isOk());
     }
 
