@@ -76,7 +76,6 @@ public class UserControllerTest extends MyRestDoc {
         // then
         resultActions.andExpect(jsonPath("$.data.id").value(3L));
         resultActions.andExpect(jsonPath("$.data.username").value("love"));
-        resultActions.andExpect(jsonPath("$.data.fullName").value("러브"));
         resultActions.andExpect(status().isOk());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }

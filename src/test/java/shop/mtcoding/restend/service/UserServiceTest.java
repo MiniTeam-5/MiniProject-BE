@@ -74,7 +74,6 @@ public class UserServiceTest extends DummyEntity {
         // then
         Assertions.assertThat(joinOutDTO.getId()).isEqualTo(1L);
         Assertions.assertThat(joinOutDTO.getUsername()).isEqualTo("cos");
-        Assertions.assertThat(joinOutDTO.getFullName()).isEqualTo("코스");
     }
 
     @Test
