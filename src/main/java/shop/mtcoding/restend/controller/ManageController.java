@@ -2,6 +2,9 @@ package shop.mtcoding.restend.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +18,7 @@ import shop.mtcoding.restend.service.ManageService;
 import shop.mtcoding.restend.service.UserService;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -29,20 +33,24 @@ public class ManageController {
     public ResponseEntity<?> userUpdate(@PathVariable Long id, @RequestBody Manage.UserManageDTO userManageDTO, @AuthenticationPrincipal MyUserDetails myUserDetails) {
         // 1. 권한 확인
         if ("MANAGER".equals(myUserDetails.getUser().getRole()) || "ADMIN".equals(myUserDetails.getUser().getRole())) {
-        // 2. 바꾸려는 회원정보가 있는지 확인 후 회원 정보 업데이트
-        User userPS = userService.회원정보수정(id, userManageDTO);
-        // 3. 변경된 정보를 앞단에 건네준다.
-        //checkpoint : 받은 데이터를 그래도 돌려줘야하나? 아니면 User객체로 건네주어야하나
-        // 아니면, 회원 관리 페이지를 통째로 줘야하나, 아니면 리다이렉션 해야되나..
-        return ResponseEntity.ok().body(userManageDTO);
-    }throw new Exception403("권한이 없습니다.");
+            // 2. 바꾸려는 회원정보가 있는지 확인 후 회원 정보 업데이트
+            User userPS = userService.회원정보수정(id, userManageDTO);
+            // 3. 변경된 정보를 앞단에 건네준다.
+            //checkpoint : 받은 데이터를 그래도 돌려줘야하나? 아니면 User객체로 건네주어야하나
+            // 아니면, 회원 관리 페이지를 통째로 줘야하나, 아니면 리다이렉션 해야되나..
+            return ResponseEntity.ok().body(userManageDTO);
+        }throw new Exception403("권한이 없습니다.");
     }
 
     @GetMapping("/m/user/")
-    public ResponseEntity<?> userChart(){
+    public ResponseEntity<?> userChart(@RequestParam(defaultValue = "10") int page,@AuthenticationPrincipal MyUserDetails myUserDetails){
         // 1. 권한 확인
-        if(id!= myUserDetails.getUser().getId()){
+        if ("MANAGER".equals(myUserDetails.getUser().getRole()) || "ADMIN".equals(myUserDetails.getUser().getRole())) {
             throw new Exception403("권한이 없습니다.");
         }
+        PageRequest pageRequest = PageRequest.of(page,10, Sort.by("id").descending());
+        Page<User> userListPS = userService.회원목록보기(pageRequest);
+        ResponseDTO<Page>responseDTO = new ResponseDTO<>(userListPS);
+        return ResponseEntity.ok().body(responseDTO);
     }
 }

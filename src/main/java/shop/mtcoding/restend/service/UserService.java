@@ -1,6 +1,10 @@
 package shop.mtcoding.restend.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,7 +23,9 @@ import shop.mtcoding.restend.dto.user.UserResponse;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -28,6 +34,7 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final Manage.UserManageDTO userManageDTO;
 
     @MyLog
     @Transactional
@@ -82,4 +89,13 @@ public class UserService {
         userPS.update(userManageDTO.toEntity());
         return userPS;
     } // 더티체킹
+
+    // checkpoint : 유저 목록을 Page객체로 전달할것인가, List객체로 전달할 것인가.
+    @MyLog
+    @Transactional(readOnly = true)
+    public Page<User> 회원목록보기(Pageable pageable){
+        List<User> userList = userRepository.findAll();
+        Page<User> usersPG = new PageImpl<>(userList.stream().map(userManageDTO::toEntityChart).collect(Collectors.toList()), pageable, userList.size());
+        return usersPG;
+    }
 }

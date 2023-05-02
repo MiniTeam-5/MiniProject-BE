@@ -27,5 +27,14 @@ public class Manage {
                     .annual_limit(annual_limit)
                     .build();
         }
+        // User -> 회원 관리 객체
+        public User toEntityChart(User user){
+            return User.builder()
+                    .username(user.getUsername())
+                    .role(user.getRole())
+                    .hire_date(user.getHire_date())
+                    .annual_limit(user.getAnnual_limit())
+                    .build();
+        }
     }
 }
