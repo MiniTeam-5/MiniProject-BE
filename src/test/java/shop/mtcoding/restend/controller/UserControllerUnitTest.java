@@ -88,7 +88,7 @@ public class UserControllerUnitTest extends DummyEntity {
     public void login_test() throws Exception {
         // given
         UserRequest.LoginInDTO loginInDTO = new UserRequest.LoginInDTO();
-        loginInDTO.setUsername("cos");
+        loginInDTO.setEmail("abcd@nate.com");
         loginInDTO.setPassword("1234");
         String requestBody = om.writeValueAsString(loginInDTO);
 

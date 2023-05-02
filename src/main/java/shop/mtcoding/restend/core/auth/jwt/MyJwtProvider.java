@@ -25,7 +25,7 @@ public class MyJwtProvider {
                 .withSubject(SUBJECT)
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXP))
                 .withClaim("id", user.getId())
-                .withClaim("role", user.getRole())
+                .withClaim("role", user.getRole().name())   //string -> enum 으로 바뀌면서 .name()클래스 추가
                 .sign(Algorithm.HMAC512(SECRET));
         return TOKEN_PREFIX + jwt;
     }

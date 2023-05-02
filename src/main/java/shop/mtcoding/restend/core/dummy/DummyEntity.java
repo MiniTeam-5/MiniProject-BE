@@ -2,6 +2,7 @@ package shop.mtcoding.restend.core.dummy;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import shop.mtcoding.restend.model.user.User;
+import shop.mtcoding.restend.model.user.UserRole;
 
 import java.time.LocalDateTime;
 
@@ -13,7 +14,7 @@ public class DummyEntity {
                 .password(passwordEncoder.encode("1234"))
                 .fullName(fullName)
                 .email(username+"@nate.com")
-                .role("USER")
+                .role(UserRole.USER)
                 .status(true)
                 .build();
     }
@@ -26,7 +27,7 @@ public class DummyEntity {
                 .password(passwordEncoder.encode("1234"))
                 .fullName(fullName)
                 .email(username+"@nate.com")
-                .role("USER")
+                .role(UserRole.USER)
                 .status(true)
                 .createdAt(LocalDateTime.now())
                 .build();
