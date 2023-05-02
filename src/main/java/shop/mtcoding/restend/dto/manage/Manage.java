@@ -19,12 +19,15 @@ public class Manage {
 
         private Integer annual_limit;
 
+        private String profile;
+
         public User toEntity(){
             return User.builder()
                     .username(username)
                     .role(role)
                     .hire_date(hire_date)
                     .annual_limit(annual_limit)
+                    .profile(profile)
                     .build();
         }
         // User -> 회원 관리 객체
@@ -34,6 +37,7 @@ public class Manage {
                     .role(user.getRole())
                     .hire_date(user.getHire_date())
                     .annual_limit(user.getAnnual_limit())
+                    .profile(user.getProfile())
                     .build();
         }
     }
