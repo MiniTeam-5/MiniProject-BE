@@ -8,13 +8,15 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import static shop.mtcoding.restend.model.user.UserRole.USER;
+
 public class UserRequest {
     @Setter
     @Getter
     public static class LoginInDTO {
-        @Pattern(regexp = "^[a-zA-Z0-9]{2,20}$", message = "영문/숫자 2~20자 이내로 작성해주세요")
+        @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$", message = "이메일 형식으로 작성해주세요")
         @NotEmpty
-        private String username;
+        private String email;
         @NotEmpty
         @Size(min = 4, max = 20)
         private String password;
@@ -45,7 +47,7 @@ public class UserRequest {
                     .password(password)
                     .email(email)
                     .fullName(fullName)
-                    .role("USER")
+                    .role(USER)
                     .status(true)
                     .build();
         }

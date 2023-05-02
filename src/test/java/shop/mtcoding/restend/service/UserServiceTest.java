@@ -80,7 +80,7 @@ public class UserServiceTest extends DummyEntity {
     public void 로그인_test() throws Exception{
         // given
         UserRequest.LoginInDTO loginInDTO = new UserRequest.LoginInDTO();
-        loginInDTO.setUsername("cos");
+        loginInDTO.setEmail("abcd@nate.com");
         loginInDTO.setPassword("1234");
 
         // stub
