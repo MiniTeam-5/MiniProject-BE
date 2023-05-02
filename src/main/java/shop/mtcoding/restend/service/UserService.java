@@ -13,6 +13,7 @@ import shop.mtcoding.restend.core.auth.session.MyUserDetails;
 import shop.mtcoding.restend.core.exception.Exception400;
 import shop.mtcoding.restend.core.exception.Exception401;
 import shop.mtcoding.restend.core.exception.Exception500;
+import shop.mtcoding.restend.dto.manage.Manage;
 import shop.mtcoding.restend.dto.user.UserRequest;
 import shop.mtcoding.restend.dto.user.UserResponse;
 import shop.mtcoding.restend.model.user.User;
@@ -70,4 +71,15 @@ public class UserService {
         );
         return new UserResponse.DetailOutDTO(userPS);
     }
+
+    // 회원 관리 페이지, 회원 정보 수정 ( 5/2 김형준 추가)
+    @MyLog
+    @Transactional
+    public User 회원정보수정(Long id, Manage.UserManageDTO userManageDTO) {
+        User userPS = userRepository.findById(id)
+                .orElseThrow(()->new Exception400("id", "해당 유저가 존재하지 않습니다"));
+        // 정보 수정
+        userPS.update(userManageDTO.toEntity());
+        return userPS;
+    } // 더티체킹
 }
