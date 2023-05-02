@@ -53,7 +53,7 @@ public class UserService {
     public String 로그인(UserRequest.LoginInDTO loginInDTO) {
         try {
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
-                    = new UsernamePasswordAuthenticationToken(loginInDTO.getUsername(), loginInDTO.getPassword());
+                    = new UsernamePasswordAuthenticationToken(loginInDTO.getEmail(), loginInDTO.getPassword());
             Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
             MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
             return MyJwtProvider.create(myUserDetails.getUser());
@@ -71,9 +71,9 @@ public class UserService {
         return new UserResponse.DetailOutDTO(userPS);
     }
 
-    public UserResponse.LoginOutDTO 이름으로회원조회(String username) {
-        User findUser = userRepository.findByUsername(username).orElseThrow(
-                () -> new Exception400("username", "해당 유저를 찾을 수 없습니다.")
+    public UserResponse.LoginOutDTO 이메일로회원조회(String email) {
+        User findUser = userRepository.findByEmail(email).orElseThrow(
+                () -> new Exception400("email", "해당 유저를 찾을 수 없습니다.")
         );
         UserResponse.LoginOutDTO loginOutDTO = new UserResponse.LoginOutDTO(findUser.getId(), findUser.getRole());
         return loginOutDTO;

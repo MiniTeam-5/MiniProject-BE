@@ -138,7 +138,7 @@ public class UserControllerTest extends MyRestDoc {
     public void login_test() throws Exception {
         // given
         UserRequest.LoginInDTO loginInDTO = new UserRequest.LoginInDTO();
-        loginInDTO.setUsername("ssar");
+        loginInDTO.setEmail("abc@nate.com");
         loginInDTO.setPassword("1234");
         String requestBody = om.writeValueAsString(loginInDTO);
 
@@ -160,7 +160,7 @@ public class UserControllerTest extends MyRestDoc {
     public void login_fail_un_authorized_test() throws Exception {
         // given
         UserRequest.LoginInDTO loginInDTO = new UserRequest.LoginInDTO();
-        loginInDTO.setUsername("ssar");
+        loginInDTO.setEmail("abc@nate.com");
         loginInDTO.setPassword("12345");
         String requestBody = om.writeValueAsString(loginInDTO);
 

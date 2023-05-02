@@ -38,7 +38,7 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserRequest.LoginInDTO loginInDTO){
         String jwt = userService.로그인(loginInDTO);
-        UserResponse.LoginOutDTO loginOutDTO = userService.이름으로회원조회(loginInDTO.getUsername());
+        UserResponse.LoginOutDTO loginOutDTO = userService.이메일로회원조회(loginInDTO.getEmail());
         ResponseDTO<?> responseDTO = new ResponseDTO<>(loginOutDTO);
         return ResponseEntity.ok().header(MyJwtProvider.HEADER, jwt).body(responseDTO);
     }
