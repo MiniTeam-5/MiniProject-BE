@@ -70,4 +70,12 @@ public class UserService {
         );
         return new UserResponse.DetailOutDTO(userPS);
     }
+
+    public UserResponse.LoginOutDTO 이름으로회원조회(String username) {
+        User findUser = userRepository.findByUsername(username).orElseThrow(
+                () -> new Exception400("username", "해당 유저를 찾을 수 없습니다.")
+        );
+        UserResponse.LoginOutDTO loginOutDTO = new UserResponse.LoginOutDTO(findUser.getId(), findUser.getRole());
+        return loginOutDTO;
+    }
 }

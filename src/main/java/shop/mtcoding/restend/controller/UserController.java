@@ -15,6 +15,7 @@ import shop.mtcoding.restend.core.exception.Exception403;
 import shop.mtcoding.restend.dto.ResponseDTO;
 import shop.mtcoding.restend.dto.user.UserRequest;
 import shop.mtcoding.restend.dto.user.UserResponse;
+import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.service.UserService;
 
 import javax.validation.Valid;
@@ -37,7 +38,8 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserRequest.LoginInDTO loginInDTO){
         String jwt = userService.로그인(loginInDTO);
-        ResponseDTO<?> responseDTO = new ResponseDTO<>();
+        UserResponse.LoginOutDTO loginOutDTO = userService.이름으로회원조회(loginInDTO.getUsername());
+        ResponseDTO<?> responseDTO = new ResponseDTO<>(loginOutDTO);
         return ResponseEntity.ok().header(MyJwtProvider.HEADER, jwt).body(responseDTO);
     }
 

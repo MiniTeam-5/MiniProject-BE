@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import shop.mtcoding.restend.core.auth.session.MyUserDetails;
 import shop.mtcoding.restend.model.user.User;
+import shop.mtcoding.restend.model.user.UserRole;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -40,8 +41,9 @@ public class MyJwtAuthorizationFilter extends BasicAuthenticationFilter {
             DecodedJWT decodedJWT = MyJwtProvider.verify(jwt);
             Long id = decodedJWT.getClaim("id").asLong();
             String role = decodedJWT.getClaim("role").asString();
+            UserRole userRole = UserRole.valueOf(role.toUpperCase());
 
-            User user = User.builder().id(id).role(role).build();
+            User user = User.builder().id(id).role(userRole).build();
             MyUserDetails myUserDetails = new MyUserDetails(user);
             Authentication authentication =
                     new UsernamePasswordAuthenticationToken(

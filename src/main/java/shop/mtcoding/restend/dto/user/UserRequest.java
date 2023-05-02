@@ -8,6 +8,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import static shop.mtcoding.restend.model.user.UserRole.USER;
+
 public class UserRequest {
     @Setter
     @Getter
@@ -45,7 +47,7 @@ public class UserRequest {
                     .password(password)
                     .email(email)
                     .fullName(fullName)
-                    .role("USER")
+                    .role(USER)
                     .status(true)
                     .build();
         }

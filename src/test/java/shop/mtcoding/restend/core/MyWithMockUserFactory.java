@@ -7,6 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 import shop.mtcoding.restend.core.auth.session.MyUserDetails;
 import shop.mtcoding.restend.model.user.User;
+import shop.mtcoding.restend.model.user.UserRole;
 
 import java.time.LocalDateTime;
 
@@ -20,7 +21,7 @@ public class MyWithMockUserFactory implements WithSecurityContextFactory<MyWithM
                 .password("1234")
                 .email(mockUser.username()+"@nate.com")
                 .fullName(mockUser.fullName())
-                .role("USER")
+                .role(UserRole.USER)
                 .status(true)
                 .createdAt(LocalDateTime.now())
                 .build();

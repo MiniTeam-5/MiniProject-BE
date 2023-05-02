@@ -3,6 +3,7 @@ package shop.mtcoding.restend.dto.user;
 import lombok.Getter;
 import lombok.Setter;
 import shop.mtcoding.restend.model.user.User;
+import shop.mtcoding.restend.model.user.UserRole;
 
 public class UserResponse {
     @Getter @Setter
@@ -11,7 +12,7 @@ public class UserResponse {
         private String username;
         private String email;
         private String fullName;
-        private String role;
+        private UserRole role;
 
         public DetailOutDTO(User user) {
             this.id = user.getId();
@@ -33,6 +34,18 @@ public class UserResponse {
             this.id = user.getId();
             this.username = user.getUsername();
             this.fullName = user.getFullName();
+        }
+    }
+
+    @Setter
+    @Getter
+    public static class LoginOutDTO {
+        private Long id;
+        private UserRole role;
+
+        public LoginOutDTO(Long id, UserRole role) {
+            this.id = id;
+            this.role = role;
         }
     }
 }
