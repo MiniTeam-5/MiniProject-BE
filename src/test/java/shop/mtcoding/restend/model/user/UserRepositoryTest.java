@@ -55,7 +55,7 @@ public class UserRepositoryTest extends DummyEntity {
         ).isEqualTo(true);
         Assertions.assertThat(userPS.getEmail()).isEqualTo("ssar@nate.com");
         Assertions.assertThat(userPS.getFullName()).isEqualTo("쌀");
-        Assertions.assertThat(userPS.getRole()).isEqualTo("USER");
+        Assertions.assertThat(userPS.getRole()).isEqualTo(UserRole.USER);
         Assertions.assertThat(userPS.getStatus()).isEqualTo(true);
         Assertions.assertThat(userPS.getCreatedAt().toLocalDate()).isEqualTo(LocalDate.now());
         Assertions.assertThat(userPS.getUpdatedAt()).isNull();
@@ -81,7 +81,7 @@ public class UserRepositoryTest extends DummyEntity {
         ).isEqualTo(true);
         Assertions.assertThat(userPS.getEmail()).isEqualTo("ssar@nate.com");
         Assertions.assertThat(userPS.getFullName()).isEqualTo("쌀");
-        Assertions.assertThat(userPS.getRole()).isEqualTo("USER");
+        Assertions.assertThat(userPS.getRole()).isEqualTo(UserRole.USER);
         Assertions.assertThat(userPS.getStatus()).isEqualTo(true);
         Assertions.assertThat(userPS.getCreatedAt().toLocalDate()).isEqualTo(LocalDate.now());
         Assertions.assertThat(userPS.getUpdatedAt()).isNull();
@@ -103,7 +103,7 @@ public class UserRepositoryTest extends DummyEntity {
         ).isEqualTo(true);
         Assertions.assertThat(userPS.getEmail()).isEqualTo("love@nate.com");
         Assertions.assertThat(userPS.getFullName()).isEqualTo("러브");
-        Assertions.assertThat(userPS.getRole()).isEqualTo("USER");
+        Assertions.assertThat(userPS.getRole()).isEqualTo(UserRole.USER);
         Assertions.assertThat(userPS.getStatus()).isEqualTo(true);
         Assertions.assertThat(userPS.getCreatedAt().toLocalDate()).isEqualTo(LocalDate.now());
         Assertions.assertThat(userPS.getUpdatedAt()).isNull();
