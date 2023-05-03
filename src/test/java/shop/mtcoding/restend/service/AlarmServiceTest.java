@@ -11,7 +11,9 @@ import shop.mtcoding.restend.model.alarm.Alarm;
 
 import shop.mtcoding.restend.model.user.User;
 
+import javax.transaction.Transactional;
 
+@Transactional
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class AlarmServiceTest {
     @Autowired
@@ -26,7 +28,7 @@ public class AlarmServiceTest {
                 .build();
     }
 
-    @DisplayName("알람 DB저장 성공")
+    @DisplayName("알람 DB저장")
     @Test
     public void saveAlarmTest() {
         // given
