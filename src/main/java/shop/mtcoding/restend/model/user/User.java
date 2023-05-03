@@ -3,6 +3,7 @@ package shop.mtcoding.restend.model.user;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Builder
@@ -32,6 +33,9 @@ public class User {
     private UserRole role;
 
     private Boolean status; // true, false
+
+    @Column(nullable = false)
+    private LocalDate hireDate;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;

@@ -19,6 +19,7 @@ import shop.mtcoding.restend.dto.user.UserRequest;
 import shop.mtcoding.restend.dto.user.UserResponse;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRepository;
+import shop.mtcoding.restend.model.user.UserRole;
 
 import java.util.Optional;
 
@@ -60,6 +61,7 @@ public class UserServiceTest extends DummyEntity {
         joinInDTO.setPassword("1234");
         joinInDTO.setEmail("cos@nate.com");
         joinInDTO.setFullName("코스");
+        joinInDTO.setHireDate("2022-12-12");
 
         // stub 1
         Mockito.when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
@@ -116,6 +118,6 @@ public class UserServiceTest extends DummyEntity {
         Assertions.assertThat(detailOutDTO.getUsername()).isEqualTo("cos");
         Assertions.assertThat(detailOutDTO.getEmail()).isEqualTo("cos@nate.com");
         Assertions.assertThat(detailOutDTO.getFullName()).isEqualTo("코스");
-        Assertions.assertThat(detailOutDTO.getRole()).isEqualTo("USER");
+        Assertions.assertThat(detailOutDTO.getRole()).isEqualTo(UserRole.USER);
     }
 }

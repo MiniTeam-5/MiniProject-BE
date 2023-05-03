@@ -82,7 +82,7 @@ public class MySecurityConfig {
         http.authorizeRequests(
                 authorize -> authorize.antMatchers("/s/**").authenticated()
                         .antMatchers("/manager/**")
-                        .access("hasRole('ADMIN') or hasRole('MANAGER')")
+                        .access("hasRole('ADMIN') or hasRole('MASTER')")
                         .antMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().permitAll()
         );

@@ -25,6 +25,8 @@ import shop.mtcoding.restend.model.user.UserRepository;
 
 import javax.persistence.EntityManager;
 
+import java.time.LocalDate;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -65,6 +67,7 @@ public class UserControllerTest extends MyRestDoc {
         joinInDTO.setPassword("1234");
         joinInDTO.setEmail("love@nate.com");
         joinInDTO.setFullName("러브");
+        joinInDTO.setHireDate("2022-12-12");
         String requestBody = om.writeValueAsString(joinInDTO);
 
         // when
@@ -89,6 +92,7 @@ public class UserControllerTest extends MyRestDoc {
         joinInDTO.setPassword("1234");
         joinInDTO.setEmail("ssar@nate.com");
         joinInDTO.setFullName("쌀");
+        joinInDTO.setHireDate("2022-12-12");
         String requestBody = om.writeValueAsString(joinInDTO);
 
         // when
@@ -137,7 +141,7 @@ public class UserControllerTest extends MyRestDoc {
     public void login_test() throws Exception {
         // given
         UserRequest.LoginInDTO loginInDTO = new UserRequest.LoginInDTO();
-        loginInDTO.setEmail("abc@nate.com");
+        loginInDTO.setEmail("ssar@nate.com");
         loginInDTO.setPassword("1234");
         String requestBody = om.writeValueAsString(loginInDTO);
 
@@ -184,7 +188,7 @@ public class UserControllerTest extends MyRestDoc {
     // authenticationManager.authenticate() 실행해서 MyUserDetailsService를 호출하고
     // usrename=ssar을 찾아서 세션에 담아주는 어노테이션
     @DisplayName("회원상세보기 성공")
-    @WithUserDetails(value = "ssar", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
     public void detail_test() throws Exception {
         // given
@@ -227,7 +231,7 @@ public class UserControllerTest extends MyRestDoc {
     }
 
     @DisplayName("회원상세보기 권한 실패")
-    @WithUserDetails(value = "cos", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @WithUserDetails(value = "cos@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
     public void detail_fail_forbidden_test() throws Exception {
         // given
