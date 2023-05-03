@@ -1,6 +1,7 @@
 package shop.mtcoding.restend.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -34,7 +35,6 @@ public class UserService {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final Manage.UserManageDTO userManageDTO;
 
     @MyLog
     @Transactional
@@ -106,6 +106,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public Page<Manage.UserManageDTO> 회원목록보기(Pageable pageable){
 
+        Manage.UserManageDTO userManageDTO = new Manage.UserManageDTO();
         List<User> userList = userRepository.findAll();
         Page<Manage.UserManageDTO> usersPG = new PageImpl<>(userList.stream().map(user -> userManageDTO.toEntityOut(user) ).collect(Collectors.toList()), pageable, userList.size());
         return usersPG;

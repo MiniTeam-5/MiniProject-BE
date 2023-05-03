@@ -21,7 +21,6 @@ import javax.servlet.http.HttpSession;
 public class AdminController {
 
     private final UserService userService;
-    private final ManageService manageService;
     private final HttpSession session;
 
     // 회원 정보 변경 로직

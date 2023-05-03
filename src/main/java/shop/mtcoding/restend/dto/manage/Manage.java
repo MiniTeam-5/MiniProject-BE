@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import shop.mtcoding.restend.model.user.User;
 
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -14,50 +15,49 @@ public class Manage {
 
     private Long id;
 
-    private Integer annual_limit;
+    private Integer annual_count;
 
     @Builder
-    public Manage(Long id, Integer annual_limit) {
+    public Manage(Long id, Integer annual_count) {
         this.id = id;
-        this.annual_limit = annual_limit;
+        this.annual_count = annual_count;
     }
 
     public User toEntityIn() {
         return User.builder()
                 .id(id)
-                .annual_limit(annual_limit)
+                .annual_limit(annual_count)
                 .build();
     }
 
     public Manage toEntityOut(User user) {
         return Manage.builder()
                 .id(user.getId())
-                .annual_limit(user.getAnnual_limit())
+                .annual_count(user.getAnnual_count())
                 .build();
     }
 
-
-        @Getter @Setter
+    @NoArgsConstructor
+    @Getter @Setter
     public static class UserManageDTO {
 
         private Long id;
 
         private String username;
-
         private String role;
 
         private LocalDateTime hire_date;
 
-        private Integer annual_limit;
+        private Integer annual_count;
 
         private String profile;
         @Builder
-        public UserManageDTO(Long id,String role, String username, LocalDateTime hire_date, Integer annual_limit, String profile) {
+        public UserManageDTO(Long id,String role, String username, LocalDateTime hire_date, Integer annual_count, String profile) {
                 this.id = id;
                 this.role = role;
                 this.username = username;
                 this.hire_date = hire_date;
-                this.annual_limit = annual_limit;
+                this.annual_count = annual_count;
                 this.profile = profile;
             }
 
@@ -67,21 +67,23 @@ public class Manage {
                     .role(role)
                     .username(username)
                     .hire_date(hire_date)
-                    .annual_limit(annual_limit)
+                    .annual_count(annual_count)
                     .profile(profile)
                     .build();
         }
         // User -> 회원 관리 객체
         public Manage.UserManageDTO toEntityOut(User user){
-            return Manage.UserManageDTO.builder()
+            return UserManageDTO.builder()
                     .id(user.getId())
+                    .role(user.getRole())
                     .username(user.getUsername())
                     .hire_date(user.getHire_date())
-                    .annual_limit(user.getAnnual_limit())
+                    .annual_count(user.getAnnual_count())
                     .profile(user.getProfile())
                     .build();
         }
     }
+    @NoArgsConstructor
     @Getter @Setter
     public static class MasterDTO {
 

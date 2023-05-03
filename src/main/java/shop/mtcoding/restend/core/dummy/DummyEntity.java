@@ -14,11 +14,14 @@ public class DummyEntity {
                 .fullName(fullName)
                 .email(username+"@nate.com")
                 .role("USER")
+                .annual_count(2)
+                .hire_date(LocalDateTime.now())
                 .status(true)
+                .createdAt(LocalDateTime.now())
                 .build();
     }
 
-    public User newMockUser(Long id, String username, String fullName){
+    public User newMockUser(Long id, String username, String fullName,String role,Integer annual_count){
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return User.builder()
                 .id(id)
@@ -26,8 +29,8 @@ public class DummyEntity {
                 .password(passwordEncoder.encode("1234"))
                 .fullName(fullName)
                 .email(username+"@nate.com")
-                .role("USER")
-                .annual_count(2)
+                .role(role)
+                .annual_count(annual_count)
                 .status(true)
                 .createdAt(LocalDateTime.now())
                 .build();

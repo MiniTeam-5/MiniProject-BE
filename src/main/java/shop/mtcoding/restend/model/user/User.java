@@ -5,7 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Builder
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "user_tb")
@@ -26,13 +26,13 @@ public class User {
     private String email;
     @Column(nullable = false, length = 20)
     private String fullName;
-
+    @Column(nullable = false)
     private String role;
-
+    @Column(nullable = false)
     private Boolean status; // true, false
 
-    @Column(nullable = false)
-    private Integer annual_limit;
+//    @Column(nullable = false)
+//    private Integer annual_limit;
 
     @Column(nullable = false)
     private Integer annual_count;
@@ -66,7 +66,7 @@ public class User {
         this.fullName = fullName;
         this.role = role;
         this.status = status;
-        this.annual_limit = annual_limit;
+        //this.annual_limit = annual_limit;
         this.annual_count = annual_count;
         this.hire_date = hire_date;
         this.profile = profile;
@@ -78,6 +78,6 @@ public class User {
         this.username = user.getUsername();
         this.role = user.getRole();
         this.hire_date = user.getHire_date();
-        this.annual_limit = user.getAnnual_limit();
+        //this.annual_limit = user.getAnnual_limit();
     }
 }
