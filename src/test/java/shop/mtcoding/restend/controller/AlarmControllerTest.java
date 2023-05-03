@@ -49,13 +49,12 @@ public class AlarmControllerTest {
 
     @BeforeEach
     public void setUp() {
-        userRepository.save(dummy.newUser("ssar", "쌀"));
-        userRepository.save(dummy.newUser("cos", "코스"));
+        userRepository.save(dummy.newUser("dotori", "도토리"));
         em.clear();
     }
 
     @DisplayName("알람 불러오기")
-    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @WithUserDetails(value = "dotori@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
     public void getUserAlarmsTest() throws Exception {
         // given
