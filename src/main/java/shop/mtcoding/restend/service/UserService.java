@@ -82,31 +82,32 @@ public class UserService {
     // 회원 관리 페이지, 회원 정보 수정 ( 5/2 김형준 추가)
     @MyLog
     @Transactional
-    public User 연차수정(Long id, Manage manage) {
+    public Manage 연차수정(Long id, Manage manage) {
         User userPS = userRepository.findById(id)
                 .orElseThrow(()->new Exception400("id", "해당 유저가 존재하지 않습니다"));
         // 정보 수정
-        userPS.update(manage.toEntity());
-        return userPS;
+        userPS.update(manage.toEntityIn());
+        return manage.toEntityOut(userPS);
     } // 더티체킹
 
     // role까지 변경가능
     @MyLog
     @Transactional
-    public User 권한수정(Long id, Manage.MasterDTO masterDTO) {
+    public Manage.MasterDTO 권한수정(Long id, Manage.MasterDTO masterDTO) {
         User userPS = userRepository.findById(id)
                 .orElseThrow(()->new Exception400("id", "해당 유저가 존재하지 않습니다"));
         // 정보 수정
-        userPS.update(masterDTO.toEntity());
-        return userPS;
+        userPS.update(masterDTO.toEntityIn());
+        return masterDTO.toEntityOut(userPS);
     } // 더티체킹
 
     // checkpoint : 유저 목록을 Page객체로 전달할것인가, List객체로 전달할 것인가.
     @MyLog
     @Transactional(readOnly = true)
-    public Page<User> 회원목록보기(Pageable pageable){
+    public Page<Manage.UserManageDTO> 회원목록보기(Pageable pageable){
+
         List<User> userList = userRepository.findAll();
-        Page<User> usersPG = new PageImpl<>(userList.stream().map(userManageDTO::toEntityChart).collect(Collectors.toList()), pageable, userList.size());
+        Page<Manage.UserManageDTO> usersPG = new PageImpl<>(userList.stream().map(user -> userManageDTO.toEntityOut(user) ).collect(Collectors.toList()), pageable, userList.size());
         return usersPG;
     }
 }

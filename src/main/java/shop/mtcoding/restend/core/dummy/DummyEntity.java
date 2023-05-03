@@ -27,6 +27,7 @@ public class DummyEntity {
                 .fullName(fullName)
                 .email(username+"@nate.com")
                 .role("USER")
+                .annual_count(2)
                 .status(true)
                 .createdAt(LocalDateTime.now())
                 .build();

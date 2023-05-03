@@ -15,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import shop.mtcoding.restend.core.auth.session.MyUserDetails;
 import shop.mtcoding.restend.core.dummy.DummyEntity;
+import shop.mtcoding.restend.dto.manage.Manage;
 import shop.mtcoding.restend.dto.user.UserRequest;
 import shop.mtcoding.restend.dto.user.UserResponse;
 import shop.mtcoding.restend.model.user.User;
@@ -123,9 +124,19 @@ public class UserServiceTest extends DummyEntity {
     public void 연차수정_test() throws Exception{
         //given
         Long id = 1L;
+        Manage manage = new Manage();
+        manage.setId(1L);
+        manage.setAnnual_limit(5);
 
         //stub
-        User cos = newMockUser(1L,"cos","코스");
-        Mockito.when()
+        User cos = newMockUser(1L,"cos","코스모");
+        Mockito.when(userRepository.findById(any())).thenReturn(Optional.of(cos));
+
+        //when
+        Manage managePS = userService.연차수정(id,manage);
+
+        //then
+        Assertions.assertThat(managePS.getId().equals(1L));
+        Assertions.assertThat(managePS.getAnnual_limit().equals(5));
     }
 }
