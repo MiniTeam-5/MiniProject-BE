@@ -61,6 +61,7 @@ public class UserServiceTest extends DummyEntity {
         joinInDTO.setPassword("1234");
         joinInDTO.setEmail("cos@nate.com");
         joinInDTO.setFullName("코스");
+        joinInDTO.setHireDate("2022-12-12");
 
         // stub 1
         Mockito.when(userRepository.findByUsername(any())).thenReturn(Optional.empty());

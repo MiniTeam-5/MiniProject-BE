@@ -65,6 +65,7 @@ public class UserControllerUnitTest extends DummyEntity {
         joinInDTO.setPassword("1234");
         joinInDTO.setEmail("cos@nate.com");
         joinInDTO.setFullName("코스");
+        joinInDTO.setHireDate("2022-12-12");
         String requestBody = om.writeValueAsString(joinInDTO);
 
         // 가정해볼께

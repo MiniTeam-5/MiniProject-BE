@@ -4,6 +4,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRole;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class DummyEntity {
@@ -16,6 +17,7 @@ public class DummyEntity {
                 .email(username+"@nate.com")
                 .role(UserRole.USER)
                 .status(true)
+                .hireDate(LocalDate.now())
                 .build();
     }
 
@@ -29,6 +31,7 @@ public class DummyEntity {
                 .email(username+"@nate.com")
                 .role(UserRole.USER)
                 .status(true)
+                .hireDate(LocalDate.now())
                 .createdAt(LocalDateTime.now())
                 .build();
     }
