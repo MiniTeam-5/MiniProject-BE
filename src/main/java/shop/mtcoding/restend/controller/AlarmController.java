@@ -20,7 +20,7 @@ public class AlarmController {
     @GetMapping("/auth/alarm")
     public ResponseEntity<?> getUserAlarms(@AuthenticationPrincipal MyUserDetails myUserDetails)
     {
-        List<AlarmResponse.AlarmOutDTO> alarmOutDTOS = alarmService.findByUserId(myUserDetails.getUser().getId());;
+        List<AlarmResponse.AlarmOutDTO> alarmOutDTOS = alarmService.findByUserId(myUserDetails.getUser().getId());
         ResponseDTO<?> responseDTO = new ResponseDTO<>(alarmOutDTOS);
         return ResponseEntity.ok(responseDTO);
     }
