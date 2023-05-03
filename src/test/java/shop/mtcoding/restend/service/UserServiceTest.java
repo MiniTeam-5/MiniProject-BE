@@ -118,4 +118,14 @@ public class UserServiceTest extends DummyEntity {
         Assertions.assertThat(detailOutDTO.getFullName()).isEqualTo("코스");
         Assertions.assertThat(detailOutDTO.getRole()).isEqualTo("USER");
     }
+
+    @Test
+    public void 연차수정_test() throws Exception{
+        //given
+        Long id = 1L;
+
+        //stub
+        User cos = newMockUser(1L,"cos","코스");
+        Mockito.when()
+    }
 }

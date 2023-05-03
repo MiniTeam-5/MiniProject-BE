@@ -82,11 +82,22 @@ public class UserService {
     // 회원 관리 페이지, 회원 정보 수정 ( 5/2 김형준 추가)
     @MyLog
     @Transactional
-    public User 회원정보수정(Long id, Manage.UserManageDTO userManageDTO) {
+    public User 연차수정(Long id, Manage manage) {
         User userPS = userRepository.findById(id)
                 .orElseThrow(()->new Exception400("id", "해당 유저가 존재하지 않습니다"));
         // 정보 수정
-        userPS.update(userManageDTO.toEntity());
+        userPS.update(manage.toEntity());
+        return userPS;
+    } // 더티체킹
+
+    // role까지 변경가능
+    @MyLog
+    @Transactional
+    public User 권한수정(Long id, Manage.MasterDTO masterDTO) {
+        User userPS = userRepository.findById(id)
+                .orElseThrow(()->new Exception400("id", "해당 유저가 존재하지 않습니다"));
+        // 정보 수정
+        userPS.update(masterDTO.toEntity());
         return userPS;
     } // 더티체킹
 
