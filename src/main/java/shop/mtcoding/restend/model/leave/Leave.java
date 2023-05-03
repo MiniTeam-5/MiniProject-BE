@@ -23,9 +23,13 @@ public class Leave {
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
+    @Enumerated(EnumType.STRING)
     private LeaveType type;
+
     private LocalDate startDate;
     private LocalDate endDate;
+
+    @Enumerated(EnumType.STRING)
     private LeaveStatus status;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

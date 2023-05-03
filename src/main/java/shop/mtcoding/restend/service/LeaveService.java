@@ -23,8 +23,9 @@ public class LeaveService {
     private final LeaveRepository leaveRepository;
     private final AlarmRepository alarmRepository;
 
+
     @Transactional
-    public LeaveResponse.ApplyOutDTO 연차신청하기(LeaveRequest.ApplyInDTO applyInDTO, Long userId) {
+    public LeaveResponse.ApplyOutDTO 연차당직신청하기(LeaveRequest.ApplyInDTO applyInDTO, Long userId) {
         // 1. 유저 존재 확인
         User userPS = userRepository.findById(userId).orElseThrow(
                 () -> new Exception500("로그인 된 유저가 DB에 존재하지 않음")
@@ -34,8 +35,12 @@ public class LeaveService {
             if(!applyInDTO.getStartDate().equals(applyInDTO.getEndDate())){
                 throw new Exception400("startDate, endDate", "startDate와 endDate가 같아야 합니다.");
             }
+
+            // 추가 구현 : 이미 신청한 날 인 경우
+            // findByStartDate in LeaveTABLE(where userId== id)
+
             // 1) 알림 등록
-            String content = userPS.getUsername() + "님의 당직 신청이 완료되었습니다.";
+            String content = userPS.getUsername() + "님의 " + applyInDTO.getStartDate() + "일 당직 신청이 완료되었습니다.";
             alarmRepository.save(Alarm.builder().user(userPS).content(content).build());
 
             // 2) 당직 등록
@@ -59,6 +64,9 @@ public class LeaveService {
         if(usingDays > remainDays){
             throw new Exception400("startDate, endDate", "남은 연차보다 더 많이 신청했습니다.");
         }
+        // 추가 구현 : 이미 신청한 날인 경우
+        // select leave where userid = id
+        // 포문 돌면서 starDate와 endDated와 newStartDate와 newEndDate가 겹치는지 확인
 
         // 3) 사용자의 남은 연차 일수 업데이트
         userPS.useAnnualLeave(usingDays);

@@ -22,7 +22,7 @@ public class LeaveController {
     private final LeaveService leaveService;
     @PostMapping("/auth/leave/apply")
     public ResponseEntity<?> apply(@RequestBody @Valid LeaveRequest.ApplyInDTO applyInDTO, Errors errors, @AuthenticationPrincipal MyUserDetails myUserDetails){
-        LeaveResponse.ApplyOutDTO applyOutDTO = leaveService.연차신청하기(applyInDTO, myUserDetails.getUser().getId());
+        LeaveResponse.ApplyOutDTO applyOutDTO = leaveService.연차당직신청하기(applyInDTO, myUserDetails.getUser().getId());
         ResponseDTO<?> responseDTO = new ResponseDTO<>(applyOutDTO);
         return ResponseEntity.ok(responseDTO);
     }
