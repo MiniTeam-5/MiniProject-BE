@@ -1,21 +1,26 @@
 package shop.mtcoding.restend.controller;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import shop.mtcoding.restend.core.dummy.DummyEntity;
 import shop.mtcoding.restend.model.alarm.Alarm;
 import shop.mtcoding.restend.model.alarm.AlarmRepository;
 import shop.mtcoding.restend.model.user.User;
+import shop.mtcoding.restend.model.user.UserRepository;
 
 
 import javax.persistence.EntityManager;
@@ -23,10 +28,13 @@ import javax.persistence.EntityManager;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@DisplayName("알람 API")
+@ActiveProfiles("test")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 public class AlarmControllerTest {
 
+    private DummyEntity dummy = new DummyEntity();
     @Autowired
     private AlarmRepository alarmRepository;
 
@@ -36,7 +44,17 @@ public class AlarmControllerTest {
     @Autowired
     private EntityManager em;
 
-    @DisplayName("알람 불러오기 성공")
+    @Autowired
+    private UserRepository userRepository;
+
+    @BeforeEach
+    public void setUp() {
+        userRepository.save(dummy.newUser("ssar", "쌀"));
+        userRepository.save(dummy.newUser("cos", "코스"));
+        em.clear();
+    }
+
+    @DisplayName("알람 불러오기")
     @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
     public void getUserAlarmsTest() throws Exception {
