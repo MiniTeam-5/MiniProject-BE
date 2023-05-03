@@ -14,24 +14,14 @@ import java.time.LocalDate;
 
 public class LeaveRequest {
 
-    /*
-    {
-”type” : “annual”,
-”start_date” : “2023-04-27”,
-”end_date” : “2023-04-28”
-}
-     */
     @Getter @Setter
     public static class ApplyInDTO {
-        // @NotEmpty
         private LeaveType type;
 
-        // @NotEmpty
         @JsonFormat(pattern = "yyyy-MM-dd")
         @FutureOrPresent
         private LocalDate startDate;
 
-        // @NotEmpty
         @JsonFormat(pattern = "yyyy-MM-dd")
         @FutureOrPresent
         private LocalDate endDate;

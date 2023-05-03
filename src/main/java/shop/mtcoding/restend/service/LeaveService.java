@@ -32,7 +32,7 @@ public class LeaveService {
         // 2. 당직인 경우
         if(applyInDTO.getType().equals(LeaveType.DUTY)){
             if(!applyInDTO.getStartDate().equals(applyInDTO.getEndDate())){
-                throw new Exception400("startDate, endDate", "당직일은 하루만 선택야 합니다.");
+                throw new Exception400("startDate, endDate", "startDate와 endDate가 같아야 합니다.");
             }
             // 1) 알림 등록
             String content = userPS.getUsername() + "님의 당직 신청이 완료되었습니다.";
