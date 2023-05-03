@@ -18,6 +18,7 @@ public class DummyEntity {
                 .role(UserRole.USER)
                 .status(true)
                 .hireDate(LocalDate.now())
+                .annualCount(15)
                 .build();
     }
 

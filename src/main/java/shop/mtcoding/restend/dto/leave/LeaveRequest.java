@@ -1,5 +1,6 @@
 package shop.mtcoding.restend.dto.leave;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import shop.mtcoding.restend.model.leave.Leave;
@@ -22,14 +23,16 @@ public class LeaveRequest {
      */
     @Getter @Setter
     public static class ApplyInDTO {
-        @NotEmpty
+        // @NotEmpty
         private LeaveType type;
 
-        @NotEmpty
+        // @NotEmpty
+        @JsonFormat(pattern = "yyyy-MM-dd")
         @FutureOrPresent
         private LocalDate startDate;
 
-        @NotEmpty
+        // @NotEmpty
+        @JsonFormat(pattern = "yyyy-MM-dd")
         @FutureOrPresent
         private LocalDate endDate;
 

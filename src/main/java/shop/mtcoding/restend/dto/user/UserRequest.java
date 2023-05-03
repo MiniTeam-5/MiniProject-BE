@@ -57,6 +57,7 @@ public class UserRequest {
                     .hireDate(localDate)
                     .role(USER)
                     .status(true)
+                    .annualCount(15)
                     .build();
         }
     }

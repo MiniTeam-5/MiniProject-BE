@@ -15,6 +15,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import shop.mtcoding.restend.controller.UserController;
 import shop.mtcoding.restend.core.advice.MyLogAdvice;
 import shop.mtcoding.restend.core.advice.MyValidAdvice;
 import shop.mtcoding.restend.core.auth.jwt.MyJwtProvider;
@@ -135,3 +136,4 @@ public class UserControllerUnitTest extends DummyEntity {
         resultActions.andExpect(status().isOk());
     }
 }
+

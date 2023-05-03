@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import shop.mtcoding.restend.model.leave.Leave;
 import shop.mtcoding.restend.model.leave.enumUtil.LeaveStatus;
-import shop.mtcoding.restend.model.user.User;
 
 public class LeaveResponse {
     /*
