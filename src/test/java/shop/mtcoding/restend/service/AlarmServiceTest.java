@@ -48,19 +48,18 @@ public class AlarmServiceTest {
     @Test
     public void saveAlarmTest() {
         // given
-        Alarm origin = Alarm.builder()
-                .id(1L)
+        Alarm alarm = Alarm.builder()
                 .user(user)
                 .content("등록되었습니다")
                 .build();
 
         // when
-        Alarm result = alarmService.save(Alarm.builder().user(user).content("등록되었습니다").build());
+        Alarm result = alarmService.save(alarm);
 
         // then
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(origin.getId(), result.getId());
-        Assertions.assertEquals(origin.getUser().getId(), result.getUser().getId());
-        Assertions.assertEquals(origin.getContent(), result.getContent());
+        Assertions.assertEquals(alarm.getId(), result.getId());
+        Assertions.assertEquals(alarm.getUser().getId(), result.getUser().getId());
+        Assertions.assertEquals(alarm.getContent(), result.getContent());
     }
 }

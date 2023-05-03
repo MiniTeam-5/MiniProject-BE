@@ -119,6 +119,7 @@ public class UserControllerTest extends MyRestDoc {
         joinInDTO.setPassword("1234");
         joinInDTO.setEmail("ssar@nate.com");
         joinInDTO.setFullName("쌀");
+        joinInDTO.setHireDate(LocalDate.now().toString());
         String requestBody = om.writeValueAsString(joinInDTO);
 
         // when
