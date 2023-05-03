@@ -36,7 +36,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserRequest.LoginInDTO loginInDTO){
+    public ResponseEntity<?> login(@RequestBody @Valid UserRequest.LoginInDTO loginInDTO, Errors errors){
         String jwt = userService.로그인(loginInDTO);
         UserResponse.LoginOutDTO loginOutDTO = userService.이메일로회원조회(loginInDTO.getEmail());
         ResponseDTO<?> responseDTO = new ResponseDTO<>(loginOutDTO);

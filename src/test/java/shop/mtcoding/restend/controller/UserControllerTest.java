@@ -25,6 +25,8 @@ import shop.mtcoding.restend.model.user.UserRepository;
 
 import javax.persistence.EntityManager;
 
+import java.time.LocalDate;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -65,6 +67,7 @@ public class UserControllerTest extends MyRestDoc {
         joinInDTO.setPassword("1234");
         joinInDTO.setEmail("love@nate.com");
         joinInDTO.setFullName("러브");
+        joinInDTO.setHireDate("2022-12-12");
         String requestBody = om.writeValueAsString(joinInDTO);
 
         // when
@@ -89,6 +92,7 @@ public class UserControllerTest extends MyRestDoc {
         joinInDTO.setPassword("1234");
         joinInDTO.setEmail("ssar@nate.com");
         joinInDTO.setFullName("쌀");
+        joinInDTO.setHireDate("2022-12-12");
         String requestBody = om.writeValueAsString(joinInDTO);
 
         // when
