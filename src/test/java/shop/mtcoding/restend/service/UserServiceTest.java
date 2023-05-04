@@ -157,7 +157,7 @@ public class UserServiceTest extends DummyEntity {
         //given
         Long id = 1L;
         Manage manage = new Manage();
-        manage.setId(1L);
+        manage.setUserId(1L);
         manage.setAnnual_count(5);
 
         //stub
@@ -168,7 +168,7 @@ public class UserServiceTest extends DummyEntity {
         Manage managePS = userService.연차수정(id, manage);
 
         //then
-        Assertions.assertThat(managePS.getId().equals(1L));
+        Assertions.assertThat(managePS.getUserId().equals(1L));
         Assertions.assertThat(managePS.getAnnual_count().equals(5));
     }
 
@@ -185,7 +185,7 @@ public class UserServiceTest extends DummyEntity {
         Manage.MasterDTO masterPS = userService.권한수정(id, masterDTO);
 
         //then
-        Assertions.assertThat(masterPS.getId().equals(1L));
+        Assertions.assertThat(masterPS.getUserId().equals(1L));
         Assertions.assertThat(masterPS.getRole().equals("ADMIN"));
     }
 
@@ -206,7 +206,7 @@ public class UserServiceTest extends DummyEntity {
         Page<Manage.UserManageDTO> pagePS = new PageImpl<>(userListPS.stream().map(user -> userManageDTO.toEntityOut(user) ).collect(Collectors.toList()), pageRequest, userList.size());
 
         // then
-        Assertions.assertThat(pagePS.getContent().get(0).getId()).isEqualTo(1L);
+        Assertions.assertThat(pagePS.getContent().get(0).getUserId()).isEqualTo(1L);
         Assertions.assertThat(pagePS.getContent().get(0).getUsername()).isEqualTo("gamja");
         Assertions.assertThat(pagePS.getContent().get(0).getRole()).isEqualTo("USER");
         Assertions.assertThat(pagePS.getContent().get(0).getAnnual_count()).isEqualTo(2);

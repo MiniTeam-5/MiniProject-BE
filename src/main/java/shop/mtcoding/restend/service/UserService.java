@@ -86,7 +86,7 @@ public class UserService {
         User userPS = userRepository.findById(id)
                 .orElseThrow(()->new Exception400("id", "해당 유저가 존재하지 않습니다"));
         // 정보 수정
-        userPS.update(manage.toEntityIn());
+        userPS.update(manage.toEntityIn(id));
         return manage.toEntityOut(userPS);
     } // 더티체킹
 
@@ -97,7 +97,7 @@ public class UserService {
         User userPS = userRepository.findById(id)
                 .orElseThrow(()->new Exception400("id", "해당 유저가 존재하지 않습니다"));
         // 정보 수정
-        userPS.update(masterDTO.toEntityIn());
+        userPS.update(masterDTO.toEntityIn(id));
         return masterDTO.toEntityOut(userPS);
     } // 더티체킹
 
