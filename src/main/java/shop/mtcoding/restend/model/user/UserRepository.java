@@ -18,8 +18,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u from User u where u.email = :email")
     Optional<User> findByEmail(@Param("email") String email);
 
-    @Query("select u from User u inner join Leave l on u.id = l.user.id where where l.startDate = :today and l.status = :waiting")
-    List<User> findByStartDateAndStatus(LocalDate today, LeaveStatus waiting);
-
-
 }
