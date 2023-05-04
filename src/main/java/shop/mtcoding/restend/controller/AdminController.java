@@ -24,18 +24,20 @@ public class AdminController {
     private final HttpSession session;
 
     // 회원 정보 변경 로직
-    @PostMapping("/auth/annual/{id}")
-    public ResponseEntity<?> annualUpdate(@PathVariable Long id, @RequestBody Manage manage, @AuthenticationPrincipal MyUserDetails myUserDetails) {
+    @PostMapping("/auth/admin/annual/{id}")
+    public ResponseEntity<?> annualUpdate(@PathVariable Long id, @RequestBody Manage.AnnualRequestDTO annualRequestDTO, @AuthenticationPrincipal MyUserDetails myUserDetails) {
         // 1. 권한 확인
-        if ("MASTER".equals(myUserDetails.getUser().getRole()) || "ADMIN".equals(myUserDetails.getUser().getRole())) {
+        if ("USER".equals(myUserDetails.getUser().getRole())) {
+        throw new Exception403("권한이 없습니다.");
+        }
             // 2. 바꾸려는 회원정보가 있는지 확인 후 회원 정보 업데이트
-            Manage managePS = userService.연차수정(id, manage);
-            ResponseDTO<?>responseDTO = new ResponseDTO<>(HttpStatus.OK,"success",managePS);
+            Manage managePS = userService.연차수정(id, annualRequestDTO);
+            ResponseDTO<?>responseDTO = new ResponseDTO<>(managePS);
             // 3. 변경된 정보를 앞단에 건네준다.
             //checkpoint : 받은 데이터를 그래도 돌려줘야하나? 아니면 User객체로 건네주어야하나
             // 아니면, 회원 관리 페이지를 통째로 줘야하나, 아니면 리다이렉션 해야되나..
             return ResponseEntity.ok().body(responseDTO);
-        }throw new Exception403("권한이 없습니다.");
+
     }
 
     @GetMapping("/auth/admin")
@@ -51,7 +53,7 @@ public class AdminController {
     }
 
     // role까지 변경가능, master로 접근해야, role변경이 가능하다.
-    @PostMapping("/auth/role/{id}")
+    @PostMapping("/auth/admin/role/{id}")
     public ResponseEntity<?> userUpdate(@PathVariable Long id,@RequestBody Manage.MasterDTO masterDTO, @AuthenticationPrincipal MyUserDetails myUserDetails){
         if(!"MASTER".equals(myUserDetails.getUser().getRole())){
             throw new Exception403("권한이 없습니다.");

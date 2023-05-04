@@ -1,7 +1,6 @@
 package shop.mtcoding.restend.core;
 
 import org.springframework.security.test.context.support.WithSecurityContext;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -15,4 +14,5 @@ public @interface MyWithMockUser {
     String username() default "cos";
     String role() default "USER";
     String fullName() default "코스";
+    //int remain_days() default 2; //Integer -> int
 }

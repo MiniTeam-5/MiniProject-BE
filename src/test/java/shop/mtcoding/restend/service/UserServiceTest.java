@@ -142,16 +142,14 @@ public class UserServiceTest extends DummyEntity {
     public void 연차수정_test() throws Exception {
         //given
         Long id = 1L;
-        Manage manage = new Manage();
-        manage.setUserId(1L);
-        manage.setRemain_days(5);
+        Manage.AnnualRequestDTO annualRequestDTO = new Manage.AnnualRequestDTO(5);
 
         //stub
         User cos = newMockUser(1L, "cos", "코스모","USER",2); //Annual_limit = 2
         Mockito.when(userRepository.findById(any())).thenReturn(Optional.of(cos));
 
         //when
-        Manage managePS = userService.연차수정(id, manage);
+        Manage managePS = userService.연차수정(id, annualRequestDTO);
 
         //then
         Assertions.assertThat(managePS.getUserId().equals(1L));

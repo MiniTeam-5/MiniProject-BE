@@ -31,8 +31,8 @@ public class User {
     @Column(nullable = false)
     private Boolean status; // true, false
 
-//    @Column(nullable = false)
-//    private Integer annual_limit;
+    @Column(nullable = false)
+    private Integer annual_limit;
 
     @Column(nullable = false)
     private Integer remain_days;
@@ -66,7 +66,7 @@ public class User {
         this.fullName = fullName;
         this.role = role;
         this.status = status;
-        //this.annual_limit = annual_limit;
+        this.annual_limit = annual_limit;
         this.remain_days = remain_days;
         this.hire_date = hire_date;
         this.profile = profile;

@@ -13,14 +13,7 @@ import java.time.LocalDateTime;
 @Getter @Setter
 public class Manage {
 
-
-    @NotEmpty
     private Long userId;
-
-    // 아무값도 없을경우, default = 0
-    @NotNull
-    @Min(0)
-    @Max(100)
     private Integer remain_days;
 
     @Builder
@@ -28,20 +21,34 @@ public class Manage {
         this.userId = userId;
         this.remain_days = remain_days;
     }
-    // checkpoint :url에 id값을 넣지않고 요청하는 경우, toEntityIn(Long id) -> toEntity(user.getId)로 사용해야한다.
-    public User toEntityIn(Long fk) {
-        return User.builder()
-                .id(fk)
-                .annual_limit(remain_days)
-                .build();
-    }
-
-    public Manage toEntityOut(User user) {
+    public Manage toEntityOut(User user){
         return Manage.builder()
                 .userId(user.getId())
                 .remain_days(user.getRemain_days())
                 .build();
     }
+
+
+    @Getter @Setter
+    public static class AnnualRequestDTO{
+
+        // 아무값도 없을경우, default = 0
+        @NotNull
+        @Min(0)
+        @Max(100)
+        private Integer remain_days;
+
+        @Builder
+        public AnnualRequestDTO(Integer remain_days) {
+            this.remain_days = remain_days;
+        }
+        public User toEntityIn() {
+            return User.builder()
+                    .remain_days(remain_days)
+                    .build();
+        }
+    }
+
 
     @NoArgsConstructor
     @Getter @Setter
@@ -64,8 +71,8 @@ public class Manage {
 
         private String profile;
         @Builder
-        public UserManageDTO(Long id, String role, String username, LocalDateTime hire_date, Integer remain_days, String profile) {
-                this.userId = id;
+        public UserManageDTO(Long userId, String role, String username, LocalDateTime hire_date, Integer remain_days, String profile) {
+                this.userId = userId;
                 this.role = role;
                 this.username = username;
                 this.hire_date = hire_date;
@@ -73,8 +80,8 @@ public class Manage {
                 this.profile = profile;
             }
 
-            public Manage.UserManageDTO toEntityIn(Long fk){
-            return UserManageDTO.builder()
+            public User toEntityIn(Long fk){
+            return User.builder()
                     .id(fk)
                     .role(role)
                     .username(username)
@@ -86,7 +93,7 @@ public class Manage {
         // User -> 회원 관리 객체
         public Manage.UserManageDTO toEntityOut(User user){
             return UserManageDTO.builder()
-                    .id(user.getId())
+                    .userId(user.getId())
                     .role(user.getRole())
                     .username(user.getUsername())
                     .hire_date(user.getHire_date())

@@ -21,7 +21,7 @@ public class DummyEntity {
                 .build();
     }
 
-    public User newMockUser(Long id, String username, String fullName,String role,Integer annual_count){
+    public User newMockUser(Long id, String username, String fullName,String role,Integer remain_days){
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return User.builder()
                 .id(id)
@@ -30,7 +30,7 @@ public class DummyEntity {
                 .fullName(fullName)
                 .email(username+"@nate.com")
                 .role(role)
-                .remain_days(annual_count)
+                .remain_days(remain_days)
                 .status(true)
                 .createdAt(LocalDateTime.now())
                 .build();

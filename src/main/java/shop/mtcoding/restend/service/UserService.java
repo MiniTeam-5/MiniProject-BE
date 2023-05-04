@@ -82,11 +82,13 @@ public class UserService {
     // 회원 관리 페이지, 회원 정보 수정 ( 5/2 김형준 추가)
     @MyLog
     @Transactional
-    public Manage 연차수정(Long id, Manage manage) {
+    public Manage 연차수정(Long id, Manage.AnnualRequestDTO annualRequestDTO) {
+        Manage manage = new Manage();
         User userPS = userRepository.findById(id)
                 .orElseThrow(()->new Exception400("id", "해당 유저가 존재하지 않습니다"));
         // 정보 수정
-        userPS.update(manage.toEntityIn(id));
+        Manage.AnnualRequestDTO managePS = new Manage.AnnualRequestDTO(annualRequestDTO.getRemain_days());
+        userPS.update(managePS.toEntityIn());
         return manage.toEntityOut(userPS);
     } // 더티체킹
 
