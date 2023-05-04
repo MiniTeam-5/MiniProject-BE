@@ -15,17 +15,20 @@ import shop.mtcoding.restend.model.alarm.Alarm;
 import shop.mtcoding.restend.model.alarm.AlarmRepository;
 import shop.mtcoding.restend.model.leave.Leave;
 import shop.mtcoding.restend.model.leave.LeaveRepository;
-import shop.mtcoding.restend.model.leave.enums.LeaveStatus;
 import shop.mtcoding.restend.model.leave.enums.LeaveType;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRepository;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static shop.mtcoding.restend.model.leave.enums.LeaveStatus.*;
+import static shop.mtcoding.restend.model.leave.enums.LeaveType.ANNUAL;
+import static shop.mtcoding.restend.model.leave.enums.LeaveType.DUTY;
 
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
@@ -70,7 +73,7 @@ public class LeaveServiceTest extends DummyEntity {
         Assertions.assertThat(applyOutDTO.getType()).isEqualTo(LeaveType.DUTY);
         Assertions.assertThat(applyOutDTO.getUsingDays()).isEqualTo(0);
         Assertions.assertThat(applyOutDTO.getRemainDays()).isEqualTo(15);
-        Assertions.assertThat(applyOutDTO.getStatus()).isEqualTo(LeaveStatus.WAITING);
+        Assertions.assertThat(applyOutDTO.getStatus()).isEqualTo(WAITING);
     }
 
     @Test
@@ -87,7 +90,7 @@ public class LeaveServiceTest extends DummyEntity {
         Mockito.when(alarmRepository.save(any())).thenReturn(alarm);
 
         // stub 3
-        Leave leave = newMockLeave(1L, cos, LeaveType.ANNUAL,  LocalDate.parse("2023-07-20"), LocalDate.parse("2023-07-20"), 1);
+        Leave leave = newMockLeave(1L, cos, ANNUAL,  LocalDate.parse("2023-07-20"), LocalDate.parse("2023-07-20"), 1);
         Mockito.when(leaveRepository.findById(any())).thenReturn(Optional.of(leave));
 
         // when
@@ -95,5 +98,206 @@ public class LeaveServiceTest extends DummyEntity {
 
         // then
         Assertions.assertThat(cancelOutDTO.getRemainDays()).isEqualTo(9);
+    }
+
+    @Test
+    public void 모든유저특정월기준정보_Test() {
+
+        User user1 = User.builder().id(1L).username("dotori").build();
+        User user2 = User.builder().id(2L).username("tomato").build();
+        User user3 = User.builder().id(3L).username("strawberry").build();
+
+        Leave leave1 = Leave.builder()
+                .user(user1)
+                .type(ANNUAL)
+                .startDate(LocalDate.of(2023, 4, 25))
+                .endDate(LocalDate.of(2023, 5, 5))
+                .status(WAITING)
+                .build();
+
+        Leave leave2 = Leave.builder()
+                .user(user2)
+                .type(DUTY)
+                .startDate(LocalDate.of(2023, 5, 3))
+                .endDate(LocalDate.of(2023, 5, 4))
+                .status(APPROVAL)
+                .build();
+
+        Leave leave3 = Leave.builder()
+                .user(user3)
+                .type(ANNUAL)
+                .startDate(LocalDate.of(2023, 5, 27))
+                .endDate(LocalDate.of(2023, 6, 5))
+                .status(REJECTION)
+                .build();
+
+        List<Leave> leaveList = Arrays.asList(leave1, leave2, leave3);
+
+        //Mockito.when(leaveRepository.findAllByUserId(any())).thenReturn(leaveList);
+        Mockito.when(leaveRepository.findAll()).thenReturn(leaveList);
+
+        // when
+        List<LeaveResponse.InfoOutDTO> result = leaveService.getLeaves(null, "2023-05-15", null, null);
+
+        // then
+        assertEquals(3, result.size());
+        assertEquals(leave1.getUser().getId(), result.get(0).getUserId());
+        assertEquals(leave1.getUser().getUsername(), result.get(0).getUsername());
+        assertEquals(leave1.getType(), result.get(0).getType());
+        assertEquals(leave1.getStatus(), result.get(0).getStatus());
+        assertEquals(leave1.getStartDate().toString(), result.get(0).getStartDate().toString());
+        assertEquals(leave1.getEndDate().toString(), result.get(0).getEndDate().toString());
+        assertEquals(leave2.getUser().getId(), result.get(1).getUserId());
+        assertEquals(leave2.getUser().getUsername(), result.get(1).getUsername());
+        assertEquals(leave2.getType(), result.get(1).getType());
+        assertEquals(leave2.getStatus(), result.get(1).getStatus());
+        assertEquals(leave2.getStartDate().toString(), result.get(1).getStartDate().toString());
+        assertEquals(leave2.getEndDate().toString(), result.get(1).getEndDate().toString());
+    }
+
+    @Test
+    public void 특정유저특정월정보_Test() {
+        // given
+        User user1 = User.builder().id(1L).username("dotori").build();
+        //User user2 = User.builder().id(2L).build();
+
+        Leave leave1 = Leave.builder()
+                .user(user1)
+                .type(ANNUAL)
+                .startDate(LocalDate.of(2023, 4, 25))
+                .endDate(LocalDate.of(2023, 5, 5))
+                .status(WAITING)
+                .build();
+
+        Leave leave2 = Leave.builder()
+                .user(user1)
+                .type(DUTY)
+                .startDate(LocalDate.of(2023, 5, 3))
+                .endDate(LocalDate.of(2023, 5, 4))
+                .status(APPROVAL)
+                .build();
+
+        Leave leave3 = Leave.builder()
+                .user(user1)
+                .type(ANNUAL)
+                .startDate(LocalDate.of(2023, 5, 27))
+                .endDate(LocalDate.of(2023, 6, 5))
+                .status(REJECTION)
+                .build();
+
+        List<Leave> leaveList = Arrays.asList(leave1, leave2, leave3);
+
+        Mockito.when(leaveRepository.findAllByUserId(any())).thenReturn(leaveList);
+        //Mockito.when(leaveRepository.findAll()).thenReturn(leaveList);
+
+        // when
+        List<LeaveResponse.InfoOutDTO> result = leaveService.getLeaves(1L, "2023-05-15", null, null);
+
+        // then
+        assertEquals(3, result.size());
+        assertEquals(leave1.getUser().getId(), result.get(0).getUserId());
+        assertEquals(leave1.getUser().getUsername(), result.get(0).getUsername());
+        assertEquals(leave1.getType(), result.get(0).getType());
+        assertEquals(leave1.getStatus(), result.get(0).getStatus());
+        assertEquals(leave1.getStartDate().toString(), result.get(0).getStartDate().toString());
+        assertEquals(leave1.getEndDate().toString(), result.get(0).getEndDate().toString());
+        assertEquals(leave2.getUser().getId(), result.get(1).getUserId());
+        assertEquals(leave2.getUser().getUsername(), result.get(1).getUsername());
+        assertEquals(leave2.getType(), result.get(1).getType());
+        assertEquals(leave2.getStatus(), result.get(1).getStatus());
+        assertEquals(leave2.getStartDate().toString(), result.get(1).getStartDate().toString());
+        assertEquals(leave2.getEndDate().toString(), result.get(1).getEndDate().toString());
+    }
+
+    @Test
+    public void 특정유저주단위정보_Test() {
+        // given
+        User user1 = User.builder().id(1L).username("dotori").build();
+
+        Leave leave1 = Leave.builder()
+                .user(user1)
+                .type(ANNUAL)
+                .startDate(LocalDate.of(2023, 4, 25))
+                .endDate(LocalDate.of(2023, 5, 5))
+                .status(WAITING)
+                .build();
+
+        Leave leave2 = Leave.builder()
+                .user(user1)
+                .type(DUTY)
+                .startDate(LocalDate.of(2023, 5, 10))
+                .endDate(LocalDate.of(2023, 5, 14))
+                .status(APPROVAL)
+                .build();
+
+        Leave leave3 = Leave.builder()
+                .user(user1)
+                .type(ANNUAL)
+                .startDate(LocalDate.of(2023, 5, 27))
+                .endDate(LocalDate.of(2023, 6, 5))
+                .status(REJECTION)
+                .build();
+
+        List<Leave> leaveList = Arrays.asList(leave1, leave2, leave3);
+
+        Mockito.when(leaveRepository.findAllByUserId(any())).thenReturn(leaveList);
+
+        // when
+        List<LeaveResponse.InfoOutDTO> result = leaveService.getLeaves(1L, null, "2023-05-15", null);
+
+        // then
+        assertEquals(1, result.size());
+        assertEquals(leave2.getUser().getId(), result.get(0).getUserId());
+        assertEquals(leave2.getUser().getUsername(), result.get(0).getUsername());
+        assertEquals(leave2.getType(), result.get(0).getType());
+        assertEquals(leave2.getStatus(), result.get(0).getStatus());
+        assertEquals(leave2.getStartDate().toString(), result.get(0).getStartDate().toString());
+        assertEquals(leave2.getEndDate().toString(), result.get(0).getEndDate().toString());
+    }
+
+    @Test
+    public void 특정유저특정일단위_Test() {
+        // given
+        User user1 = User.builder().id(1L).username("dotori").build();
+
+        Leave leave1 = Leave.builder()
+                .user(user1)
+                .type(ANNUAL)
+                .startDate(LocalDate.of(2023, 4, 25))
+                .endDate(LocalDate.of(2023, 5, 5))
+                .status(WAITING)
+                .build();
+
+        Leave leave2 = Leave.builder()
+                .user(user1)
+                .type(DUTY)
+                .startDate(LocalDate.of(2023, 5, 10))
+                .endDate(LocalDate.of(2023, 5, 14))
+                .status(APPROVAL)
+                .build();
+
+        Leave leave3 = Leave.builder()
+                .user(user1)
+                .type(ANNUAL)
+                .startDate(LocalDate.of(2023, 5, 27))
+                .endDate(LocalDate.of(2023, 6, 5))
+                .status(REJECTION)
+                .build();
+
+        List<Leave> leaveList = Arrays.asList(leave1, leave2, leave3);
+
+        Mockito.when(leaveRepository.findAllByUserId(any())).thenReturn(leaveList);
+
+        // when
+        List<LeaveResponse.InfoOutDTO> result = leaveService.getLeaves(1L, null, null, "2023-06-01");
+
+        // then
+        assertEquals(1, result.size());
+        assertEquals(leave3.getUser().getId(), result.get(0).getUserId());
+        assertEquals(leave3.getUser().getUsername(), result.get(0).getUsername());
+        assertEquals(leave3.getType(), result.get(0).getType());
+        assertEquals(leave3.getStatus(), result.get(0).getStatus());
+        assertEquals(leave3.getStartDate().toString(), result.get(0).getStartDate().toString());
+        assertEquals(leave3.getEndDate().toString(), result.get(0).getEndDate().toString());
     }
 }

@@ -41,12 +41,12 @@ public class LeaveController {
     }
 
     @GetMapping("/auth/leave")
-    public ResponseEntity<?> getLeaveData(
+    public ResponseEntity<?> get(
             @RequestParam(required = false) Long id,
             @RequestParam(required = false) String month,
             @RequestParam(required = false) String week,
             @RequestParam(required = false) String day) {
-        List<LeaveResponse.InfoOutDTO> leaveDataList = leaveService.getLeaveData(id, month, week, day);
+        List<LeaveResponse.InfoOutDTO> leaveDataList = leaveService.getLeaves(id, month, week, day);
         ResponseDTO<List<LeaveResponse.InfoOutDTO>> responseDTO = new ResponseDTO<>(leaveDataList);
         return ResponseEntity.ok(responseDTO);
     }

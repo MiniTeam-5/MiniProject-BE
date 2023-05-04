@@ -3,7 +3,6 @@ package shop.mtcoding.restend.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import shop.mtcoding.restend.core.exception.Exception400;
 import shop.mtcoding.restend.core.exception.Exception500;
 import shop.mtcoding.restend.core.util.MyDateUtil;
@@ -129,7 +128,7 @@ public class LeaveService {
 
     //month, week, day 은 모두 특정한 날짜이다. 같은 형식이다. 다만 월에 속한 연차정보, 한주에 속한 연차 정보, 하루에 속한 연차 정보를
     //구분하기 위해 만들었음
-    public List<LeaveResponse.InfoOutDTO> getLeaveData(Long id, String month, String week, String day) {
+    public List<LeaveResponse.InfoOutDTO> getLeaves(Long id, String month, String week, String day) {
 
         int nonNullCount = 0;
         if (month != null) nonNullCount++;
@@ -170,12 +169,12 @@ public class LeaveService {
             } else if (week != null)//지정한 날짜를 포함하는 주를 구하고 그 주에 걸친 모든 연차를 찾아서 반환
             {
                 LocalDate copyToday = LocalDate.parse(week);
-                LocalDate weekStartDate = copyToday.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-                LocalDate weekEndDate = copyToday.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+                LocalDate weekStartDate = copyToday.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
+                LocalDate weekEndDate = copyToday.with(TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY));
 
                 leaves = leaves.stream()
-                        .filter(leave -> (leave.getStartDate().isBefore(weekEndDate)) || (leave.getStartDate().isEqual(weekEndDate))
-                                && (leave.getEndDate().isAfter(weekStartDate)) || (leave.getEndDate().isEqual(weekStartDate)))
+                        .filter(leave -> ((leave.getStartDate().isBefore(weekEndDate)) || (leave.getStartDate().isEqual(weekEndDate)))
+                                && ((leave.getEndDate().isAfter(weekStartDate)) || (leave.getEndDate().isEqual(weekStartDate))))
                         .collect(Collectors.toList());
 
             } else if (day != null)//지정한 날짜를 포함하는 모든 연차를 찾아서 반환
