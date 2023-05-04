@@ -40,7 +40,7 @@ public class AlarmServiceTest {
 
     @BeforeEach
     public void setUp() {
-        user = userRepository.save(dummy.newUser("nas", "나스"));
+        user = userRepository.save(dummy.newUser("nas"));
         em.clear();
     }
 

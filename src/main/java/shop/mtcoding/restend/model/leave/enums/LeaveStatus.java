@@ -1,4 +1,4 @@
-package shop.mtcoding.restend.model.leave.enumUtil;
+package shop.mtcoding.restend.model.leave.enums;
 
 public enum LeaveStatus {
     WAITING,

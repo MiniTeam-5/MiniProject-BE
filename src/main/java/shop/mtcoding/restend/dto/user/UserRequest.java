@@ -53,11 +53,10 @@ public class UserRequest {
                     .username(username)
                     .password(password)
                     .email(email)
-                    .fullName(fullName)
                     .hireDate(localDate)
                     .role(USER)
                     .status(true)
-                    .annualCount(15)
+                    .remainDays(15)
                     .build();
         }
     }

@@ -4,12 +4,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 import shop.mtcoding.restend.model.leave.Leave;
-import shop.mtcoding.restend.model.leave.enumUtil.LeaveStatus;
-import shop.mtcoding.restend.model.leave.enumUtil.LeaveType;
+import shop.mtcoding.restend.model.leave.enums.LeaveStatus;
+import shop.mtcoding.restend.model.leave.enums.LeaveType;
 import shop.mtcoding.restend.model.user.User;
 
 import javax.validation.constraints.FutureOrPresent;
-import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 
 public class LeaveRequest {
@@ -27,12 +26,13 @@ public class LeaveRequest {
         private LocalDate endDate;
 
 
-        public Leave toEntity(User user){
+        public Leave toEntity(User user, Integer usingDays){
             return Leave.builder()
                     .type(type)
                     .user(user)
                     .startDate(startDate)
                     .endDate(endDate)
+                    .usingDays(usingDays)
                     .status(LeaveStatus.WAITING)
                     .build();
 

@@ -1,7 +1,6 @@
 package shop.mtcoding.restend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,12 +17,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import shop.mtcoding.restend.core.MyRestDoc;
-import shop.mtcoding.restend.core.auth.jwt.MyJwtProvider;
 import shop.mtcoding.restend.core.dummy.DummyEntity;
 import shop.mtcoding.restend.dto.leave.LeaveRequest;
-import shop.mtcoding.restend.dto.user.UserRequest;
 import shop.mtcoding.restend.model.leave.LeaveRepository;
-import shop.mtcoding.restend.model.leave.enumUtil.LeaveType;
+import shop.mtcoding.restend.model.leave.enums.LeaveType;
 import shop.mtcoding.restend.model.user.UserRepository;
 
 import javax.persistence.EntityManager;
@@ -58,8 +55,8 @@ public class LeaveControllerTest extends MyRestDoc {
 
     @BeforeEach
     public void setUp() {
-        userRepository.save(dummy.newUser("ssar", "쌀"));
-        userRepository.save(dummy.newUser("cos", "코스"));
+        userRepository.save(dummy.newUser("ssar"));
+        userRepository.save(dummy.newUser("cos"));
         em.clear();
     }
 
@@ -82,6 +79,9 @@ public class LeaveControllerTest extends MyRestDoc {
 
         // then
         resultActions.andExpect(jsonPath("$.data.id").value(1L));
+        resultActions.andExpect(jsonPath("$.data.type").value("ANNUAL"));
+        resultActions.andExpect(jsonPath("$.data.usingDays").value(1));
+        resultActions.andExpect(jsonPath("$.data.remainDays").value(14));
         resultActions.andExpect(jsonPath("$.data.status").value("WAITING"));
         resultActions.andExpect(status().isOk());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
@@ -106,6 +106,9 @@ public class LeaveControllerTest extends MyRestDoc {
 
         // then
         resultActions.andExpect(jsonPath("$.data.id").value(4L));
+        resultActions.andExpect(jsonPath("$.data.type").value("ANNUAL"));
+        resultActions.andExpect(jsonPath("$.data.usingDays").value(3));
+        resultActions.andExpect(jsonPath("$.data.remainDays").value(12));
         resultActions.andExpect(jsonPath("$.data.status").value("WAITING"));
         resultActions.andExpect(status().isOk());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
@@ -130,6 +133,9 @@ public class LeaveControllerTest extends MyRestDoc {
 
         // then
         resultActions.andExpect(jsonPath("$.data.id").value(3L));
+        resultActions.andExpect(jsonPath("$.data.type").value("ANNUAL"));
+        resultActions.andExpect(jsonPath("$.data.usingDays").value(3));
+        resultActions.andExpect(jsonPath("$.data.remainDays").value(12));
         resultActions.andExpect(jsonPath("$.data.status").value("WAITING"));
         resultActions.andExpect(status().isOk());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
@@ -154,6 +160,9 @@ public class LeaveControllerTest extends MyRestDoc {
 
         // then
         resultActions.andExpect(jsonPath("$.data.id").value(2L));
+        resultActions.andExpect(jsonPath("$.data.type").value("DUTY"));
+        resultActions.andExpect(jsonPath("$.data.usingDays").value(0));
+        resultActions.andExpect(jsonPath("$.data.remainDays").value(15));
         resultActions.andExpect(jsonPath("$.data.status").value("WAITING"));
         resultActions.andExpect(status().isOk());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);

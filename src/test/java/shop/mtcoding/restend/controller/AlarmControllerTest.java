@@ -51,7 +51,9 @@ public class AlarmControllerTest {
 
     @BeforeEach
     public void setUp() {
-        user = userRepository.save(dummy.newUser("dotori", "도토리"));
+        userRepository.save(dummy.newUser("ssar"));
+        userRepository.save(dummy.newUser("cos"));
+        user = userRepository.save(dummy.newUser("dotori"));
         em.clear();
     }
 

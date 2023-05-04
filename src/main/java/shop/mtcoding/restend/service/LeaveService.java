@@ -12,7 +12,7 @@ import shop.mtcoding.restend.model.alarm.Alarm;
 import shop.mtcoding.restend.model.alarm.AlarmRepository;
 import shop.mtcoding.restend.model.leave.Leave;
 import shop.mtcoding.restend.model.leave.LeaveRepository;
-import shop.mtcoding.restend.model.leave.enumUtil.LeaveType;
+import shop.mtcoding.restend.model.leave.enums.LeaveType;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRepository;
 
@@ -44,15 +44,12 @@ public class LeaveService {
             alarmRepository.save(Alarm.builder().user(userPS).content(content).build());
 
             // 2) 당직 등록
-            Leave leavePS = leaveRepository.save(applyInDTO.toEntity(userPS));
-            return new LeaveResponse.ApplyOutDTO(leavePS);
+            Leave leavePS = leaveRepository.save(applyInDTO.toEntity(userPS, 0));
+            return new LeaveResponse.ApplyOutDTO(leavePS, userPS);
         }
 
         // 3. 연차인 경우
-        // 1) 사용자의 남은 연차일수 가져오기
-        int remainDays = userPS.getAnnualCount();
-
-        // 2) 사용할 연차 일수 계산하기
+        // 1) 사용할 연차 일수 계산하기
         // 버전1 : 평일만 계산
         Integer usingDays = MyDateUtil.getWeekDayCount(applyInDTO.getStartDate(), applyInDTO.getEndDate());
         // 버전2 : 공휴일 계산 코드 사용
@@ -61,7 +58,7 @@ public class LeaveService {
         if(usingDays == 0){
             throw new Exception400("startDate, endDate", "연차를 0일 신청했습니다.");
         }
-        if(usingDays > remainDays){
+        if(usingDays > userPS.getRemainDays()){
             throw new Exception400("startDate, endDate", "남은 연차보다 더 많이 신청했습니다.");
         }
         // 추가 구현 : 이미 신청한 날인 경우
@@ -77,7 +74,7 @@ public class LeaveService {
         alarmRepository.save(Alarm.builder().user(userPS).content(content).build());
 
         // 5) 연차 등록
-        Leave leavePS = leaveRepository.save(applyInDTO.toEntity(userPS));
-        return new LeaveResponse.ApplyOutDTO(leavePS);
+        Leave leavePS = leaveRepository.save(applyInDTO.toEntity(userPS, usingDays));
+        return new LeaveResponse.ApplyOutDTO(leavePS, userPS);
     }
 }
