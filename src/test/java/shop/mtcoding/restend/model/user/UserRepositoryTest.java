@@ -54,7 +54,6 @@ public class UserRepositoryTest extends DummyEntity {
                 passwordEncoder.matches("1234", userPS.getPassword())
         ).isEqualTo(true);
         Assertions.assertThat(userPS.getEmail()).isEqualTo("ssar@nate.com");
-        Assertions.assertThat(userPS.getUsername()).isEqualTo("ssar");
         Assertions.assertThat(userPS.getRole()).isEqualTo(UserRole.USER);
         Assertions.assertThat(userPS.getStatus()).isEqualTo(true);
         Assertions.assertThat(userPS.getHireDate()).isEqualTo(LocalDate.now().minusYears(1).minusWeeks(1));

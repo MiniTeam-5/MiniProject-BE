@@ -45,6 +45,7 @@ public class DummyEntity {
     }
 
     public User newMockUser(Long id, String username, Integer remainDays){
+
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return User.builder()
                 .id(id)
