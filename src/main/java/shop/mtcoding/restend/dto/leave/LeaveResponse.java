@@ -32,6 +32,38 @@ public class LeaveResponse {
 
         public CancelOutDTO(User user) {
             this.remainDays = user.getRemainDays();
+
+        }
+    }
+
+    @Setter
+    @Getter
+    public static class InfoOutDTO {
+
+        private Long userId;
+        private String username;
+        private LeaveType type;
+        private LeaveStatus status;
+        private String startDate;
+        private String endDate;
+
+        public InfoOutDTO(Long userId, String username, LeaveType type, LeaveStatus status, String startDate, String endDate) {
+            this.userId = userId;
+            this.username = username;
+            this.type = type;
+            this.status = status;
+            this.startDate = startDate;
+            this.endDate = endDate;
+        }
+
+        // Leave 엔티티와 User 엔티티를 사용하여 DTO를 생성하는 생성자
+        public InfoOutDTO(Leave leave, User user) {
+            this.userId = user.getId();
+            this.username = user.getUsername();
+            this.type = leave.getType();
+            this.status = leave.getStatus();
+            this.startDate = leave.getStartDate().toString();
+            this.endDate = leave.getEndDate().toString();
         }
     }
 }
