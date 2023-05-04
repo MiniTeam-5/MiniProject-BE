@@ -63,17 +63,17 @@ public class AdminControllerUnitTest extends DummyEntity{
         // stub
         User cos = newMockUser(1L,"cos", "코스","USER",2);
         Manage annualUpdate = new Manage().toEntityOut(cos);
-        Mockito.when(userService.연차수정(id,any())).thenReturn(annualUpdate);
+        Mockito.when(userService.연차수정(any(),any())).thenReturn(annualUpdate);
 
         // when
         ResultActions resultActions = mvc
-                .perform(post("/join").content(requestBody).contentType(MediaType.APPLICATION_JSON));
+                .perform(post("/auth/annual/{id}").content(requestBody).contentType(MediaType.APPLICATION_JSON));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : "+ responseBody);
 
         // then
-        resultActions.andExpect(jsonPath("$.data.id").value(1L));
-        resultActions.andExpect(jsonPath("$.data.annual_count").value(5));
+        resultActions.andExpect(jsonPath("$.data.userId").value(1L));
+        resultActions.andExpect(jsonPath("$.data.remain_days").value(5));
         resultActions.andExpect(status().isOk());
     }
 }
