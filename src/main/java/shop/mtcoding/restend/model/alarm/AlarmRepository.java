@@ -11,5 +11,4 @@ public interface AlarmRepository extends JpaRepository<Alarm, Long> {
 
     @Query("SELECT a FROM Alarm a WHERE a.user.id = :userId")
     List<Alarm> findByUserId(@Param("userId") Long userId);
-
 }
