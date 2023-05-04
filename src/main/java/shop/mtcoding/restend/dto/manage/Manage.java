@@ -21,25 +21,25 @@ public class Manage {
     @NotNull
     @Min(0)
     @Max(100)
-    private Integer annual_count;
+    private Integer remain_days;
 
     @Builder
-    public Manage(Long userId, Integer annual_count) {
+    public Manage(Long userId, Integer remain_days) {
         this.userId = userId;
-        this.annual_count = annual_count;
+        this.remain_days = remain_days;
     }
     // checkpoint :url에 id값을 넣지않고 요청하는 경우, toEntityIn(Long id) -> toEntity(user.getId)로 사용해야한다.
     public User toEntityIn(Long fk) {
         return User.builder()
                 .id(fk)
-                .annual_limit(annual_count)
+                .annual_limit(remain_days)
                 .build();
     }
 
     public Manage toEntityOut(User user) {
         return Manage.builder()
                 .userId(user.getId())
-                .annual_count(user.getAnnual_count())
+                .remain_days(user.getRemain_days())
                 .build();
     }
 
@@ -60,16 +60,16 @@ public class Manage {
         @NotNull
         @Min(0)
         @Max(100)
-        private Integer annual_count;
+        private Integer remain_days;
 
         private String profile;
         @Builder
-        public UserManageDTO(Long id,String role, String username, LocalDateTime hire_date, Integer annual_count, String profile) {
+        public UserManageDTO(Long id, String role, String username, LocalDateTime hire_date, Integer remain_days, String profile) {
                 this.userId = id;
                 this.role = role;
                 this.username = username;
                 this.hire_date = hire_date;
-                this.annual_count = annual_count;
+                this.remain_days = remain_days;
                 this.profile = profile;
             }
 
@@ -79,7 +79,7 @@ public class Manage {
                     .role(role)
                     .username(username)
                     .hire_date(hire_date)
-                    .annual_count(annual_count)
+                    .remain_days(remain_days)
                     .profile(profile)
                     .build();
         }
@@ -90,7 +90,7 @@ public class Manage {
                     .role(user.getRole())
                     .username(user.getUsername())
                     .hire_date(user.getHire_date())
-                    .annual_count(user.getAnnual_count())
+                    .remain_days(user.getRemain_days())
                     .profile(user.getProfile())
                     .build();
         }

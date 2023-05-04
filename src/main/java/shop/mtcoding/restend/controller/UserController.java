@@ -31,7 +31,7 @@ public class UserController {
     public ResponseEntity<?> join(@RequestBody @Valid UserRequest.JoinInDTO joinInDTO, Errors errors) {
         UserResponse.JoinOutDTO joinOutDTO = userService.회원가입(joinInDTO);
         ResponseDTO<?> responseDTO = new ResponseDTO<>(joinOutDTO);
-        return ResponseEntity.ok(responseDTO);
+        return ResponseEntity.ok().body(responseDTO);
     }
 
     @PostMapping("/login")
@@ -49,6 +49,6 @@ public class UserController {
         UserResponse.DetailOutDTO detailOutDTO = userService.회원상세보기(id);
         //System.out.println(new ObjectMapper().writeValueAsString(detailOutDTO));
         ResponseDTO<?> responseDTO = new ResponseDTO<>(detailOutDTO);
-        return ResponseEntity.ok(responseDTO);
+        return ResponseEntity.ok().body(responseDTO);
     }
 }

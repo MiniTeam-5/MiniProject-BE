@@ -35,7 +35,7 @@ public class User {
 //    private Integer annual_limit;
 
     @Column(nullable = false)
-    private Integer annual_count;
+    private Integer remain_days;
 
     @Column(nullable = false)
     private LocalDateTime hire_date;
@@ -58,7 +58,7 @@ public class User {
     }
 
     @Builder
-    public User(Long id, String username, String password, String email, String fullName, String role, Boolean status, Integer annual_limit, Integer annual_count, LocalDateTime hire_date, String profile, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public User(Long id, String username, String password, String email, String fullName, String role, Boolean status, Integer annual_limit, Integer remain_days, LocalDateTime hire_date, String profile, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -67,7 +67,7 @@ public class User {
         this.role = role;
         this.status = status;
         //this.annual_limit = annual_limit;
-        this.annual_count = annual_count;
+        this.remain_days = remain_days;
         this.hire_date = hire_date;
         this.profile = profile;
         this.createdAt = createdAt;

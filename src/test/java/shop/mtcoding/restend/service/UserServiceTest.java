@@ -1,46 +1,32 @@
 package shop.mtcoding.restend.service;
 
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import shop.mtcoding.restend.core.auth.session.MyUserDetails;
 import shop.mtcoding.restend.core.dummy.DummyEntity;
-import shop.mtcoding.restend.core.exception.Exception403;
-import shop.mtcoding.restend.core.exception.Exception404;
 import shop.mtcoding.restend.dto.manage.Manage;
 import shop.mtcoding.restend.dto.user.UserRequest;
 import shop.mtcoding.restend.dto.user.UserResponse;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRepository;
-import shop.mtcoding.restend.model.user.UserRepositoryTest;
 
-import javax.persistence.EntityManager;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import org.junit.Before;
 
 import static org.mockito.ArgumentMatchers.any;
 
@@ -158,7 +144,7 @@ public class UserServiceTest extends DummyEntity {
         Long id = 1L;
         Manage manage = new Manage();
         manage.setUserId(1L);
-        manage.setAnnual_count(5);
+        manage.setRemain_days(5);
 
         //stub
         User cos = newMockUser(1L, "cos", "코스모","USER",2); //Annual_limit = 2
@@ -169,7 +155,7 @@ public class UserServiceTest extends DummyEntity {
 
         //then
         Assertions.assertThat(managePS.getUserId().equals(1L));
-        Assertions.assertThat(managePS.getAnnual_count().equals(5));
+        Assertions.assertThat(managePS.getRemain_days().equals(5));
     }
 
     @Test
@@ -209,7 +195,7 @@ public class UserServiceTest extends DummyEntity {
         Assertions.assertThat(pagePS.getContent().get(0).getUserId()).isEqualTo(1L);
         Assertions.assertThat(pagePS.getContent().get(0).getUsername()).isEqualTo("gamja");
         Assertions.assertThat(pagePS.getContent().get(0).getRole()).isEqualTo("USER");
-        Assertions.assertThat(pagePS.getContent().get(0).getAnnual_count()).isEqualTo(2);
+        Assertions.assertThat(pagePS.getContent().get(0).getRemain_days()).isEqualTo(2);
 
     }
 

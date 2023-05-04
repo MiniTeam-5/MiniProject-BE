@@ -14,7 +14,7 @@ public class DummyEntity {
                 .fullName(fullName)
                 .email(username+"@nate.com")
                 .role("USER")
-                .annual_count(2)
+                .remain_days(2)
                 .hire_date(LocalDateTime.now())
                 .status(true)
                 .createdAt(LocalDateTime.now())
@@ -30,7 +30,7 @@ public class DummyEntity {
                 .fullName(fullName)
                 .email(username+"@nate.com")
                 .role(role)
-                .annual_count(annual_count)
+                .remain_days(annual_count)
                 .status(true)
                 .createdAt(LocalDateTime.now())
                 .build();
