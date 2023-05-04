@@ -7,8 +7,13 @@ import shop.mtcoding.restend.model.leave.enums.LeaveStatus;
 import java.time.LocalDate;
 import java.util.List;
 
+import java.util.List;
+
 public interface LeaveRepository extends JpaRepository<Leave, Long> {
 
     @Query("select l from Leave l join fetch l.user where l.startDate = :today and l.status = :waiting")
     List<Leave> findByStartDateAndStatus(LocalDate today, LeaveStatus waiting);
+    
+    List<Leave> findAllByUserId(Long userId);
+    
 }

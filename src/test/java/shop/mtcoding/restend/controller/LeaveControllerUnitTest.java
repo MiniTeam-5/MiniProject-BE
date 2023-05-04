@@ -9,9 +9,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithSecurityContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -24,13 +21,14 @@ import shop.mtcoding.restend.core.config.MySecurityConfig;
 import shop.mtcoding.restend.core.dummy.DummyEntity;
 import shop.mtcoding.restend.dto.leave.LeaveRequest;
 import shop.mtcoding.restend.dto.leave.LeaveResponse;
-import shop.mtcoding.restend.dto.user.UserResponse;
 import shop.mtcoding.restend.model.leave.Leave;
 import shop.mtcoding.restend.model.leave.enums.LeaveType;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.service.LeaveService;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -120,6 +118,39 @@ public class LeaveControllerUnitTest extends DummyEntity {
 
         // 검증해볼께
         resultActions.andExpect(jsonPath("$.data.remainDays").value(9));
+        resultActions.andExpect(status().isOk());
+    }
+
+    @MyWithMockUser(id = 1L, username = "cos", role = "USER", remainDays = 15)
+    @Test
+    public void getLeaveData_test() throws Exception {
+        // 준비
+        User user = newMockUser(1L, "cos", 14);
+        Leave leave = newMockLeave(1L, user, LeaveType.valueOf("ANNUAL"), LocalDate.parse("2023-07-27"),
+                LocalDate.parse("2023-08-02"), 5);
+        LeaveResponse.InfoOutDTO infoOutDTO = new LeaveResponse.InfoOutDTO(leave, user);
+        List<LeaveResponse.InfoOutDTO> infoOutDTOList = new ArrayList<>();
+        infoOutDTOList.add(infoOutDTO);
+
+        // 가정
+        Mockito.when(leaveService.getLeaves(any(), any(), any(), any())).thenReturn(infoOutDTOList);
+
+        // 테스트 진행
+        ResultActions resultActions = mvc.perform(get("/auth/leave")
+                .param("id", "1")
+                .param("month", "2023-07-27")
+                .contentType(MediaType.APPLICATION_JSON));
+
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // 검증
+        resultActions.andExpect(jsonPath("$.data[0].userId").value(1L));
+        resultActions.andExpect(jsonPath("$.data[0].username").value("cos"));
+        resultActions.andExpect(jsonPath("$.data[0].type").value("ANNUAL"));
+        resultActions.andExpect(jsonPath("$.data[0].status").value("WAITING"));
+        resultActions.andExpect(jsonPath("$.data[0].startDate").value("2023-07-27"));
+        resultActions.andExpect(jsonPath("$.data[0].endDate").value("2023-08-02"));
         resultActions.andExpect(status().isOk());
     }
 }
