@@ -72,4 +72,28 @@ public class LeaveServiceTest extends DummyEntity {
         Assertions.assertThat(applyOutDTO.getRemainDays()).isEqualTo(15);
         Assertions.assertThat(applyOutDTO.getStatus()).isEqualTo(LeaveStatus.WAITING);
     }
+
+    @Test
+    public void 연차당직신청취소하기_test() throws Exception{
+        // given
+        Long id = 1L;
+
+        // stub 1
+        User cos = newMockUser(1L, "cos", 8);
+        Mockito.when(userRepository.findById(any())).thenReturn(Optional.of(cos));
+
+        // stub 2
+        Alarm alarm = newMockAlarm(1L, cos, "cos님의 2023-07-20부터 2023-07-20까지, 총 1일의 연차 신청이 취소되었습니다.");
+        Mockito.when(alarmRepository.save(any())).thenReturn(alarm);
+
+        // stub 3
+        Leave leave = newMockLeave(1L, cos, LeaveType.ANNUAL,  LocalDate.parse("2023-07-20"), LocalDate.parse("2023-07-20"), 1);
+        Mockito.when(leaveRepository.findById(any())).thenReturn(Optional.of(leave));
+
+        // when
+        LeaveResponse.CancelOutDTO cancelOutDTO = leaveService.연차당직신청취소하기(1L, 1L);
+
+        // then
+        Assertions.assertThat(cancelOutDTO.getRemainDays()).isEqualTo(9);
+    }
 }

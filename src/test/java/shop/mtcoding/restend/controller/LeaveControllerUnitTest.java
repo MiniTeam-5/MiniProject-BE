@@ -24,6 +24,7 @@ import shop.mtcoding.restend.core.config.MySecurityConfig;
 import shop.mtcoding.restend.core.dummy.DummyEntity;
 import shop.mtcoding.restend.dto.leave.LeaveRequest;
 import shop.mtcoding.restend.dto.leave.LeaveResponse;
+import shop.mtcoding.restend.dto.user.UserResponse;
 import shop.mtcoding.restend.model.leave.Leave;
 import shop.mtcoding.restend.model.leave.enums.LeaveType;
 import shop.mtcoding.restend.model.user.User;
@@ -97,6 +98,28 @@ public class LeaveControllerUnitTest extends DummyEntity {
         resultActions.andExpect(jsonPath("$.data.usingDays").value(1));
         resultActions.andExpect(jsonPath("$.data.remainDays").value(14));
         resultActions.andExpect(jsonPath("$.data.status").value("WAITING"));
+        resultActions.andExpect(status().isOk());
+    }
+
+    @MyWithMockUser(id = 1L, username = "cos", role = "USER", remainDays = 15)
+    @Test
+    public void cancel_test() throws Exception {
+        // given
+        Long id = 1L;
+
+        // stub
+        User user = newMockUser(1L,"cos", 9);
+        LeaveResponse.CancelOutDTO cancelOutDTO = new LeaveResponse.CancelOutDTO(user);
+        Mockito.when(leaveService.연차당직신청취소하기(any(), any())).thenReturn(cancelOutDTO);
+
+        // shen
+        ResultActions resultActions = mvc
+                .perform(post("/auth/leave/"+id+"/delete"));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // 검증해볼께
+        resultActions.andExpect(jsonPath("$.data.remainDays").value(9));
         resultActions.andExpect(status().isOk());
     }
 }
