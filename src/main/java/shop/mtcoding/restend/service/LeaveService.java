@@ -12,6 +12,7 @@ import shop.mtcoding.restend.model.alarm.Alarm;
 import shop.mtcoding.restend.model.alarm.AlarmRepository;
 import shop.mtcoding.restend.model.leave.Leave;
 import shop.mtcoding.restend.model.leave.LeaveRepository;
+import shop.mtcoding.restend.model.leave.enums.LeaveStatus;
 import shop.mtcoding.restend.model.leave.enums.LeaveType;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRepository;
@@ -76,5 +77,35 @@ public class LeaveService {
         // 5) 연차 등록
         Leave leavePS = leaveRepository.save(applyInDTO.toEntity(userPS, usingDays));
         return new LeaveResponse.ApplyOutDTO(leavePS, userPS);
+    }
+
+    @Transactional
+    public LeaveResponse.CancelOutDTO 연차당직신청취소하기(Long id, Long userId) {
+        Leave leavePS = leaveRepository.findById(id).orElseThrow(
+                () -> new Exception500("해당 연차/당직 신청 정보가 DB에 존재하지 않음")
+        );
+        User userPS = userRepository.findById(userId).orElseThrow(
+                () -> new Exception500("로그인 된 유저가 DB에 존재하지 않음")
+        );
+
+        if(leavePS.getStatus().equals(LeaveStatus.APPROVAL)){
+            throw new Exception400("id", "이미 승인된 신청입니다.");
+        }
+        if(leavePS.getStatus().equals(LeaveStatus.REJECTION)){
+            throw new Exception400("id", "이미 거절된 신청입니다.");
+        }
+
+        String content = "";
+        if(leavePS.getType().equals(LeaveType.ANNUAL)){
+            userPS.increaseRemainDays(leavePS.getUsingDays());
+            content = userPS.getUsername() + "님의 " + leavePS.getStartDate().toString() + "부터 "
+                    + leavePS.getEndDate() + "까지, 총 " + leavePS.getUsingDays() + "일의 연차 신청이 취소되었습니다.";
+        } else {
+            content = userPS.getUsername() + "님의 " + leavePS.getStartDate() + "일 당직 신청이 취소되었습니다.";
+        }
+
+        leaveRepository.delete(leavePS);
+        alarmRepository.save(Alarm.builder().user(userPS).content(content).build());
+        return new LeaveResponse.CancelOutDTO(userPS);
     }
 }

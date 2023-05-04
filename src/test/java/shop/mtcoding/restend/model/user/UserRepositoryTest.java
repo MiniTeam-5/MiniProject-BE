@@ -30,8 +30,8 @@ public class UserRepositoryTest extends DummyEntity {
     @BeforeEach
     public void setUp() {
         em.createNativeQuery("ALTER TABLE user_tb ALTER COLUMN `id` RESTART WITH 1").executeUpdate();
-        userRepository.save(newUser("ssar"));
-        userRepository.save(newUser("cos"));
+        userRepository.save(newUser("ssar", 15));
+        userRepository.save(newUser("cos", 15));
         em.clear();
     }
 
@@ -93,7 +93,7 @@ public class UserRepositoryTest extends DummyEntity {
     @Test
     public void save() {
         // given
-        User love = newUser("love");
+        User love = newUser("love", 15);
 
         // when
         User userPS = userRepository.save(love);

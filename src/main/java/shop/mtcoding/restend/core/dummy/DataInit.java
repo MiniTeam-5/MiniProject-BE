@@ -13,8 +13,8 @@ public class DataInit extends DummyEntity{
     @Bean
     CommandLineRunner init(UserRepository userRepository){
         return args -> {
-            userRepository.save(newUser("ssar"));
-            userRepository.save(newUser("cos"));
+            userRepository.save(newUser("ssar", 15));
+            userRepository.save(newUser("cos", 15));
         };
     }
 }

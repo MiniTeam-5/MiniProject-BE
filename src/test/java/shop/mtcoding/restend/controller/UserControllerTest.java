@@ -53,8 +53,8 @@ public class UserControllerTest extends MyRestDoc {
 
     @BeforeEach
     public void setUp() {
-        userRepository.save(dummy.newUser("ssar"));
-        userRepository.save(dummy.newUser("cos"));
+        userRepository.save(dummy.newUser("ssar", 15));
+        userRepository.save(dummy.newUser("cos", 15));
         em.clear();
     }
 

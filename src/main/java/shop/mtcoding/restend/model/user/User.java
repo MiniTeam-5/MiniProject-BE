@@ -57,4 +57,8 @@ public class User {
     public void useAnnualLeave(Integer usingDays) {
         this.remainDays -= usingDays;
     }
+
+    public void increaseRemainDays(Integer days) {
+        this.remainDays += days;
+    }
 }
