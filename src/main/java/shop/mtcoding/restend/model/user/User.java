@@ -26,8 +26,6 @@ public class User {
 
     @Column(nullable = false, length = 20)
     private String email;
-    @Column(nullable = false, length = 20)
-    private String fullName;
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
@@ -37,10 +35,29 @@ public class User {
     @Column(nullable = false)
     private LocalDate hireDate;
 
+    private String profile;
+
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    public void changeProfile(String profile) {
+        this.profile = profile;
+    }
+
+    public void changeEmail(String email) {
+        this.email = email;
+    }
+
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
+    public void changeUsername(String username) {
+        this.username = username;
+    }
 
     @PrePersist
     protected void onCreate() {

@@ -20,7 +20,6 @@ public class MyWithMockUserFactory implements WithSecurityContextFactory<MyWithM
                 .username(mockUser.username())
                 .password("1234")
                 .email(mockUser.username()+"@nate.com")
-                .fullName(mockUser.fullName())
                 .role(UserRole.USER)
                 .status(true)
                 .createdAt(LocalDateTime.now())

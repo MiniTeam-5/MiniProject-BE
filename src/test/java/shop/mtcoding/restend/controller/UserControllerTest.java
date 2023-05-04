@@ -53,8 +53,8 @@ public class UserControllerTest extends MyRestDoc {
 
     @BeforeEach
     public void setUp() {
-        userRepository.save(dummy.newUser("ssar", "쌀"));
-        userRepository.save(dummy.newUser("cos", "코스"));
+        userRepository.save(dummy.newUser("ssar"));
+        userRepository.save(dummy.newUser("cos"));
         em.clear();
     }
 
@@ -66,7 +66,6 @@ public class UserControllerTest extends MyRestDoc {
         joinInDTO.setUsername("love");
         joinInDTO.setPassword("1234");
         joinInDTO.setEmail("love@nate.com");
-        joinInDTO.setFullName("러브");
         joinInDTO.setHireDate("2022-12-12");
         String requestBody = om.writeValueAsString(joinInDTO);
 
@@ -91,7 +90,6 @@ public class UserControllerTest extends MyRestDoc {
         joinInDTO.setUsername("ssar");
         joinInDTO.setPassword("1234");
         joinInDTO.setEmail("ssar@nate.com");
-        joinInDTO.setFullName("쌀");
         joinInDTO.setHireDate("2022-12-12");
         String requestBody = om.writeValueAsString(joinInDTO);
 
@@ -118,7 +116,6 @@ public class UserControllerTest extends MyRestDoc {
         joinInDTO.setUsername("s");
         joinInDTO.setPassword("1234");
         joinInDTO.setEmail("ssar@nate.com");
-        joinInDTO.setFullName("쌀");
         String requestBody = om.writeValueAsString(joinInDTO);
 
         // when
@@ -204,7 +201,6 @@ public class UserControllerTest extends MyRestDoc {
         resultActions.andExpect(jsonPath("$.data.id").value(1L));
         resultActions.andExpect(jsonPath("$.data.username").value("ssar"));
         resultActions.andExpect(jsonPath("$.data.email").value("ssar@nate.com"));
-        resultActions.andExpect(jsonPath("$.data.fullName").value("쌀"));
         resultActions.andExpect(jsonPath("$.data.role").value("USER"));
         resultActions.andExpect(status().isOk());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);

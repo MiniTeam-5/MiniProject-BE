@@ -5,8 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import shop.mtcoding.restend.core.annotation.MyErrorLog;
 import shop.mtcoding.restend.core.annotation.MyLog;
 import shop.mtcoding.restend.core.auth.jwt.MyJwtProvider;
@@ -49,8 +51,27 @@ public class UserController {
             throw new Exception403("권한이 없습니다");
         }
         UserResponse.DetailOutDTO detailOutDTO = userService.회원상세보기(id);
-        //System.out.println(new ObjectMapper().writeValueAsString(detailOutDTO));
         ResponseDTO<?> responseDTO = new ResponseDTO<>(detailOutDTO);
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @PostMapping("/s/user/{id}")
+    public ResponseEntity<?> modifyProfile(@PathVariable Long id,
+                                           @RequestParam(required = false) MultipartFile profile,
+                                           @ModelAttribute @Valid UserRequest.ModifyInDTO modifyInDTO, BindingResult bindingResult,
+                                           @AuthenticationPrincipal MyUserDetails myUserDetails) {
+        if(id.longValue() != myUserDetails.getUser().getId()){
+            throw new Exception403("권한이 없습니다");
+        }
+
+        if (profile != null){
+            if (!profile.isEmpty()) {
+                userService.프로필사진변경(modifyInDTO, profile);
+            }
+        }
+
+        UserResponse.ModifiedOutDTO modifiedOutDTO = userService.개인정보수정(modifyInDTO, id);
+        ResponseDTO<?> responseDTO = new ResponseDTO<>(modifiedOutDTO);
         return ResponseEntity.ok(responseDTO);
     }
 }
