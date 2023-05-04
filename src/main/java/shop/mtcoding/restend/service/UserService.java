@@ -21,6 +21,8 @@ import shop.mtcoding.restend.dto.user.UserResponse;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRepository;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 @Transactional(readOnly = true)
@@ -32,6 +34,7 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
     @Value("${file.path}")
     private String uploadFolder;
+
 
     @MyLog
     @Transactional
@@ -47,9 +50,17 @@ public class UserService {
             throw new Exception400("email", "해당 이메일 주소는 사용중입니다");
         }
 
+        if (!joinInDTO.getPassword().equals(joinInDTO.getCheckPassword())) {
+            throw new Exception400("password", "패스워드가 일치하지 않습니다");
+        }
+
         String encPassword = passwordEncoder.encode(joinInDTO.getPassword()); // 60Byte
         joinInDTO.setPassword(encPassword);
-//        System.out.println("encPassword : "+encPassword);
+
+        LocalDate hireDate = LocalDate.parse(joinInDTO.getHireDate());
+        long days = ChronoUnit.DAYS.between(hireDate, LocalDate.now());
+        int limit = calPlusLimit(days);
+        joinInDTO.setAnnualLimit(limit <= 25 ? limit : 25);
 
         // 디비 save 되는 쪽만 try catch로 처리하자.
         try {
@@ -57,6 +68,15 @@ public class UserService {
             return new UserResponse.JoinOutDTO(userPS);
         }catch (Exception e){
             throw new Exception500("회원가입 실패 : "+e.getMessage());
+        }
+    }
+
+    private int calPlusLimit(long days) {
+        if (days < 365 * 3) {
+            return 15;
+        } else {
+            int ceil =(int) Math.ceil((double) (days - 1095)/730);
+            return 15 + ceil;
         }
     }
 

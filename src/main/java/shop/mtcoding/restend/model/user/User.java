@@ -37,6 +37,8 @@ public class User {
 
     private String profile;
 
+    private Integer annualLimit;
+
     @Column(nullable = false)
     private LocalDateTime createdAt;
 

@@ -8,6 +8,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,6 +22,9 @@ import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRepository;
 import shop.mtcoding.restend.model.user.UserRole;
 
+import javax.persistence.EntityManager;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -45,6 +49,7 @@ public class UserServiceTest extends DummyEntity {
     @Spy
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+
     @Test
     public void hello_test(){
         String pw = "1234";
@@ -59,6 +64,7 @@ public class UserServiceTest extends DummyEntity {
         UserRequest.JoinInDTO joinInDTO = new UserRequest.JoinInDTO();
         joinInDTO.setUsername("cos");
         joinInDTO.setPassword("1234");
+        joinInDTO.setCheckPassword("1234");
         joinInDTO.setEmail("cos@nate.com");
         joinInDTO.setHireDate("2022-12-12");
 
@@ -118,4 +124,5 @@ public class UserServiceTest extends DummyEntity {
         Assertions.assertThat(detailOutDTO.getEmail()).isEqualTo("cos@nate.com");
 //        Assertions.assertThat(detailOutDTO.getRole()).isEqualTo(UserRole.USER);
     }
+
 }
