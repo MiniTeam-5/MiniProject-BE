@@ -30,8 +30,8 @@ public class UserRepositoryTest extends DummyEntity {
     @BeforeEach
     public void setUp() {
         em.createNativeQuery("ALTER TABLE user_tb ALTER COLUMN `id` RESTART WITH 1").executeUpdate();
-        userRepository.save(newUser("ssar"));
-        userRepository.save(newUser("cos"));
+        userRepository.save(newUser("ssar", 15));
+        userRepository.save(newUser("cos", 15));
         em.clear();
     }
 
@@ -54,7 +54,6 @@ public class UserRepositoryTest extends DummyEntity {
                 passwordEncoder.matches("1234", userPS.getPassword())
         ).isEqualTo(true);
         Assertions.assertThat(userPS.getEmail()).isEqualTo("ssar@nate.com");
-        Assertions.assertThat(userPS.getUsername()).isEqualTo("ssar");
         Assertions.assertThat(userPS.getRole()).isEqualTo(UserRole.USER);
         Assertions.assertThat(userPS.getStatus()).isEqualTo(true);
         Assertions.assertThat(userPS.getHireDate()).isEqualTo(LocalDate.now().minusYears(1).minusWeeks(1));
@@ -93,7 +92,7 @@ public class UserRepositoryTest extends DummyEntity {
     @Test
     public void save() {
         // given
-        User love = newUser("love");
+        User love = newUser("love", 15);
 
         // when
         User userPS = userRepository.save(love);

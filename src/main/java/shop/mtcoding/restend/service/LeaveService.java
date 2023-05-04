@@ -13,6 +13,7 @@ import shop.mtcoding.restend.model.alarm.Alarm;
 import shop.mtcoding.restend.model.alarm.AlarmRepository;
 import shop.mtcoding.restend.model.leave.Leave;
 import shop.mtcoding.restend.model.leave.LeaveRepository;
+import shop.mtcoding.restend.model.leave.enums.LeaveStatus;
 import shop.mtcoding.restend.model.leave.enums.LeaveType;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRepository;
@@ -85,6 +86,36 @@ public class LeaveService {
         return new LeaveResponse.ApplyOutDTO(leavePS, userPS);
     }
 
+    @Transactional
+    public LeaveResponse.CancelOutDTO 연차당직신청취소하기(Long id, Long userId) {
+        Leave leavePS = leaveRepository.findById(id).orElseThrow(
+                () -> new Exception500("해당 연차/당직 신청 정보가 DB에 존재하지 않음")
+        );
+        User userPS = userRepository.findById(userId).orElseThrow(
+                () -> new Exception500("로그인 된 유저가 DB에 존재하지 않음")
+        );
+
+        if(leavePS.getStatus().equals(LeaveStatus.APPROVAL)){
+            throw new Exception400("id", "이미 승인된 신청입니다.");
+        }
+        if(leavePS.getStatus().equals(LeaveStatus.REJECTION)){
+            throw new Exception400("id", "이미 거절된 신청입니다.");
+        }
+
+        String content = "";
+        if(leavePS.getType().equals(LeaveType.ANNUAL)){
+            userPS.increaseRemainDays(leavePS.getUsingDays());
+            content = userPS.getUsername() + "님의 " + leavePS.getStartDate().toString() + "부터 "
+                    + leavePS.getEndDate() + "까지, 총 " + leavePS.getUsingDays() + "일의 연차 신청이 취소되었습니다.";
+        } else {
+            content = userPS.getUsername() + "님의 " + leavePS.getStartDate() + "일 당직 신청이 취소되었습니다.";
+        }
+
+        leaveRepository.delete(leavePS);
+        alarmRepository.save(Alarm.builder().user(userPS).content(content).build());
+        return new LeaveResponse.CancelOutDTO(userPS);
+    }
+
     //처리해야할 경우의 수
     //모든 유저의 서버 기준 월 정보
     //모든 유저의 특정 월 정보
@@ -121,25 +152,22 @@ public class LeaveService {
 
         LocalDate today = LocalDate.now();
 
-        if(nonNullCount == 0)//지정한 month, week, day 없는 경우 서버시간 기준으로 월 정보를 보낸다
+        if (nonNullCount == 0)//지정한 month, week, day 없는 경우 서버시간 기준으로 월 정보를 보낸다
         {
             LocalDate copyToday = today;
             leaves = leaves.stream()
-                    .filter( leave ->( leave.getStartDate().getMonth() == copyToday.getMonth() && leave.getStartDate().getYear() == copyToday.getYear())
-                            || ( leave.getEndDate().getMonth() == copyToday.getMonth() && leave.getEndDate().getYear() == copyToday.getYear()))
+                    .filter(leave -> (leave.getStartDate().getMonth() == copyToday.getMonth() && leave.getStartDate().getYear() == copyToday.getYear())
+                            || (leave.getEndDate().getMonth() == copyToday.getMonth() && leave.getEndDate().getYear() == copyToday.getYear()))
                     .collect(Collectors.toList());
-        }
-        else if(nonNullCount == 1)
-        {
+        } else if (nonNullCount == 1) {
             if (month != null)//지정한 날짜를 포함하는 월을 구하고 그 월에 걸친 모든 연차를 찾아서 반환
             {
                 LocalDate copyToday = LocalDate.parse(month);
                 leaves = leaves.stream()
-                        .filter( leave ->( leave.getStartDate().getMonth() == copyToday.getMonth() && leave.getStartDate().getYear() == copyToday.getYear())
-                        || ( leave.getEndDate().getMonth() == copyToday.getMonth() && leave.getEndDate().getYear() == copyToday.getYear()))
+                        .filter(leave -> (leave.getStartDate().getMonth() == copyToday.getMonth() && leave.getStartDate().getYear() == copyToday.getYear())
+                                || (leave.getEndDate().getMonth() == copyToday.getMonth() && leave.getEndDate().getYear() == copyToday.getYear()))
                         .collect(Collectors.toList());
-            }
-            else if(week != null)//지정한 날짜를 포함하는 주를 구하고 그 주에 걸친 모든 연차를 찾아서 반환
+            } else if (week != null)//지정한 날짜를 포함하는 주를 구하고 그 주에 걸친 모든 연차를 찾아서 반환
             {
                 LocalDate copyToday = LocalDate.parse(week);
                 LocalDate weekStartDate = copyToday.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
@@ -147,16 +175,15 @@ public class LeaveService {
 
                 leaves = leaves.stream()
                         .filter(leave -> (leave.getStartDate().isBefore(weekEndDate)) || (leave.getStartDate().isEqual(weekEndDate))
-                        && (leave.getEndDate().isAfter(weekStartDate)) || (leave.getEndDate().isEqual(weekStartDate)))
+                                && (leave.getEndDate().isAfter(weekStartDate)) || (leave.getEndDate().isEqual(weekStartDate)))
                         .collect(Collectors.toList());
 
-            }
-            else if(day != null)//지정한 날짜를 포함하는 모든 연차를 찾아서 반환
+            } else if (day != null)//지정한 날짜를 포함하는 모든 연차를 찾아서 반환
             {
                 LocalDate copyToday = LocalDate.parse(day);
                 leaves = leaves.stream()
                         .filter(leave -> (leave.getStartDate().isEqual(copyToday) || (leave.getStartDate().isBefore(copyToday)))
-                        && ((leave.getEndDate().isEqual(copyToday)) || (leave.getEndDate().isAfter(copyToday))))
+                                && ((leave.getEndDate().isEqual(copyToday)) || (leave.getEndDate().isAfter(copyToday))))
                         .collect(Collectors.toList());
             }
 

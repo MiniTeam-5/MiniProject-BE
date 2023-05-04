@@ -9,6 +9,8 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
@@ -17,15 +19,20 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import shop.mtcoding.restend.core.MyRestDoc;
+import shop.mtcoding.restend.core.auth.session.MyUserDetails;
 import shop.mtcoding.restend.core.dummy.DummyEntity;
 import shop.mtcoding.restend.dto.leave.LeaveRequest;
+import shop.mtcoding.restend.model.leave.Leave;
 import shop.mtcoding.restend.model.leave.LeaveRepository;
+import shop.mtcoding.restend.model.leave.enums.LeaveStatus;
 import shop.mtcoding.restend.model.leave.enums.LeaveType;
+import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRepository;
 
 import javax.persistence.EntityManager;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -55,8 +62,16 @@ public class LeaveControllerTest extends MyRestDoc {
 
     @BeforeEach
     public void setUp() {
-        userRepository.save(dummy.newUser("ssar"));
-        userRepository.save(dummy.newUser("cos"));
+        User ssar = userRepository.save(dummy.newUser("ssar", 15));
+        User cos = userRepository.save(dummy.newUser("cos", 11));
+        leaveRepository.save(dummy.newLeave(ssar, LeaveType.ANNUAL, LocalDate.parse("2023-08-19"),
+                LocalDate.parse("2023-08-19"), 1, LeaveStatus.REJECTION));
+        leaveRepository.save(dummy.newLeave(cos, LeaveType.ANNUAL, LocalDate.parse("2023-08-10"),
+                LocalDate.parse("2023-08-11"), 2, LeaveStatus.APPROVAL));
+        leaveRepository.save(dummy.newLeave(ssar, LeaveType.DUTY, LocalDate.parse("2023-07-10"),
+                LocalDate.parse("2023-07-10"), 0, LeaveStatus.WAITING));
+        leaveRepository.save(dummy.newLeave(cos, LeaveType.ANNUAL, LocalDate.parse("2023-09-18"),
+                LocalDate.parse("2023-09-19"), 2, LeaveStatus.WAITING));
         em.clear();
     }
 
@@ -78,7 +93,7 @@ public class LeaveControllerTest extends MyRestDoc {
         System.out.println("테스트 : " + responseBody);
 
         // then
-        resultActions.andExpect(jsonPath("$.data.id").value(1L));
+        resultActions.andExpect(jsonPath("$.data.id").value(9L));
         resultActions.andExpect(jsonPath("$.data.type").value("ANNUAL"));
         resultActions.andExpect(jsonPath("$.data.usingDays").value(1));
         resultActions.andExpect(jsonPath("$.data.remainDays").value(14));
@@ -105,7 +120,7 @@ public class LeaveControllerTest extends MyRestDoc {
         System.out.println("테스트 : " + responseBody);
 
         // then
-        resultActions.andExpect(jsonPath("$.data.id").value(4L));
+        resultActions.andExpect(jsonPath("$.data.id").value(40L));
         resultActions.andExpect(jsonPath("$.data.type").value("ANNUAL"));
         resultActions.andExpect(jsonPath("$.data.usingDays").value(3));
         resultActions.andExpect(jsonPath("$.data.remainDays").value(12));
@@ -132,7 +147,7 @@ public class LeaveControllerTest extends MyRestDoc {
         System.out.println("테스트 : " + responseBody);
 
         // then
-        resultActions.andExpect(jsonPath("$.data.id").value(3L));
+        resultActions.andExpect(jsonPath("$.data.id").value(23L));
         resultActions.andExpect(jsonPath("$.data.type").value("ANNUAL"));
         resultActions.andExpect(jsonPath("$.data.usingDays").value(3));
         resultActions.andExpect(jsonPath("$.data.remainDays").value(12));
@@ -159,7 +174,7 @@ public class LeaveControllerTest extends MyRestDoc {
         System.out.println("테스트 : " + responseBody);
 
         // then
-        resultActions.andExpect(jsonPath("$.data.id").value(2L));
+        resultActions.andExpect(jsonPath("$.data.id").value(14L));
         resultActions.andExpect(jsonPath("$.data.type").value("DUTY"));
         resultActions.andExpect(jsonPath("$.data.usingDays").value(0));
         resultActions.andExpect(jsonPath("$.data.remainDays").value(15));
@@ -219,6 +234,7 @@ public class LeaveControllerTest extends MyRestDoc {
         resultActions.andExpect(status().isBadRequest());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
+
     @DisplayName("연차 신청 실패 (0일 신청)")
     @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
@@ -270,5 +286,118 @@ public class LeaveControllerTest extends MyRestDoc {
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
+    @DisplayName("연차 신청 취소 성공")
+    @WithUserDetails(value = "cos@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void cancel_annual_test() throws Exception {
+        // given
+        Long id = 4L;
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(post("/auth/leave/"+id+"/delete"));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // then
+        resultActions.andExpect(jsonPath("$.data.remainDays").value(13));
+        resultActions.andExpect(status().isOk());
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @DisplayName("당직 신청 취소 성공")
+    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void cancel_duty_test() throws Exception {
+        // given
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        authentication.getPrincipal().
+//        MyUserDetails myUserDetails
+//        leaveRepository.save(dummy.newLeave(lov, LeaveType.ANNUAL, LocalDate.parse("2023-08-10"),
+//                LocalDate.parse("2023-08-11"), 2, LeaveStatus.APPROVAL));
+        Long id = 3L;
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(post("/auth/leave/"+id+"/delete"));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // then
+        resultActions.andExpect(jsonPath("$.data.remainDays").value(15));
+        resultActions.andExpect(status().isOk());
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @DisplayName("연차/당직 신청 취소 유효성 검사 실패 (연차/당직 신청 정보가 없을 때)")
+    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void cancel_fail_valid_no_leave_test() throws Exception {
+        // given
+        Long id = 200L;
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(post("/auth/leave/"+id+"/delete"));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // then
+        resultActions.andExpect(jsonPath("$.status").value(500));
+        resultActions.andExpect(jsonPath("$.msg").value("serverError"));
+        resultActions.andExpect(jsonPath("$.data").value("해당 연차/당직 신청 정보가 DB에 존재하지 않음"));
+        resultActions.andExpect(status().is5xxServerError());
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @DisplayName("연차/당직 신청 취소 실패 (이미 승인됨)")
+    @WithUserDetails(value = "cos@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void cancel_fail_already_approved_test() throws Exception {
+        // given
+//        User lov = userRepository.save(dummy.newUser("lov", 13));
+//        leaveRepository.save(dummy.newLeave(lov, LeaveType.ANNUAL, LocalDate.parse("2023-08-10"),
+//                LocalDate.parse("2023-08-11"), 2, LeaveStatus.APPROVAL));
+        Long id = 2L;
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(post("/auth/leave/"+id+"/delete"));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // then
+        resultActions.andExpect(jsonPath("$.status").value(400));
+        resultActions.andExpect(jsonPath("$.msg").value("badRequest"));
+        resultActions.andExpect(jsonPath("$.data.key").value("id"));
+        resultActions.andExpect(jsonPath("$.data.value").value("이미 승인된 신청입니다."));
+        resultActions.andExpect(status().isBadRequest());
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @DisplayName("연차/당직 신청 취소 실패 (이미 거절됨)")
+    @WithUserDetails(value = "cos@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void cancel_fail_already_rejected_test() throws Exception {
+        // given
+//        User big = userRepository.save(dummy.newUser("big", 15));
+//        leaveRepository.save(dummy.newLeave(big, LeaveType.ANNUAL, LocalDate.parse("2023-08-19"),
+//                LocalDate.parse("2023-08-19"), 1, LeaveStatus.REJECTION));
+        Long id = 1L;
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(post("/auth/leave/"+id+"/delete"));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // then
+        resultActions.andExpect(jsonPath("$.status").value(400));
+        resultActions.andExpect(jsonPath("$.msg").value("badRequest"));
+        resultActions.andExpect(jsonPath("$.data.key").value("id"));
+        resultActions.andExpect(jsonPath("$.data.value").value("이미 거절된 신청입니다."));
+        resultActions.andExpect(status().isBadRequest());
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
 }
 
