@@ -47,19 +47,21 @@ public class AlarmControllerTest {
     @Autowired
     private UserRepository userRepository;
 
+    private User user;
+
     @BeforeEach
     public void setUp() {
         userRepository.save(dummy.newUser("ssar"));
         userRepository.save(dummy.newUser("cos"));
+        user = userRepository.save(dummy.newUser("dotori"));
         em.clear();
     }
 
     @DisplayName("알람 불러오기")
-    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @WithUserDetails(value = "dotori@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
     public void getUserAlarmsTest() throws Exception {
         // given
-        User user = User.builder().id(1L).build();
 
         Alarm alarm1 = Alarm.builder().id(1L).user(user).content("알람1").build();
         Alarm alarm2 = Alarm.builder().id(2L).user(user).content("알람2").build();
