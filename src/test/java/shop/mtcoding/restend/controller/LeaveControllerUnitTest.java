@@ -1,7 +1,6 @@
 package shop.mtcoding.restend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,27 +9,25 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithSecurityContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import shop.mtcoding.restend.core.MyWithMockUser;
 import shop.mtcoding.restend.core.advice.MyLogAdvice;
 import shop.mtcoding.restend.core.advice.MyValidAdvice;
-import shop.mtcoding.restend.core.auth.jwt.MyJwtProvider;
 import shop.mtcoding.restend.core.auth.session.MyUserDetails;
-import shop.mtcoding.restend.core.auth.session.MyUserDetailsService;
 import shop.mtcoding.restend.core.config.MyFilterRegisterConfig;
 import shop.mtcoding.restend.core.config.MySecurityConfig;
 import shop.mtcoding.restend.core.dummy.DummyEntity;
 import shop.mtcoding.restend.dto.leave.LeaveRequest;
 import shop.mtcoding.restend.dto.leave.LeaveResponse;
-import shop.mtcoding.restend.dto.user.UserRequest;
-import shop.mtcoding.restend.dto.user.UserResponse;
 import shop.mtcoding.restend.model.leave.Leave;
-import shop.mtcoding.restend.model.leave.enumUtil.LeaveType;
+import shop.mtcoding.restend.model.leave.enums.LeaveType;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.service.LeaveService;
-import shop.mtcoding.restend.service.UserService;
 
 import java.time.LocalDate;
 
@@ -50,7 +47,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         MyValidAdvice.class,
         MyLogAdvice.class,
         MySecurityConfig.class,
-        MyFilterRegisterConfig.class
+        MyFilterRegisterConfig.class,
+        MyUserDetails.class
 }) // Advice 와 Security 설정 가져오기
 @WebMvcTest(
         // 필요한 Controller 가져오기, 특정 필터를 제외하기
@@ -66,7 +64,7 @@ public class LeaveControllerUnitTest extends DummyEntity {
     @MockBean
     private MyUserDetails myUserDetails;
 
-    @MyWithMockUser(id = 1L, username = "cos", role = "USER", fullName = "코스")
+    @MyWithMockUser(id = 1L, username = "cos", role = "USER", remainDays = 15)
     @Test
     public void apply_test() throws Exception {
         // 준비
@@ -77,9 +75,14 @@ public class LeaveControllerUnitTest extends DummyEntity {
         String requestBody = om.writeValueAsString(applyInDTO);
 
         // 가정해볼께
-        Leave leave1 = newMockLeave(1L, myUserDetails.getUser(), LeaveType.valueOf("ANNUAL"), LocalDate.parse("2023-07-20"),
-                LocalDate.parse("2023-07-20"));
-        LeaveResponse.ApplyOutDTO applyOutDTO = new LeaveResponse.ApplyOutDTO(leave1);
+        User user = newMockUser(1L,"cos", 14);
+        Leave leave = newMockLeave(1L, user, LeaveType.valueOf("ANNUAL"), LocalDate.parse("2023-07-20"),
+                LocalDate.parse("2023-07-20"), 1);
+        System.out.println("1");
+        System.out.println(leave.getUsingDays());
+        System.out.println(user.getRemainDays());
+        System.out.println("2");
+        LeaveResponse.ApplyOutDTO applyOutDTO = new LeaveResponse.ApplyOutDTO(leave, user);
         Mockito.when(leaveService.연차당직신청하기(any(), any())).thenReturn(applyOutDTO);
 
         // 테스트진행
@@ -90,6 +93,9 @@ public class LeaveControllerUnitTest extends DummyEntity {
 
         // 검증해볼께
         resultActions.andExpect(jsonPath("$.data.id").value(1L));
+        resultActions.andExpect(jsonPath("$.data.type").value("ANNUAL"));
+        resultActions.andExpect(jsonPath("$.data.usingDays").value(1));
+        resultActions.andExpect(jsonPath("$.data.remainDays").value(14));
         resultActions.andExpect(jsonPath("$.data.status").value("WAITING"));
         resultActions.andExpect(status().isOk());
     }

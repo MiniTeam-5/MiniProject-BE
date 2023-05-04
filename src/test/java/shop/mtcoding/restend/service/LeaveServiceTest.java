@@ -9,15 +9,14 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 import shop.mtcoding.restend.core.dummy.DummyEntity;
-import shop.mtcoding.restend.core.exception.Exception400;
 import shop.mtcoding.restend.dto.leave.LeaveRequest;
 import shop.mtcoding.restend.dto.leave.LeaveResponse;
 import shop.mtcoding.restend.model.alarm.Alarm;
 import shop.mtcoding.restend.model.alarm.AlarmRepository;
 import shop.mtcoding.restend.model.leave.Leave;
 import shop.mtcoding.restend.model.leave.LeaveRepository;
-import shop.mtcoding.restend.model.leave.enumUtil.LeaveStatus;
-import shop.mtcoding.restend.model.leave.enumUtil.LeaveType;
+import shop.mtcoding.restend.model.leave.enums.LeaveStatus;
+import shop.mtcoding.restend.model.leave.enums.LeaveType;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRepository;
 
@@ -52,7 +51,7 @@ public class LeaveServiceTest extends DummyEntity {
         applyInDTO.setEndDate(LocalDate.parse("2023-07-20"));
 
         // stub 1
-        User cos = newMockUser(1L, "cos", "코스");
+        User cos = newMockUser(1L, "cos", 15);
         Mockito.when(userRepository.findById(any())).thenReturn(Optional.of(cos));
 
         // stub 2
@@ -60,7 +59,7 @@ public class LeaveServiceTest extends DummyEntity {
         Mockito.when(alarmRepository.save(any())).thenReturn(alarm);
 
         // stub 3
-        Leave leave = newMockLeave(1L, cos, LeaveType.DUTY,  LocalDate.parse("2023-07-20"), LocalDate.parse("2023-07-20"));
+        Leave leave = newMockLeave(1L, cos, LeaveType.DUTY,  LocalDate.parse("2023-07-20"), LocalDate.parse("2023-07-20"), 0);
         Mockito.when(leaveRepository.save(any())).thenReturn(leave);
 
         // when
@@ -68,6 +67,9 @@ public class LeaveServiceTest extends DummyEntity {
 
         // then
         Assertions.assertThat(applyOutDTO.getId()).isEqualTo(1L);
+        Assertions.assertThat(applyOutDTO.getType()).isEqualTo(LeaveType.DUTY);
+        Assertions.assertThat(applyOutDTO.getUsingDays()).isEqualTo(0);
+        Assertions.assertThat(applyOutDTO.getRemainDays()).isEqualTo(15);
         Assertions.assertThat(applyOutDTO.getStatus()).isEqualTo(LeaveStatus.WAITING);
     }
 }

@@ -70,7 +70,7 @@ public class UserControllerUnitTest extends DummyEntity {
         String requestBody = om.writeValueAsString(joinInDTO);
 
         // 가정해볼께
-        User cos = newMockUser(1L,"cos", "코스");
+        User cos = newMockUser(1L,"cos", 15);
         UserResponse.JoinOutDTO joinOutDTO = new UserResponse.JoinOutDTO(cos);
         Mockito.when(userService.회원가입(any())).thenReturn(joinOutDTO);
 
@@ -109,7 +109,7 @@ public class UserControllerUnitTest extends DummyEntity {
         resultActions.andExpect(status().isOk());
     }
 
-    @MyWithMockUser(id = 1L, username = "cos", role = "USER", fullName = "코스")
+    @MyWithMockUser(id = 1L, username = "cos", role = "USER", remainDays = 15)
     //@WithMockUser(value = "ssar", password = "1234", roles = "USER")
     @Test
     public void detail_test() throws Exception {
@@ -117,7 +117,7 @@ public class UserControllerUnitTest extends DummyEntity {
         Long id = 1L;
 
         // stub
-        User cos = newMockUser(1L,"cos", "코스");
+        User cos = newMockUser(1L,"cos", 15);
         UserResponse.DetailOutDTO detailOutDTO = new UserResponse.DetailOutDTO(cos);
         Mockito.when(userService.회원상세보기(any())).thenReturn(detailOutDTO);
 
@@ -131,7 +131,6 @@ public class UserControllerUnitTest extends DummyEntity {
         resultActions.andExpect(jsonPath("$.data.id").value(1L));
         resultActions.andExpect(jsonPath("$.data.username").value("cos"));
         resultActions.andExpect(jsonPath("$.data.email").value("cos@nate.com"));
-        resultActions.andExpect(jsonPath("$.data.fullName").value("코스"));
         resultActions.andExpect(jsonPath("$.data.role").value("USER"));
         resultActions.andExpect(status().isOk());
     }

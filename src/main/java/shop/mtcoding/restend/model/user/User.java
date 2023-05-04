@@ -27,8 +27,6 @@ public class User {
 
     @Column(nullable = false, length = 20)
     private String email;
-    @Column(nullable = false, length = 20)
-    private String fullName;
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
@@ -39,7 +37,7 @@ public class User {
     private LocalDate hireDate;
 
     @Min(0)
-    private Integer annualCount; // 남은 연차수
+    private Integer remainDays; // 남은 연차수
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
@@ -57,6 +55,6 @@ public class User {
     }
 
     public void useAnnualLeave(Integer usingDays) {
-        this.annualCount -= usingDays;
+        this.remainDays -= usingDays;
     }
 }

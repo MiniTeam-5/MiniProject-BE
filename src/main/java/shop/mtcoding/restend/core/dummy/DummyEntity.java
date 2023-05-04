@@ -1,29 +1,28 @@
 package shop.mtcoding.restend.core.dummy;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import shop.mtcoding.restend.dto.leave.LeaveRequest;
 import shop.mtcoding.restend.model.alarm.Alarm;
 import shop.mtcoding.restend.model.leave.Leave;
-import shop.mtcoding.restend.model.leave.enumUtil.LeaveStatus;
-import shop.mtcoding.restend.model.leave.enumUtil.LeaveType;
+import shop.mtcoding.restend.model.leave.enums.LeaveStatus;
+import shop.mtcoding.restend.model.leave.enums.LeaveType;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRole;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class DummyEntity {
-    public User newUser(String username, String fullName){
+    public User newUser(String username){
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return User.builder()
                 .username(username)
                 .password(passwordEncoder.encode("1234"))
-                .fullName(fullName)
                 .email(username+"@nate.com")
                 .role(UserRole.USER)
                 .status(true)
-                .hireDate(LocalDate.now())
-                .annualCount(15)
+                .hireDate(LocalDate.now().minusYears(1).minusWeeks(1)) // 입사 1년차라 가정
+                .remainDays(15)
                 .build();
     }
 
@@ -34,39 +33,40 @@ public class DummyEntity {
                 .build();
     }
 
-    public Leave newLeave(User user, LeaveType type, LocalDate date){
+    public Leave newLeave(User user, LeaveType type, LocalDate startDate, LocalDate endDate, Integer usingDays){
         return Leave.builder()
                 .user(user)
                 .type(type)
-                .startDate(date)
-                .endDate(date)
+                .startDate(startDate)
+                .endDate(endDate)
+                .usingDays(usingDays)
                 .status(LeaveStatus.WAITING)
                 .build();
     }
 
-    public User newMockUser(Long id, String username, String fullName){
+    public User newMockUser(Long id, String username, Integer remainDays){
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return User.builder()
                 .id(id)
                 .username(username)
                 .password(passwordEncoder.encode("1234"))
-                .fullName(fullName)
                 .email(username+"@nate.com")
                 .role(UserRole.USER)
                 .status(true)
-                .hireDate(LocalDate.now())
-                .annualCount(15)
+                .hireDate(LocalDate.now().minusYears(1).minusWeeks(1)) // 입사 1년차라 가정
+                .remainDays(remainDays)
                 .createdAt(LocalDateTime.now())
                 .build();
     }
 
-    public Leave newMockLeave(Long id, User user, LeaveType type, LocalDate startDate, LocalDate endDate){
+    public Leave newMockLeave(Long id, User user, LeaveType type, LocalDate startDate, LocalDate endDate, Integer usingDays){
         return Leave.builder()
                 .id(id)
                 .user(user)
                 .type(type)
                 .startDate(startDate)
                 .endDate(endDate)
+                .usingDays(usingDays)
                 .status(LeaveStatus.WAITING)
                 .createdAt(LocalDateTime.now())
                 .build();

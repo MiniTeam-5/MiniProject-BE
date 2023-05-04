@@ -33,7 +33,7 @@ public class AlarmRepositoryTest extends DummyEntity {
     public void setUp() {
         em.createNativeQuery("ALTER TABLE user_tb ALTER COLUMN `id` RESTART WITH 1").executeUpdate();
         em.createNativeQuery("ALTER TABLE alarm_tb ALTER COLUMN `id` RESTART WITH 1").executeUpdate();
-        userRepository.save(newUser("ssar", "쌀"));
+        userRepository.save(newUser("ssar"));
         User ssar = userRepository.findById(1L).orElseThrow(
                 () -> new RuntimeException("테스트 중 findById 에러 : 1번 유저가 없습니다")
         );;
@@ -43,7 +43,7 @@ public class AlarmRepositoryTest extends DummyEntity {
     @Test
     public void save() {
         // given
-        userRepository.save(newUser("cos", "코스"));
+        userRepository.save(newUser("cos"));
         User cos = userRepository.findById(2L).orElseThrow(
                 () -> new RuntimeException("테스트 중 findById 에러 : 2번 유저가 없습니다")
         );;

@@ -1,8 +1,8 @@
 package shop.mtcoding.restend.model.leave;
 
 import lombok.*;
-import shop.mtcoding.restend.model.leave.enumUtil.LeaveStatus;
-import shop.mtcoding.restend.model.leave.enumUtil.LeaveType;
+import shop.mtcoding.restend.model.leave.enums.LeaveStatus;
+import shop.mtcoding.restend.model.leave.enums.LeaveType;
 import shop.mtcoding.restend.model.user.User;
 
 import javax.persistence.*;
@@ -28,6 +28,7 @@ public class Leave {
 
     private LocalDate startDate;
     private LocalDate endDate;
+    private Integer usingDays;
 
     @Enumerated(EnumType.STRING)
     private LeaveStatus status;
