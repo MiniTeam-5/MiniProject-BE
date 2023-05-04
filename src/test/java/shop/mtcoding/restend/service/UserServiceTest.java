@@ -72,7 +72,8 @@ public class UserServiceTest extends DummyEntity {
         Mockito.when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
 
         // stub 2
-        User cos = newMockUser(1L, "cos");
+
+        User cos = newMockUser(1L, "cos", 15);
         Mockito.when(userRepository.save(any())).thenReturn(cos);
 
         // when
@@ -91,7 +92,8 @@ public class UserServiceTest extends DummyEntity {
         loginInDTO.setPassword("1234");
 
         // stub
-        User cos = newMockUser(1L, "cos");
+
+        User cos = newMockUser(1L, "cos", 15);
         MyUserDetails myUserDetails = new MyUserDetails(cos);
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 myUserDetails, myUserDetails.getPassword(), myUserDetails.getAuthorities()
@@ -112,7 +114,8 @@ public class UserServiceTest extends DummyEntity {
         Long id = 1L;
 
         // stub
-        User cos = newMockUser(1L, "cos");
+
+        User cos = newMockUser(1L, "cos", 15);
         Mockito.when(userRepository.findById(any())).thenReturn(Optional.of(cos));
 
         // when

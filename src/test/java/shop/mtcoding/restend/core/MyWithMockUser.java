@@ -14,4 +14,6 @@ public @interface MyWithMockUser {
     long id() default 1L;
     String username() default "cos";
     String role() default "USER";
+    int remainDays() default 15;
+
 }

@@ -59,6 +59,7 @@ public class UserRequest {
                     .annualLimit(annualLimit)
                     .role(USER)
                     .status(true)
+                    .remainDays(15)
                     .build();
         }
     }

@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import javax.validation.constraints.Min;
 import java.time.LocalDateTime;
 
 @Builder
@@ -39,6 +40,9 @@ public class User {
 
     private Integer annualLimit;
 
+    @Min(0)
+    private Integer remainDays; // 남은 연차수
+
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
@@ -69,5 +73,9 @@ public class User {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public void useAnnualLeave(Integer usingDays) {
+        this.remainDays -= usingDays;
     }
 }
