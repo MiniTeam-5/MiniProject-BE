@@ -30,6 +30,7 @@ public class Leave {
     private LocalDate endDate;
     private Integer usingDays;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     private LeaveStatus status;
     private LocalDateTime createdAt;
