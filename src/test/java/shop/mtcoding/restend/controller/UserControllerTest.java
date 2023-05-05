@@ -22,6 +22,7 @@ import shop.mtcoding.restend.core.auth.jwt.MyJwtProvider;
 import shop.mtcoding.restend.core.dummy.DummyEntity;
 import shop.mtcoding.restend.dto.user.UserRequest;
 import shop.mtcoding.restend.model.user.UserRepository;
+import shop.mtcoding.restend.model.user.UserRole;
 
 import javax.persistence.EntityManager;
 
@@ -53,8 +54,8 @@ public class UserControllerTest extends MyRestDoc {
 
     @BeforeEach
     public void setUp() {
-        userRepository.save(dummy.newUser("ssar", 15));
-        userRepository.save(dummy.newUser("cos", 15));
+        userRepository.save(dummy.newUser("ssar", true, 15));
+        userRepository.save(dummy.newUser("cos", true, 15));
         em.clear();
     }
 
