@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import javax.validation.constraints.Min;
 import java.time.LocalDateTime;
 
 @Builder
@@ -26,8 +27,6 @@ public class User {
 
     @Column(nullable = false, length = 20)
     private String email;
-    @Column(nullable = false, length = 20)
-    private String fullName;
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
@@ -37,10 +36,34 @@ public class User {
     @Column(nullable = false)
     private LocalDate hireDate;
 
+    private String profile;
+
+    private Integer annualLimit;
+
+    @Min(0)
+    private Integer remainDays; // 남은 연차수
+
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    public void changeProfile(String profile) {
+        this.profile = profile;
+    }
+
+    public void changeEmail(String email) {
+        this.email = email;
+    }
+
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
+    public void changeUsername(String username) {
+        this.username = username;
+    }
 
     @PrePersist
     protected void onCreate() {
@@ -50,5 +73,13 @@ public class User {
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
+    }
+
+    public void useAnnualLeave(Integer usingDays) {
+        this.remainDays -= usingDays;
+    }
+
+    public void increaseRemainDays(Integer days) {
+        this.remainDays += days;
     }
 }

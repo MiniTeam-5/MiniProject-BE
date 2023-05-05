@@ -9,6 +9,7 @@ import shop.mtcoding.restend.core.auth.session.MyUserDetails;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRole;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class MyWithMockUserFactory implements WithSecurityContextFactory<MyWithMockUser> {
@@ -20,9 +21,10 @@ public class MyWithMockUserFactory implements WithSecurityContextFactory<MyWithM
                 .username(mockUser.username())
                 .password("1234")
                 .email(mockUser.username()+"@nate.com")
-                .fullName(mockUser.fullName())
                 .role(UserRole.USER)
                 .status(true)
+                .hireDate(LocalDate.now().minusYears(1).minusWeeks(1))
+                .remainDays(mockUser.remainDays())
                 .createdAt(LocalDateTime.now())
                 .build();
         MyUserDetails myUserDetails = new MyUserDetails(user);
