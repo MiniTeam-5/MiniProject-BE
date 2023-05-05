@@ -119,6 +119,7 @@ public class UserControllerTest extends MyRestDoc {
         joinInDTO.setPassword("1234");
         joinInDTO.setCheckPassword("1234");
         joinInDTO.setEmail("ssar@nate.com");
+        joinInDTO.setHireDate("2023-05-05");//이게 없으면 Username, HireDate 에서 번갈아 가면서 오류가 발생합니다. JoinInDTO 객체를 참고하세요.
         String requestBody = om.writeValueAsString(joinInDTO);
 
         // when
