@@ -66,7 +66,7 @@ public class LeaveControllerTest extends MyRestDoc {
 
     @BeforeEach
     public void setUp() {
-        User ssar = userRepository.save(dummy.newUser("ssar", true,15));
+        User ssar = userRepository.save(dummy.newUser("ssar", true,13));
         User cos = userRepository.save(dummy.newUser("cos", true, 11));
         User abort = userRepository.save(dummy.newUser("abort", false,  14));
         leaveRepository.save(dummy.newLeave(ssar, LeaveType.ANNUAL, LocalDate.parse("2023-08-19"),
@@ -79,8 +79,8 @@ public class LeaveControllerTest extends MyRestDoc {
                 LocalDate.parse("2023-09-19"), 2, LeaveStatus.WAITING));
         leaveRepository.save(dummy.newLeave(abort, LeaveType.ANNUAL, LocalDate.parse("2023-09-29"),
                 LocalDate.parse("2023-09-29"), 1, LeaveStatus.WAITING));
-        leaveRepository.save(dummy.newLeave(ssar, LeaveType.DUTY, LocalDate.parse("2023-07-17"),
-                LocalDate.parse("2023-07-17"), 0, LeaveStatus.WAITING));
+        leaveRepository.save(dummy.newLeave(ssar, LeaveType.ANNUAL, LocalDate.parse("2023-07-17"),
+                LocalDate.parse("2023-07-18"), 2, LeaveStatus.WAITING));
         leaveRepository.save(dummy.newLeave(cos, LeaveType.ANNUAL, LocalDate.parse("2023-10-26"),
                 LocalDate.parse("2023-10-27"), 2, LeaveStatus.WAITING));
         em.clear();
@@ -107,7 +107,7 @@ public class LeaveControllerTest extends MyRestDoc {
         resultActions.andExpect(jsonPath("$.data.id").value(30L));
         resultActions.andExpect(jsonPath("$.data.type").value("ANNUAL"));
         resultActions.andExpect(jsonPath("$.data.usingDays").value(1));
-        resultActions.andExpect(jsonPath("$.data.remainDays").value(14));
+        resultActions.andExpect(jsonPath("$.data.remainDays").value(12));
         resultActions.andExpect(jsonPath("$.data.status").value("WAITING"));
         resultActions.andExpect(status().isOk());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
@@ -120,8 +120,8 @@ public class LeaveControllerTest extends MyRestDoc {
         // given
         LeaveRequest.ApplyInDTO applyInDTO = new LeaveRequest.ApplyInDTO();
         applyInDTO.setType(LeaveType.valueOf("ANNUAL"));
-        applyInDTO.setStartDate(LocalDate.parse("2023-07-19"));
-        applyInDTO.setEndDate(LocalDate.parse("2023-07-21"));
+        applyInDTO.setStartDate(LocalDate.parse("2023-09-04"));
+        applyInDTO.setEndDate(LocalDate.parse("2023-09-06"));
         String requestBody = om.writeValueAsString(applyInDTO);
 
         // when
@@ -131,10 +131,10 @@ public class LeaveControllerTest extends MyRestDoc {
         System.out.println("테스트 : " + responseBody);
 
         // then
-        resultActions.andExpect(jsonPath("$.data.id").value(124L));
+        resultActions.andExpect(jsonPath("$.data.id").value(131L));
         resultActions.andExpect(jsonPath("$.data.type").value("ANNUAL"));
         resultActions.andExpect(jsonPath("$.data.usingDays").value(3));
-        resultActions.andExpect(jsonPath("$.data.remainDays").value(12));
+        resultActions.andExpect(jsonPath("$.data.remainDays").value(10));
         resultActions.andExpect(jsonPath("$.data.status").value("WAITING"));
         resultActions.andExpect(status().isOk());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
@@ -161,7 +161,7 @@ public class LeaveControllerTest extends MyRestDoc {
         resultActions.andExpect(jsonPath("$.data.id").value(67L));
         resultActions.andExpect(jsonPath("$.data.type").value("ANNUAL"));
         resultActions.andExpect(jsonPath("$.data.usingDays").value(3));
-        resultActions.andExpect(jsonPath("$.data.remainDays").value(12));
+        resultActions.andExpect(jsonPath("$.data.remainDays").value(10));
         resultActions.andExpect(jsonPath("$.data.status").value("WAITING"));
         resultActions.andExpect(status().isOk());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
@@ -188,7 +188,7 @@ public class LeaveControllerTest extends MyRestDoc {
         resultActions.andExpect(jsonPath("$.data.id").value(22L));
         resultActions.andExpect(jsonPath("$.data.type").value("ANNUAL"));
         resultActions.andExpect(jsonPath("$.data.usingDays").value(2));
-        resultActions.andExpect(jsonPath("$.data.remainDays").value(13));
+        resultActions.andExpect(jsonPath("$.data.remainDays").value(11));
         resultActions.andExpect(jsonPath("$.data.status").value("WAITING"));
         resultActions.andExpect(status().isOk());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
@@ -215,7 +215,7 @@ public class LeaveControllerTest extends MyRestDoc {
         resultActions.andExpect(jsonPath("$.data.id").value(38L));
         resultActions.andExpect(jsonPath("$.data.type").value("DUTY"));
         resultActions.andExpect(jsonPath("$.data.usingDays").value(0));
-        resultActions.andExpect(jsonPath("$.data.remainDays").value(15));
+        resultActions.andExpect(jsonPath("$.data.remainDays").value(13));
         resultActions.andExpect(jsonPath("$.data.status").value("WAITING"));
         resultActions.andExpect(status().isOk());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
@@ -324,6 +324,58 @@ public class LeaveControllerTest extends MyRestDoc {
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
+    @DisplayName("당직 신청 실패 (중복 신청)")
+    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void apply_duty_fail_duplicate_test() throws Exception {
+        // given
+        LeaveRequest.ApplyInDTO applyInDTO = new LeaveRequest.ApplyInDTO();
+        applyInDTO.setType(LeaveType.valueOf("DUTY"));
+        applyInDTO.setStartDate(LocalDate.parse("2023-07-10"));
+        applyInDTO.setEndDate(LocalDate.parse("2023-07-10"));
+        String requestBody = om.writeValueAsString(applyInDTO);
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(post("/auth/leave/apply").content(requestBody).contentType(MediaType.APPLICATION_JSON));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // then
+        resultActions.andExpect(jsonPath("$.status").value(400));
+        resultActions.andExpect(jsonPath("$.msg").value("badRequest"));
+        resultActions.andExpect(jsonPath("$.data.key").value("startDate, endDate"));
+        resultActions.andExpect(jsonPath("$.data.value").value("중복된 당직 신청입니다."));
+        resultActions.andExpect(status().isBadRequest());
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @DisplayName("연차 신청 실패 (이미 신청된 날짜 포함)")
+    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void apply_annual_fail_duplicate_test() throws Exception {
+        // given
+        LeaveRequest.ApplyInDTO applyInDTO = new LeaveRequest.ApplyInDTO();
+        applyInDTO.setType(LeaveType.valueOf("ANNUAL"));
+        applyInDTO.setStartDate(LocalDate.parse("2023-07-14"));
+        applyInDTO.setEndDate(LocalDate.parse("2023-07-19"));
+        String requestBody = om.writeValueAsString(applyInDTO);
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(post("/auth/leave/apply").content(requestBody).contentType(MediaType.APPLICATION_JSON));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // then
+        resultActions.andExpect(jsonPath("$.status").value(400));
+        resultActions.andExpect(jsonPath("$.msg").value("badRequest"));
+        resultActions.andExpect(jsonPath("$.data.key").value("startDate, endDate"));
+        resultActions.andExpect(jsonPath("$.data.value").value("이미 신청한 연차일이 포함된 신청입니다."));
+        resultActions.andExpect(status().isBadRequest());
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
     @DisplayName("연차 신청 취소 성공")
     @WithUserDetails(value = "cos@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
@@ -357,7 +409,7 @@ public class LeaveControllerTest extends MyRestDoc {
         System.out.println("테스트 : " + responseBody);
 
         // then
-        resultActions.andExpect(jsonPath("$.data.remainDays").value(15));
+        resultActions.andExpect(jsonPath("$.data.remainDays").value(13));
         resultActions.andExpect(status().isOk());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }

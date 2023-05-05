@@ -23,7 +23,8 @@ public interface LeaveRepository extends JpaRepository<Leave, Long> {
     boolean existsDuplicateDuty(@Param("duty") LeaveType type, @Param("date") LocalDate startDate, @Param("id") Long userId);
 
     @Query("select case when count(l) > 0 then true else false end from Leave l where l.type = :annual and l.user.id = :id " +
-            "and ((l.startDate <= :start and l.endDate >= :start) or (l.startDate <= :end and l.endDate >= :end))")
-    boolean findMyAnnualAfter(@Param("annual")LeaveType type, @Param("start") LocalDate startDate,
+            "and ((l.startDate <= :start and l.endDate >= :start) or (l.startDate <= :end and l.endDate >= :end)" +
+            "or (l.startDate >= :start and l.endDate <= :end))")
+    boolean existsDuplicateAnnual(@Param("annual")LeaveType type, @Param("start") LocalDate startDate,
                                   @Param("end") LocalDate endDate, @Param("id") Long userId);
 }

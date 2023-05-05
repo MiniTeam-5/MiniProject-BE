@@ -57,12 +57,8 @@ public class LeaveService {
             Leave leavePS = leaveRepository.save(applyInDTO.toEntity(userPS, 0));
             return new LeaveResponse.ApplyOutDTO(leavePS, userPS);
         }
-
         // 3. 연차인 경우
-        // 1) 사용할 연차 일수 계산하기
-        // 버전1 : 평일만 계산 -> O
-        // 버전2 : 공휴일 계산 코드 사용
-        // 버전3 : 공공 API 이용 -> O
+        // 1) 사용할 연차 일수 계산하기: 평일만 계산 + 공휴일 계산 by 공공 API
         Integer usingDays = -1;
         try{
             usingDays = MyDateUtil.getWeekDayCount(applyInDTO.getStartDate(), applyInDTO.getEndDate());
@@ -78,7 +74,7 @@ public class LeaveService {
         }
 
         // 이미 신청한 날이 껴있는 경우
-        if(leaveRepository.findMyAnnualAfter(applyInDTO.getType(), applyInDTO.getStartDate(), applyInDTO.getEndDate(),userId)){
+        if(leaveRepository.existsDuplicateAnnual(applyInDTO.getType(), applyInDTO.getStartDate(), applyInDTO.getEndDate(),userId)){
             throw new Exception400("startDate, endDate", "이미 신청한 연차일이 포함된 신청입니다.");
         }
 
