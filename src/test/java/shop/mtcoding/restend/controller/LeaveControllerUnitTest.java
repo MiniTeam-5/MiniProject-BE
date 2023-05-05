@@ -9,6 +9,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -118,13 +119,13 @@ public class LeaveControllerUnitTest extends DummyEntity {
         resultActions.andExpect(status().isOk());
     }
 
-    @MyWithMockUser(id = 1L, username = "adm", role = "ADMIN", remainDays = 15)
+    @WithMockUser(username="admin@nate.com", roles={"ADMIN"})
     @Test
     public void decide_test() throws Exception {
         // given
         LeaveRequest.DecideInDTO decideInDTO = new LeaveRequest.DecideInDTO();
         decideInDTO.setId(1L);
-        decideInDTO.setStatus(LeaveStatus.REJECTION);
+        decideInDTO.setStatus(LeaveStatus.APPROVAL);
         String requestBody = om.writeValueAsString(decideInDTO);
 
         // stub
