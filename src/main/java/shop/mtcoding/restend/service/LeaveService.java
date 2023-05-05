@@ -43,8 +43,10 @@ public class LeaveService {
                 throw new Exception400("startDate, endDate", "startDate와 endDate가 같아야 합니다.");
             }
 
-            // 추가 구현 : 이미 신청한 날 인 경우
-            // findByStartDate in LeaveTABLE(where userId== id)
+            // 이미 신청한 날인 경우
+            if(leaveRepository.existsDuplicateDuty(applyInDTO.getType(), applyInDTO.getStartDate(), userId)){
+                throw new Exception400("startDate, endDate", "중복된 당직 신청입니다.");
+            }
 
             // 1) 알림 등록
             String content = userPS.getUsername()+"님의 "+applyInDTO.getStartDate()+"일 당직 신청이 완료되었습니다.";
@@ -68,9 +70,11 @@ public class LeaveService {
         if(usingDays > userPS.getRemainDays()){
             throw new Exception400("startDate, endDate", "남은 연차보다 더 많이 신청했습니다.");
         }
-        // 추가 구현 : 이미 신청한 날인 경우
-        // select leave where userid = id
-        // 포문 돌면서 starDate와 endDated와 newStartDate와 newEndDate가 겹치는지 확인
+
+        // 이미 신청한 날이 껴있는 경우
+        if(leaveRepository.findMyAnnualAfter(applyInDTO.getType(), applyInDTO.getStartDate(), applyInDTO.getEndDate(),userId)){
+            throw new Exception400("startDate, endDate", "이미 신청한 연차일이 포함된 신청입니다.");
+        }
 
         // 3) 사용자의 남은 연차 일수 업데이트
         userPS.useAnnualLeave(usingDays);
