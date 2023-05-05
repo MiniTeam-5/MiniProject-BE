@@ -111,35 +111,24 @@ public class UserService {
     }
 
 
-    public User 회원조회(Long id) {
-        User findUser = userRepository.findById(id).orElseThrow(
-                () -> new Exception400("id", "해당 유저가 존재하지 않습니다")
-        );
-        return findUser;
-    }
-
     @Transactional
-    public void 이메일변경(User userPS, String email) {
-        userPS.changeEmail(email);
-    }
-
-
-
-    @Transactional
-    public UserResponse.ModifiedOutDTO 개인정보수정(UserRequest.ModifyInDTO modifyInDTO, Long id) {
+    public UserResponse.ModifiedOutDTO 개인정보수정(UserRequest.ModifiedInDTO modifiedInDTO, Long id) {
 
         User user = userRepository.findById(id).orElseThrow(()->new Exception400("id","해당 유저가 존재하지 않습니다"));
         UserResponse.ModifiedOutDTO modifiedOutDTO = new UserResponse.ModifiedOutDTO(user);
 
-        if (user.getEmail() != modifyInDTO.getEmail()) {
-            user.changeEmail(modifyInDTO.getEmail());
+        if (modifiedInDTO.getDeletedProfile() != null && modifiedInDTO.getDeletedProfile().equals(true)) {
+            user.changeProfile(uploadFolder+"person.png");
         }
-        if (user.getUsername() != modifyInDTO.getUsername()) {
-            user.changeUsername(modifyInDTO.getUsername());
+        if (user.getEmail() != modifiedInDTO.getEmail()) {
+            user.changeEmail(modifiedInDTO.getEmail());
         }
-        if (!modifyInDTO.getNewPassword().isEmpty()) {
-            if (modifyInDTO.getNewPassword().equals(modifyInDTO.getCheckPassword())) {
-                String encodePassword = passwordEncoder.encode(modifyInDTO.getNewPassword());
+        if (user.getUsername() != modifiedInDTO.getUsername()) {
+            user.changeUsername(modifiedInDTO.getUsername());
+        }
+        if (modifiedInDTO.getNewPassword() != null && !modifiedInDTO.getNewPassword().isEmpty()) {
+            if (modifiedInDTO.getNewPassword().equals(modifiedInDTO.getCheckPassword())) {
+                String encodePassword = passwordEncoder.encode(modifiedInDTO.getNewPassword());
                 user.changePassword(encodePassword);
                 modifiedOutDTO.setPasswordReset(true);
             } else {
@@ -151,10 +140,11 @@ public class UserService {
     }
 
     @Transactional
-    public void 프로필사진변경(UserRequest.ModifyInDTO modifyInDTO, MultipartFile profile) {
+    public void 프로필사진변경(UserRequest.ModifiedInDTO modifiedInDTO, MultipartFile profile, Long id) {
+        User user = userRepository.findById(id).orElseThrow(()->new Exception400("id","해당 유저가 존재하지 않습니다"));
         String uuidImageName = MyFileUtil.write(uploadFolder, profile);
         try {
-            modifyInDTO.setProfile(uploadFolder+uuidImageName);
+            modifiedInDTO.setProfile(uploadFolder+uuidImageName);
         } catch (Exception e) {
             throw new Exception500("프로필사진 변경 실패 : " + e.getMessage());
         }
