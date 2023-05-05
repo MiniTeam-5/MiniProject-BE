@@ -17,6 +17,7 @@ import shop.mtcoding.restend.model.leave.enums.LeaveType;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRepository;
 
+import java.net.URISyntaxException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
@@ -59,10 +60,15 @@ public class LeaveService {
 
         // 3. 연차인 경우
         // 1) 사용할 연차 일수 계산하기
-        // 버전1 : 평일만 계산
-        Integer usingDays = MyDateUtil.getWeekDayCount(applyInDTO.getStartDate(), applyInDTO.getEndDate());
+        // 버전1 : 평일만 계산 -> O
         // 버전2 : 공휴일 계산 코드 사용
-        // 버전3 : 공공 API 이용
+        // 버전3 : 공공 API 이용 -> O
+        Integer usingDays = -1;
+        try{
+            usingDays = MyDateUtil.getWeekDayCount(applyInDTO.getStartDate(), applyInDTO.getEndDate());
+        }catch (URISyntaxException e){
+            throw new Exception500(e.getMessage());
+        }
 
         if(usingDays == 0){
             throw new Exception400("startDate, endDate", "연차를 0일 신청했습니다.");
