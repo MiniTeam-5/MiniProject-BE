@@ -104,7 +104,7 @@ public class LeaveControllerTest extends MyRestDoc {
         System.out.println("테스트 : " + responseBody);
 
         // then
-        resultActions.andExpect(jsonPath("$.data.id").value(22L));
+        resultActions.andExpect(jsonPath("$.data.id").value(30L));
         resultActions.andExpect(jsonPath("$.data.type").value("ANNUAL"));
         resultActions.andExpect(jsonPath("$.data.usingDays").value(1));
         resultActions.andExpect(jsonPath("$.data.remainDays").value(14));
@@ -131,7 +131,7 @@ public class LeaveControllerTest extends MyRestDoc {
         System.out.println("테스트 : " + responseBody);
 
         // then
-        resultActions.andExpect(jsonPath("$.data.id").value(116L));
+        resultActions.andExpect(jsonPath("$.data.id").value(124L));
         resultActions.andExpect(jsonPath("$.data.type").value("ANNUAL"));
         resultActions.andExpect(jsonPath("$.data.usingDays").value(3));
         resultActions.andExpect(jsonPath("$.data.remainDays").value(12));
@@ -158,10 +158,37 @@ public class LeaveControllerTest extends MyRestDoc {
         System.out.println("테스트 : " + responseBody);
 
         // then
-        resultActions.andExpect(jsonPath("$.data.id").value(59L));
+        resultActions.andExpect(jsonPath("$.data.id").value(67L));
         resultActions.andExpect(jsonPath("$.data.type").value("ANNUAL"));
         resultActions.andExpect(jsonPath("$.data.usingDays").value(3));
         resultActions.andExpect(jsonPath("$.data.remainDays").value(12));
+        resultActions.andExpect(jsonPath("$.data.status").value("WAITING"));
+        resultActions.andExpect(status().isOk());
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @DisplayName("연차 신청 성공 (공휴일 포함)")
+    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void apply_annual_including_holidays_test() throws Exception {
+        // given
+        LeaveRequest.ApplyInDTO applyInDTO = new LeaveRequest.ApplyInDTO();
+        applyInDTO.setType(LeaveType.valueOf("ANNUAL"));
+        applyInDTO.setStartDate(LocalDate.parse("2023-05-26"));
+        applyInDTO.setEndDate(LocalDate.parse("2023-05-30"));
+        String requestBody = om.writeValueAsString(applyInDTO);
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(post("/auth/leave/apply").content(requestBody).contentType(MediaType.APPLICATION_JSON));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // then
+        resultActions.andExpect(jsonPath("$.data.id").value(22L));
+        resultActions.andExpect(jsonPath("$.data.type").value("ANNUAL"));
+        resultActions.andExpect(jsonPath("$.data.usingDays").value(2));
+        resultActions.andExpect(jsonPath("$.data.remainDays").value(13));
         resultActions.andExpect(jsonPath("$.data.status").value("WAITING"));
         resultActions.andExpect(status().isOk());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
@@ -185,7 +212,7 @@ public class LeaveControllerTest extends MyRestDoc {
         System.out.println("테스트 : " + responseBody);
 
         // then
-        resultActions.andExpect(jsonPath("$.data.id").value(30L));
+        resultActions.andExpect(jsonPath("$.data.id").value(38L));
         resultActions.andExpect(jsonPath("$.data.type").value("DUTY"));
         resultActions.andExpect(jsonPath("$.data.usingDays").value(0));
         resultActions.andExpect(jsonPath("$.data.remainDays").value(15));
