@@ -47,7 +47,7 @@ public class LeaveService {
             // findByStartDate in LeaveTABLE(where userId== id)
 
             // 1) 알림 등록
-            String content = userPS.getUsername() + "님의 " + applyInDTO.getStartDate() + "일 당직 신청이 완료되었습니다.";
+            String content = userPS.getUsername()+"님의 "+applyInDTO.getStartDate()+"일 당직 신청이 완료되었습니다.";
             alarmRepository.save(Alarm.builder().user(userPS).content(content).build());
 
             // 2) 당직 등록
@@ -76,8 +76,8 @@ public class LeaveService {
         userPS.useAnnualLeave(usingDays);
 
         // 4) 알림 등록
-        String content = userPS.getUsername() + "님의 " + applyInDTO.getStartDate().toString() + "부터 "
-                + applyInDTO.getEndDate() + "까지, 총 " + usingDays + "일의 연차 신청이 완료되었습니다.";
+        String content = userPS.getUsername()+"님의 "+applyInDTO.getStartDate().toString()+"부터 "
+                +applyInDTO.getEndDate()+"까지, 총 "+usingDays+"일의 연차 신청이 완료되었습니다.";
         alarmRepository.save(Alarm.builder().user(userPS).content(content).build());
 
         // 5) 연차 등록
@@ -104,15 +104,54 @@ public class LeaveService {
         String content = "";
         if(leavePS.getType().equals(LeaveType.ANNUAL)){
             userPS.increaseRemainDays(leavePS.getUsingDays());
-            content = userPS.getUsername() + "님의 " + leavePS.getStartDate().toString() + "부터 "
-                    + leavePS.getEndDate() + "까지, 총 " + leavePS.getUsingDays() + "일의 연차 신청이 취소되었습니다.";
+            content = userPS.getUsername()+"님의 "+leavePS.getStartDate().toString()+"부터 "
+                    +leavePS.getEndDate()+"까지, 총 "+leavePS.getUsingDays()+"일의 연차 신청이 취소되었습니다.";
         } else {
-            content = userPS.getUsername() + "님의 " + leavePS.getStartDate() + "일 당직 신청이 취소되었습니다.";
+            content = userPS.getUsername()+"님의 "+leavePS.getStartDate()+"일 당직 신청이 취소되었습니다.";
         }
 
         leaveRepository.delete(leavePS);
         alarmRepository.save(Alarm.builder().user(userPS).content(content).build());
         return new LeaveResponse.CancelOutDTO(userPS);
+    }
+
+    @Transactional
+    public LeaveResponse.DecideOutDTO 연차당직결정하기(LeaveRequest.DecideInDTO decideInDTO) {
+        Leave leavePS = leaveRepository.findById(decideInDTO.getId()).orElseThrow(
+                () -> new Exception500("해당 연차/당직 신청 정보가 DB에 존재하지 않음")
+        );
+        User userPS = leavePS.getUser();
+        if (!userPS.getStatus()) {
+            throw new Exception500("탈퇴한 회원의 신청입니다.");
+        }
+        if (leavePS.getStatus().equals(LeaveStatus.APPROVAL)) {
+            throw new Exception400("id", "이미 승인된 신청입니다.");
+        }
+        if (leavePS.getStatus().equals(LeaveStatus.REJECTION)) {
+            throw new Exception400("id", "이미 거절된 신청입니다.");
+        }
+
+        boolean isReject = false;
+        if (decideInDTO.getStatus().equals(LeaveStatus.APPROVAL)) {
+            leavePS.setStatus(LeaveStatus.APPROVAL);
+        } else {
+            leavePS.setStatus(LeaveStatus.REJECTION);
+            isReject = true;
+        }
+
+        String content = "";
+        String status = isReject ? "거절" : "승인";
+        if (leavePS.getType().equals(LeaveType.ANNUAL)) {
+            if (isReject) userPS.increaseRemainDays(leavePS.getUsingDays());
+            content = userPS.getUsername() + "님의 " + leavePS.getStartDate().toString() + "부터 "
+                    + leavePS.getEndDate() + "까지, 총 " + leavePS.getUsingDays() + "일의 연차 신청이 " +
+                    status + "되었습니다.";
+        } else {
+            content = userPS.getUsername() + "님의 " + leavePS.getStartDate() + "일 당직 신청이 " + status + "되었습니다.";
+        }
+
+        alarmRepository.save(Alarm.builder().user(userPS).content(content).build());
+        return new LeaveResponse.DecideOutDTO(userPS);
     }
 
     //처리해야할 경우의 수

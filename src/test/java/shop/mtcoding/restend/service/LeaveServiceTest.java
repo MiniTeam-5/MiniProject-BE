@@ -15,6 +15,7 @@ import shop.mtcoding.restend.model.alarm.Alarm;
 import shop.mtcoding.restend.model.alarm.AlarmRepository;
 import shop.mtcoding.restend.model.leave.Leave;
 import shop.mtcoding.restend.model.leave.LeaveRepository;
+import shop.mtcoding.restend.model.leave.enums.LeaveStatus;
 import shop.mtcoding.restend.model.leave.enums.LeaveType;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRepository;
@@ -101,6 +102,30 @@ public class LeaveServiceTest extends DummyEntity {
     }
 
     @Test
+    public void 연차당직결정하기_test() throws Exception {
+
+        // given
+        LeaveRequest.DecideInDTO decideInDTO = new LeaveRequest.DecideInDTO();
+        decideInDTO.setId(1L);
+        decideInDTO.setStatus(LeaveStatus.REJECTION);
+
+        // stub 1
+        User cos = newMockUser(1L, "cos", 14);
+        Leave leave = newMockLeave(1L, cos, LeaveType.ANNUAL, LocalDate.parse("2023-07-20"), LocalDate.parse("2023-07-20"), 0);
+        Mockito.when(leaveRepository.findById(any())).thenReturn(Optional.ofNullable(leave));
+
+        // stub 2
+        Alarm alarm = newMockAlarm(1L, cos, cos.getUsername() + "님의 " + leave.getStartDate() + "부터 "
+                + leave.getEndDate() + "까지, 총 " + leave.getUsingDays() + "일의 연차 신청이 승인되었습니다.");
+        Mockito.when(alarmRepository.save(any())).thenReturn(alarm);
+
+        // when
+        LeaveResponse.DecideOutDTO decideOutDTO = leaveService.연차당직결정하기(decideInDTO);
+
+        // then
+        Assertions.assertThat(decideOutDTO.getRemainDays()).isEqualTo(14);
+    }
+
     public void 모든유저특정월기준정보_Test() {
 
         User user1 = User.builder().id(1L).username("dotori").build();

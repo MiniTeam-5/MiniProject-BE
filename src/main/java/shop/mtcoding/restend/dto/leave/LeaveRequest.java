@@ -38,4 +38,10 @@ public class LeaveRequest {
 
         }
     }
+
+    @Getter @Setter
+    public static class DecideInDTO {
+        private long id;
+        private LeaveStatus status;
+    }
 }
