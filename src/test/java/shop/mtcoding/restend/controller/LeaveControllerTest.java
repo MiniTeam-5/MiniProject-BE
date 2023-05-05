@@ -70,7 +70,7 @@ public class LeaveControllerTest extends MyRestDoc {
         User cos = userRepository.save(dummy.newUser("cos", true, 11));
         User abort = userRepository.save(dummy.newUser("abort", false,  14));
         leaveRepository.save(dummy.newLeave(ssar, LeaveType.ANNUAL, LocalDate.parse("2023-08-19"),
-                LocalDate.parse("2023-08-19"), 1, LeaveStatus.REJECT));
+                LocalDate.parse("2023-08-19"), 1, LeaveStatus.REJECTION));
         leaveRepository.save(dummy.newLeave(cos, LeaveType.ANNUAL, LocalDate.parse("2023-08-10"),
                 LocalDate.parse("2023-08-11"), 2, LeaveStatus.APPROVAL));
         leaveRepository.save(dummy.newLeave(ssar, LeaveType.DUTY, LocalDate.parse("2023-07-10"),
@@ -407,7 +407,7 @@ public class LeaveControllerTest extends MyRestDoc {
         // given
         LeaveRequest.DecideInDTO decideInDTO = new LeaveRequest.DecideInDTO();
         decideInDTO.setId(6L);
-        decideInDTO.setStatus(LeaveStatus.REJECT);
+        decideInDTO.setStatus(LeaveStatus.REJECTION);
         String requestBody = om.writeValueAsString(decideInDTO);
 
         // when
@@ -504,7 +504,7 @@ public class LeaveControllerTest extends MyRestDoc {
         // given
         LeaveRequest.DecideInDTO decideInDTO = new LeaveRequest.DecideInDTO();
         decideInDTO.setId(1L);
-        decideInDTO.setStatus(LeaveStatus.REJECT);
+        decideInDTO.setStatus(LeaveStatus.REJECTION);
         String requestBody = om.writeValueAsString(decideInDTO);
 
         // when
@@ -529,7 +529,7 @@ public class LeaveControllerTest extends MyRestDoc {
         // given
         LeaveRequest.DecideInDTO decideInDTO = new LeaveRequest.DecideInDTO();
         decideInDTO.setId(3L);
-        decideInDTO.setStatus(LeaveStatus.REJECT);
+        decideInDTO.setStatus(LeaveStatus.REJECTION);
         String requestBody = om.writeValueAsString(decideInDTO);
 
         // when
