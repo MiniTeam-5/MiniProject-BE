@@ -13,7 +13,6 @@ import shop.mtcoding.restend.core.exception.Exception403;
 import shop.mtcoding.restend.dto.ResponseDTO;
 import shop.mtcoding.restend.dto.manage.Manage;
 import shop.mtcoding.restend.service.UserService;
-
 import javax.servlet.http.HttpSession;
 
 @RequiredArgsConstructor
@@ -24,7 +23,7 @@ public class AdminController {
     private final HttpSession session;
 
     // 회원 정보 변경 로직
-    @PostMapping("/auth/admin/annual/{id}")
+    @PostMapping("/admin/annual/{id}")
     public ResponseEntity<?> annualUpdate(@PathVariable Long id, @RequestBody Manage.AnnualRequestDTO annualRequestDTO, @AuthenticationPrincipal MyUserDetails myUserDetails) {
         // 1. 권한 확인
         if ("USER".equals(myUserDetails.getUser().getRole())) {
@@ -40,7 +39,7 @@ public class AdminController {
 
     }
 
-    @GetMapping("/auth/admin")
+    @GetMapping("/admin")
     public ResponseEntity<?> userChart(@RequestParam(defaultValue = "10") int page,@AuthenticationPrincipal MyUserDetails myUserDetails) {
         // 1. 권한 확인
         if ("MASTER".equals(myUserDetails.getUser().getRole()) || "ADMIN".equals(myUserDetails.getUser().getRole())) {
@@ -53,7 +52,7 @@ public class AdminController {
     }
 
     // role까지 변경가능, master로 접근해야, role변경이 가능하다.
-    @PostMapping("/auth/admin/role/{id}")
+    @PostMapping("/admin/role/{id}")
     public ResponseEntity<?> userUpdate(@PathVariable Long id,@RequestBody Manage.MasterDTO masterDTO, @AuthenticationPrincipal MyUserDetails myUserDetails){
         if(!"MASTER".equals(myUserDetails.getUser().getRole())){
             throw new Exception403("권한이 없습니다.");
