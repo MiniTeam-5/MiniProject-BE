@@ -18,6 +18,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -45,12 +49,15 @@ import shop.mtcoding.restend.service.UserService;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -76,25 +83,28 @@ public class AdminControllerUnitTest extends DummyEntity{
 
     @Test
     @WithMockUser(roles = "ADMIN")
-    public void testAnnualUpdate() throws Exception{
+    public void annualUpdate_test() throws Exception{
         // given
         Long id = 1L;
-        User userPS = User.builder().id(id).remain_days(5).build();
+        Manage.AnnualRequestDTO annualRequestDTO = new Manage.AnnualRequestDTO(5);
 
-        Manage manage = new Manage().toEntityOut(userPS);
+        String requestBody = om.writeValueAsString(annualRequestDTO);
 
+        //stub
+        Manage manage = new Manage();
+        User userPS = newMockUser(1L,"cos","코스","ADMIN",2);
         when(userService.연차수정(Mockito.any(Long.class), any(Manage.AnnualRequestDTO.class)))
-                .thenReturn(manage);
+                .thenReturn(manage.toEntityOut(userPS));
 
         // 설정
-        SecurityContextHolder.getContext().setAuthentication((Authentication) myUserDetails);
-
+        //SecurityContextHolder.getContext().setAuthentication((Authentication) myUserDetails);
 
         // when
         ResultActions resultActions = mvc.perform(MockMvcRequestBuilders.post("/admin/annual/{id}", id)
-                .contentType(MediaType.APPLICATION_JSON)
-               // .content(om.writeValueAsString(manage))
-               // .with(SecurityMockMvcRequestPostProcessors.user(myUserDetails))
+                        .content(requestBody)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(om.writeValueAsString(manage))
+                        .with(SecurityMockMvcRequestPostProcessors.user(myUserDetails))
         );
 
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
@@ -105,6 +115,38 @@ public class AdminControllerUnitTest extends DummyEntity{
                 .andExpect(jsonPath("$.msg").value("success"))
                 .andExpect(jsonPath("$.data").exists())
                 .andReturn();
+    }
+
+    @MyWithMockUser(id = 1L, username = "cos", role = "ADMIN", fullName = "코스")
+    public void userChart_test() throws Exception{
+        // given
+        int size = 5;
+        PageRequest pageRequest = PageRequest.of(0, size, Sort.by(Sort.Direction.DESC, "id"));
+
+
+        // stub
+        User userPS1 = newMockUser(1L,"gamja","감자","USER",2);
+        User userPS2 = newMockUser(2L,"suckja","숙자","USER",2);
+        User userPS3 = newMockUser(3L,"goguma","고구마","USER",2);
+        User userPS4 = newMockUser(4L,"hama","하마","USER",2);
+        User userPS5 = newMockUser(5L,"saja","사자","USER",2);
+        User userPS6 = newMockUser(6L,"gogi","고기","USER",2);
+        User userPS7 = newMockUser(7L,"dodosa","도도새","USER",2);
+        User userPS8 = newMockUser(8L,"chicken","치킨","USER",2);
+        List<User> userList = Arrays.asList(userPS1, userPS2, userPS3, userPS4, userPS5, userPS6, userPS7, userPS8);
+
+        Manage.UserManageDTO userManageDTO = new Manage.UserManageDTO();
+        Page<Manage.UserManageDTO> usersPG = new PageImpl<>(userList.stream().map(user -> userManageDTO.toEntityOut(user) ).collect(Collectors.toList()), pageRequest, userList.size());
+
+        Mockito.when(userService.회원목록보기(any())).thenReturn(usersPG);
+
+        //when
+        ResultActions resultActions = mvc
+                .perform(get("/admin?page=2&size=5"));
+
+
+        // then
+
     }
 
 }

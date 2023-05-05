@@ -1,6 +1,7 @@
 package shop.mtcoding.restend.service;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -8,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,7 +25,9 @@ import shop.mtcoding.restend.dto.user.UserResponse;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRepository;
 
+import javax.persistence.EntityManager;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -52,15 +56,6 @@ public class UserServiceTest extends DummyEntity {
     // 진짜 객체를 만들어서 Mockito 환경에 Load
     @Spy
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    //@Autowired
-    //private EntityManager em;
-//    @BeforeEach
-//    public void setUp() {
-//        userRepository.save(newUser("gamja", "감자"));
-//        userRepository.save(newUser("goguma", "고구마"));
-//        userRepository.flush();
-//    }
 
 
     @Test
@@ -180,10 +175,18 @@ public class UserServiceTest extends DummyEntity {
         Manage.UserManageDTO userManageDTO = new Manage.UserManageDTO();
         int page = 10;
         PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("id").descending());
-        User userPS = newMockUser(1L,"gamja","감자","USER",2);
-        List<User>userList = new ArrayList<>();
-        userList.add(userPS);
+
         // stub
+        User userPS1 = newMockUser(1L,"gamja","감자","USER",2);
+        User userPS2 = newMockUser(2L,"suckja","숙자","USER",2);
+        User userPS3 = newMockUser(3L,"goguma","고구마","USER",2);
+        User userPS4 = newMockUser(4L,"hama","하마","USER",2);
+        User userPS5 = newMockUser(5L,"saja","사자","USER",2);
+
+
+        List<User>userList = new ArrayList<>();
+        userList.addAll(Arrays.asList(userPS1,userPS2,userPS3,userPS4,userPS5));
+
         Mockito.when(userRepository.findAll()).thenReturn(userList);
         // when
         List<User>userListPS = userRepository.findAll();
@@ -194,6 +197,10 @@ public class UserServiceTest extends DummyEntity {
         Assertions.assertThat(pagePS.getContent().get(0).getUsername()).isEqualTo("gamja");
         Assertions.assertThat(pagePS.getContent().get(0).getRole()).isEqualTo("USER");
         Assertions.assertThat(pagePS.getContent().get(0).getRemain_days()).isEqualTo(2);
+
+        Assertions.assertThat(pagePS).isInstanceOf(Page.class);
+        Assertions.assertThat(pagePS.getContent()).hasSize(5);
+
 
     }
 

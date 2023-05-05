@@ -39,8 +39,8 @@ public class AdminController {
 
     }
 
-    @GetMapping("/admin")
-    public ResponseEntity<?> userChart(@RequestParam(defaultValue = "10") int page,@AuthenticationPrincipal MyUserDetails myUserDetails) {
+    @GetMapping("/admin") //  /admin?page=5&size=20
+    public ResponseEntity<?> userChart(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size,@AuthenticationPrincipal MyUserDetails myUserDetails) {
         // 1. 권한 확인
         if ("MASTER".equals(myUserDetails.getUser().getRole()) || "ADMIN".equals(myUserDetails.getUser().getRole())) {
         PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("id").descending());
