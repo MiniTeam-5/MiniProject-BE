@@ -66,4 +66,13 @@ public class LeaveResponse {
             this.endDate = leave.getEndDate().toString();
         }
     }
+
+    @Setter @Getter
+    public static class DecideOutDTO {
+        private Integer remainDays; // 본인의 남은 연차수
+
+        public DecideOutDTO(User user) {
+            this.remainDays = user.getRemainDays();
+        }
+    }
 }

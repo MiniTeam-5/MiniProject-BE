@@ -9,26 +9,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.mock.web.MockPart;
 import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import shop.mtcoding.restend.core.MyRestDoc;
 import shop.mtcoding.restend.core.auth.jwt.MyJwtProvider;
 import shop.mtcoding.restend.core.dummy.DummyEntity;
 import shop.mtcoding.restend.dto.user.UserRequest;
 import shop.mtcoding.restend.model.user.UserRepository;
+import shop.mtcoding.restend.model.user.UserRole;
 
 import javax.persistence.EntityManager;
 
+import java.io.FileInputStream;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -53,8 +61,8 @@ public class UserControllerTest extends MyRestDoc {
 
     @BeforeEach
     public void setUp() {
-        userRepository.save(dummy.newUser("ssar", 15));
-        userRepository.save(dummy.newUser("cos", 15));
+        userRepository.save(dummy.newUser("ssar", true, 15));
+        userRepository.save(dummy.newUser("cos", true, 15));
         em.clear();
     }
 
@@ -248,6 +256,64 @@ public class UserControllerTest extends MyRestDoc {
         resultActions.andExpect(jsonPath("$.data").value("권한이 없습니다"));
         resultActions.andExpect(status().isForbidden());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @DisplayName("프로필, 사원명, 이메일, 비밀번호 변경")
+    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void modify_all_test() throws Exception {
+
+        //Given
+        UserRequest.ModifiedInDTO modifiedInDTO = new UserRequest.ModifiedInDTO();
+        modifiedInDTO.setEmail("asdf@nate.com");
+        modifiedInDTO.setUsername("asdf");
+        modifiedInDTO.setNewPassword("1234");
+        modifiedInDTO.setCheckPassword("1234");
+
+        //when
+        MockMultipartFile profile = new MockMultipartFile(
+                "profile", "person.png", "image/png", new FileInputStream("./upload/person.png"));
+
+        // modifiedInDTO 객체를 JSON 문자열로 변환
+        String modifiedInJson = om.writeValueAsString(modifiedInDTO);
+        MockMultipartFile json = new MockMultipartFile("modifiedInDTO", "modifiedInDTO", "application/json", modifiedInJson.getBytes(StandardCharsets.UTF_8));
+
+        //then
+        mvc.perform(
+                        multipart("/auth/user/1")
+                                .file(profile)
+                                .file(json))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.email").value("asdf@nate.com"))
+                .andExpect(jsonPath("$.data.username").value("asdf"))
+                .andExpect(jsonPath("$.data.passwordReset").value(true))
+                .andExpect(jsonPath("$.data.profileReset").value(true));
+    }
+
+    @DisplayName("사원명, 이메일, 비밀번호 변경")
+    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void modify_name_email_password_test() throws Exception {
+
+        //Given
+        UserRequest.ModifiedInDTO modifiedInDTO = new UserRequest.ModifiedInDTO();
+        modifiedInDTO.setEmail("asdf@nate.com");
+        modifiedInDTO.setUsername("asdf");
+        modifiedInDTO.setNewPassword("1234");
+        modifiedInDTO.setCheckPassword("1234");
+
+//        String modifiedInJson = om.writeValueAsString(modifiedInDTO);
+//        MockMultipartFile json = new MockMultipartFile("modifiedInDTO", "modifiedInDTO", "application/json", modifiedInJson.getBytes(StandardCharsets.UTF_8));
+//        MockMultipartFile jsonPart = new MockMultipartFile("modifiedInDTO", null, "application/json", om.writeValueAsBytes(modifiedInDTO));
+//
+//        //When
+//        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.multipart("/auth/user/1")
+//                .file(jsonPart)
+//                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE);
+//
+//        //Then
+//        mvc.perform(request)
+//                .andExpect(status().isOk());
     }
 }
 

@@ -9,6 +9,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -22,6 +23,7 @@ import shop.mtcoding.restend.core.dummy.DummyEntity;
 import shop.mtcoding.restend.dto.leave.LeaveRequest;
 import shop.mtcoding.restend.dto.leave.LeaveResponse;
 import shop.mtcoding.restend.model.leave.Leave;
+import shop.mtcoding.restend.model.leave.enums.LeaveStatus;
 import shop.mtcoding.restend.model.leave.enums.LeaveType;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.service.LeaveService;
@@ -77,10 +79,6 @@ public class LeaveControllerUnitTest extends DummyEntity {
         User user = newMockUser(1L,"cos", 14);
         Leave leave = newMockLeave(1L, user, LeaveType.valueOf("ANNUAL"), LocalDate.parse("2023-07-20"),
                 LocalDate.parse("2023-07-20"), 1);
-        System.out.println("1");
-        System.out.println(leave.getUsingDays());
-        System.out.println(user.getRemainDays());
-        System.out.println("2");
         LeaveResponse.ApplyOutDTO applyOutDTO = new LeaveResponse.ApplyOutDTO(leave, user);
         Mockito.when(leaveService.연차당직신청하기(any(), any())).thenReturn(applyOutDTO);
 
@@ -119,6 +117,30 @@ public class LeaveControllerUnitTest extends DummyEntity {
         // 검증해볼께
         resultActions.andExpect(jsonPath("$.data.remainDays").value(9));
         resultActions.andExpect(status().isOk());
+    }
+
+    @WithMockUser(username="admin@nate.com", roles={"ADMIN"})
+    @Test
+    public void decide_test() throws Exception {
+        // given
+        LeaveRequest.DecideInDTO decideInDTO = new LeaveRequest.DecideInDTO();
+        decideInDTO.setId(1L);
+        decideInDTO.setStatus(LeaveStatus.APPROVAL);
+        String requestBody = om.writeValueAsString(decideInDTO);
+
+        // stub
+        User user = newMockUser(1L, "cos", 14);
+        LeaveResponse.DecideOutDTO decideOutDTO = new LeaveResponse.DecideOutDTO(user);
+        Mockito.when(leaveService.연차당직결정하기(any())).thenReturn(decideOutDTO);
+
+        // shen
+        ResultActions resultActions = mvc
+                .perform(post("/admin/approve").content(requestBody).contentType(MediaType.APPLICATION_JSON));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // 검증해볼께
+        resultActions.andExpect(jsonPath("$.data.remainDays").value(14));
     }
 
     @MyWithMockUser(id = 1L, username = "cos", role = "USER", remainDays = 15)

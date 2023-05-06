@@ -5,6 +5,7 @@ import lombok.Setter;
 import shop.mtcoding.restend.model.user.User;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -66,8 +67,7 @@ public class UserRequest {
 
     @Setter
     @Getter
-    public static class ModifyInDTO {
-        private String profile;
+    public static class ModifiedInDTO {
 
         @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$", message = "이메일 형식으로 작성해주세요")
         @NotEmpty
@@ -77,14 +77,7 @@ public class UserRequest {
 
         private String newPassword;
         private String checkPassword;
+        private Boolean deletedProfile;
 
-        public User toEntity() {
-            return User.builder()
-                    .profile(profile)
-                    .password(newPassword)
-                    .email(email)
-                    .username(username)
-                    .build();
-        }
     }
 }
