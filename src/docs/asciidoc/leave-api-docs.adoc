@@ -1,0 +1,168 @@
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
+:leave: leave-controller-test
+
+= REST API
+:toc: left
+:toclevels: 2
+:source-highlighter: highlightjs
+
+
+== 연차/당직 신청 API
+=== 연차 신청 성공 (하루)
+===== Request Example
+include::{snippets}/{leave}/apply_annual_one_day_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leave}/apply_annual_one_day_test/http-response.adoc[]
+
+=== 연차 신청 성공 (여러 일)
+===== Request Example
+include::{snippets}/{leave}/apply_annual_many_days_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leave}/apply_annual_many_days_test/http-response.adoc[]
+
+=== 연차 신청 성공 (주말 포함)
+===== Request Example
+include::{snippets}/{leave}/apply_annual_including_weekend_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leave}/apply_annual_including_weekend_test/http-response.adoc[]
+
+=== 연차 신청 성공 (공휴일 포함)
+===== Request Example
+include::{snippets}/{leave}/apply_annual_including_holidays_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leave}/apply_annual_including_holidays_test/http-response.adoc[]
+
+=== 당직 신청 성공
+===== Request Example
+include::{snippets}/{leave}/apply_duty_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leave}/apply_duty_test/http-response.adoc[]
+
+=== 당직 신청 실패 (하루만 신청해야 함)
+===== Request Example
+include::{snippets}/{leave}/apply_duty_fail_not_one_day_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leave}/apply_duty_fail_not_one_day_test/http-response.adoc[]
+
+=== 연차/당직 신청 유효성 검사 실패
+===== Request Example
+include::{snippets}/{leave}/apply_fail_valid_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leave}/apply_fail_valid_test/http-response.adoc[]
+
+=== 연차 신청 실패 (0일 신청)
+===== Request Example
+include::{snippets}/{leave}/apply_annual_fail_zero_day_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leave}/apply_annual_fail_zero_day_test/http-response.adoc[]
+
+=== 연차 신청 실패 (남은 연차 일수보다 많이 신청)
+===== Request Example
+include::{snippets}/{leave}/apply_annual_fail_over_day_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leave}/apply_annual_fail_over_day_test/http-response.adoc[]
+
+=== 당직 신청 실패 (중복 신청)
+===== Request Example
+include::{snippets}/{leave}/apply_duty_fail_duplicate_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leave}/apply_duty_fail_duplicate_test/http-response.adoc[]
+
+=== 연차 신청 실패 (이미 신청된 날짜 포함)
+===== Request Example
+include::{snippets}/{leave}/apply_annual_fail_duplicate_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leave}/apply_annual_fail_duplicate_test/http-response.adoc[]
+
+== 연차/당직 신청 취소 API
+=== 연차 신청 취소 성공
+===== Request Example
+include::{snippets}/{leave}/cancel_annual_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leave}/cancel_annual_test/http-response.adoc[]
+
+=== 당직 신청 취소 성공
+===== Request Example
+include::{snippets}/{leave}/cancel_duty_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leave}/cancel_duty_test/http-response.adoc[]
+
+=== 연차/당직 신청 취소 실패 (연차/당직 신청 정보가 없을 때)
+===== Request Example
+include::{snippets}/{leave}/cancel_fail_no_leave_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leave}/cancel_fail_no_leave_test/http-response.adoc[]
+
+=== 연차/당직 신청 취소 실패 (이미 승인됨)
+===== Request Example
+include::{snippets}/{leave}/cancel_fail_already_approved_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leave}/cancel_fail_already_approved_test/http-response.adoc[]
+
+=== 연차/당직 신청 취소 실패 (이미 거절됨)
+===== Request Example
+include::{snippets}/{leave}/cancel_fail_already_rejected_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leave}/cancel_fail_already_rejected_test/http-response.adoc[]
+
+== 연차/당직 신청 승인/거절 API
+=== 연차/당직 신청 승인/거절 성공
+===== Request Example
+include::{snippets}/{leave}/decide_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leave}/decide_test/http-response.adoc[]
+
+=== 연차/당직 신청 승인/거절 실패 (연차/당직 신청 정보가 없을 때)
+===== Request Example
+include::{snippets}/{leave}/decide_fail_no_leave_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leave}/decide_fail_no_leave_test/http-response.adoc[]
+
+=== 연차/당직 신청 승인/거절 실패 (이미 탈퇴한 회원의 신청)
+===== Request Example
+include::{snippets}/{leave}/decide_fail_status_false_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leave}/decide_fail_status_false_test/http-response.adoc[]
+
+=== 연차/당직 신청 승인/거절 실패 (이미 승인됨)
+===== Request Example
+include::{snippets}/{leave}/decide_fail_already_approved_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leave}/decide_fail_already_approved_test/http-response.adoc[]
+
+=== 연차/당직 신청 승인/거절 실패 (이미 거절됨)
+===== Request Example
+include::{snippets}/{leave}/decide_fail_already_rejected_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leave}/decide_fail_already_rejected_test/http-response.adoc[]
+
+=== 연차/당직 신청 승인/거절 실패 (관리자 권한이 아님)
+===== Request Example
+include::{snippets}/{leave}/decide_fail_not_admin_or_master_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{leave}/decide_fail_not_admin_or_master_test/http-response.adoc[]
