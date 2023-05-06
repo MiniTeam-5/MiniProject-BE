@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import shop.mtcoding.restend.core.exception.Exception400;
 import shop.mtcoding.restend.core.exception.Exception500;
 import shop.mtcoding.restend.core.util.MyDateUtil;
+import shop.mtcoding.restend.dto.alarm.AlarmResponse;
 import shop.mtcoding.restend.dto.leave.LeaveRequest;
 import shop.mtcoding.restend.dto.leave.LeaveResponse;
 import shop.mtcoding.restend.model.alarm.Alarm;
@@ -31,6 +32,7 @@ public class LeaveService {
     private final LeaveRepository leaveRepository;
     private final AlarmRepository alarmRepository;
 
+    private final SseService sseService;
 
     @Transactional
     public LeaveResponse.ApplyOutDTO 연차당직신청하기(LeaveRequest.ApplyInDTO applyInDTO, Long userId) {
@@ -156,7 +158,9 @@ public class LeaveService {
             content = userPS.getUsername() + "님의 " + leavePS.getStartDate() + "일 당직 신청이 " + status + "되었습니다.";
         }
 
-        alarmRepository.save(Alarm.builder().user(userPS).content(content).build());
+        Alarm alarmPS = alarmRepository.save(Alarm.builder().user(userPS).content(content).build());
+        sseService.sendToUser(userPS.getId(), "alarm", new AlarmResponse.AlarmOutDTO(alarmPS));
+
         return new LeaveResponse.DecideOutDTO(userPS);
     }
 
