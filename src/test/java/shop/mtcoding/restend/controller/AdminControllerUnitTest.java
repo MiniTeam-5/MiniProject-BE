@@ -179,4 +179,10 @@ public class AdminControllerUnitTest extends DummyEntity{
         assertEquals("2023-05-10T12:30:00", contentArray.getJSONObject(1).getString("hire_date"));
 
     }
+
+
+    @Test
+    public void roleUpdate_test(){
+
+    }
 }

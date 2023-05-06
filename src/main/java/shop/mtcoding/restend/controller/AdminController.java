@@ -55,7 +55,7 @@ public class AdminController {
 
     // role까지 변경가능, master로 접근해야, role변경이 가능하다.
     @PostMapping("/master/role/{id}")
-    public ResponseEntity<?> userUpdate(@PathVariable Long id,@RequestBody Manage.MasterDTO masterDTO, @AuthenticationPrincipal MyUserDetails myUserDetails){
+    public ResponseEntity<?> roleUpdate(@PathVariable Long id,@RequestBody Manage.MasterDTO masterDTO, @AuthenticationPrincipal MyUserDetails myUserDetails){
         if(!"MASTER".equals(myUserDetails.getUser().getRole())){
             throw new Exception403("권한이 없습니다.");
         }
