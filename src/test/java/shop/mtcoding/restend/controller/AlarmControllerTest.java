@@ -21,6 +21,7 @@ import shop.mtcoding.restend.model.alarm.Alarm;
 import shop.mtcoding.restend.model.alarm.AlarmRepository;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRepository;
+import shop.mtcoding.restend.model.user.UserRole;
 
 
 import javax.persistence.EntityManager;
@@ -51,9 +52,9 @@ public class AlarmControllerTest {
 
     @BeforeEach
     public void setUp() {
-        userRepository.save(dummy.newUser("ssar"));
-        userRepository.save(dummy.newUser("cos"));
-        user = userRepository.save(dummy.newUser("dotori"));
+        userRepository.save(dummy.newUser("ssar", true, 15));
+        userRepository.save(dummy.newUser("cos", true, 15));
+        user = userRepository.save(dummy.newUser("dotori", true, 15));
         em.clear();
     }
 

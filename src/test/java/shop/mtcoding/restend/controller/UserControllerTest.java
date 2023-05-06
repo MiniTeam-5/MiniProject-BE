@@ -28,6 +28,7 @@ import shop.mtcoding.restend.core.auth.jwt.MyJwtProvider;
 import shop.mtcoding.restend.core.dummy.DummyEntity;
 import shop.mtcoding.restend.dto.user.UserRequest;
 import shop.mtcoding.restend.model.user.UserRepository;
+import shop.mtcoding.restend.model.user.UserRole;
 
 import javax.persistence.EntityManager;
 
@@ -60,8 +61,8 @@ public class UserControllerTest extends MyRestDoc {
 
     @BeforeEach
     public void setUp() {
-        userRepository.save(dummy.newUser("ssar"));
-        userRepository.save(dummy.newUser("cos"));
+        userRepository.save(dummy.newUser("ssar", true, 15));
+        userRepository.save(dummy.newUser("cos", true, 15));
         em.clear();
     }
 
@@ -126,7 +127,7 @@ public class UserControllerTest extends MyRestDoc {
         joinInDTO.setPassword("1234");
         joinInDTO.setCheckPassword("1234");
         joinInDTO.setEmail("ssar@nate.com");
-        joinInDTO.setHireDate("2022-12-12");
+        joinInDTO.setHireDate("2023-05-05");//이게 없으면 Username, HireDate 에서 번갈아 가면서 오류가 발생합니다. JoinInDTO 객체를 참고하세요.
         String requestBody = om.writeValueAsString(joinInDTO);
 
         // when
