@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 
 
@@ -173,8 +174,8 @@ public class UserServiceTest extends DummyEntity {
     void 회원목록보기_test() {
         // given
         Manage.UserManageDTO userManageDTO = new Manage.UserManageDTO();
-        int page = 10;
-        PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("id").descending());
+        int page = 0;
+        PageRequest pageRequest = PageRequest.of(page, 3, Sort.by("id").descending());
 
         // stub
         User userPS1 = newMockUser(1L,"gamja","감자","USER",2);
@@ -188,24 +189,21 @@ public class UserServiceTest extends DummyEntity {
         userList.addAll(Arrays.asList(userPS1,userPS2,userPS3,userPS4,userPS5));
 
         Mockito.when(userRepository.findAll()).thenReturn(userList);
+
         // when
-        List<User>userListPS = userRepository.findAll();
-        Page<Manage.UserManageDTO> pagePS = new PageImpl<>(userListPS.stream().map(user -> userManageDTO.toEntityOut(user) ).collect(Collectors.toList()), pageRequest, userList.size());
+        Page<Manage.UserManageDTO>usersPG = userService.회원목록보기(pageRequest);
+        String responsBody = usersPG.getContent().toString();
+        System.out.println("Test : "+ responsBody);
 
         // then
-        Assertions.assertThat(pagePS.getContent().get(0).getUserId()).isEqualTo(1L);
-        Assertions.assertThat(pagePS.getContent().get(0).getUsername()).isEqualTo("gamja");
-        Assertions.assertThat(pagePS.getContent().get(0).getRole()).isEqualTo("USER");
-        Assertions.assertThat(pagePS.getContent().get(0).getRemain_days()).isEqualTo(2);
+        Assertions.assertThat(usersPG).isInstanceOf(Page.class);
+        assertEquals(3, usersPG.getSize());
 
-        Assertions.assertThat(pagePS).isInstanceOf(Page.class);
-        Assertions.assertThat(pagePS.getContent()).hasSize(5);
-
+        Assertions.assertThat(usersPG.getContent().get(0).getUserId()).isEqualTo(1L);
+        Assertions.assertThat(usersPG.getContent().get(0).getUsername()).isEqualTo("gamja");
+        Assertions.assertThat(usersPG.getContent().get(0).getRole()).isEqualTo("USER");
+        Assertions.assertThat(usersPG.getContent().get(0).getRemain_days()).isEqualTo(2);
 
     }
 
 }
-//        Assertions.assertThat(1L).isEqualTo(pagePS.getContent().get(0).getId());
-//        Assertions.assertThat("gamja").isEqualTo(pagePS.getContent().get(0).getUsername());
-//        Assertions.assertThat("USER").isEqualTo(pagePS.getContent().get(0).getRole());
-//        Assertions.assertThat(2).isEqualTo(pagePS.getContent().get(0).getAnnual_count());

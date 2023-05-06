@@ -2,6 +2,7 @@ package shop.mtcoding.restend.core.dummy;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import shop.mtcoding.restend.core.auth.session.MyUserDetails;
+import shop.mtcoding.restend.dto.manage.Manage;
 import shop.mtcoding.restend.model.user.User;
 
 import java.time.LocalDateTime;
@@ -34,6 +35,17 @@ public class DummyEntity {
                 .remain_days(remain_days)
                 .status(true)
                 .createdAt(LocalDateTime.now())
+                .build();
+    }
+
+    public Manage.UserManageDTO newMockChartUser(Long userId, String role, String username, LocalDateTime hire_date, Integer remain_days, String profile){
+        return Manage.UserManageDTO.builder()
+                .userId(userId)
+                .role(role)
+                .username(username)
+                .hire_date(hire_date)
+                .remain_days(remain_days)
+                .profile(profile)
                 .build();
     }
 
