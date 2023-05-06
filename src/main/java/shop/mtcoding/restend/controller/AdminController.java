@@ -30,7 +30,7 @@ public class AdminController {
 
     // 회원 정보 변경 로직
     @PostMapping("/auth/admin/annual/{id}")
-    public ResponseEntity<?> annualUpdate(@PathVariable Long id, @RequestBody @Valid Manage.AnnualRequestDTO annualRequestDTO, @AuthenticationPrincipal MyUserDetails myUserDetails) throws JsonProcessingException {
+    public ResponseEntity<?> annualUpdate(@PathVariable Long id, @RequestBody @Valid Manage.AnnualRequestDTO annualRequestDTO) throws JsonProcessingException {
         // 1. 권한 확인  이미 Filter에서 권한 확인 마침. 이상하게,테스트 환경에서 myUserDetails에 객체 권한이 USER이다.
 
         // 2. 바꾸려는 회원정보가 있는지 확인 후 회원 정보 업데이트
@@ -43,16 +43,14 @@ public class AdminController {
 
     }
 
-    @GetMapping("/admin") //  /admin?page=5&size=20
-    public ResponseEntity<?> userChart(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size,@AuthenticationPrincipal MyUserDetails myUserDetails) {
+    @GetMapping("/auth/admin") //  /admin?page=5&size=20
+    public ResponseEntity<?> userChart(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size) {
         // 1. 권한 확인
-        if ("MASTER".equals(myUserDetails.getUser().getRole()) || "ADMIN".equals(myUserDetails.getUser().getRole())) {
+        //if ("MASTER".equals(myUserDetails.getUser().getRole()) || "ADMIN".equals(myUserDetails.getUser().getRole())) {
         PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("id").descending());
         Page<Manage.UserManageDTO> userListPS = userService.회원목록보기(pageRequest);
         ResponseDTO<Page> responseDTO = new ResponseDTO<>(userListPS);
         return ResponseEntity.ok().body(responseDTO);
-    }
-        throw new Exception403("권한이 없습니다.");
     }
 
     // role까지 변경가능, master로 접근해야, role변경이 가능하다.

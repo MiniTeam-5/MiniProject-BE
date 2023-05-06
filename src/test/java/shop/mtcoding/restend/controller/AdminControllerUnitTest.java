@@ -10,6 +10,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -42,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -107,31 +112,33 @@ public class AdminControllerUnitTest extends DummyEntity{
     }
 
     @MyWithMockUser(id = 1L, username = "cos", role = "ADMIN", fullName = "코스")
-    public void userChart_test() throws Exception{
+    @Test
+    void testUserChart() throws Exception {
         // given
-//        int page;
-//        int size;
-//        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
+        PageRequest pageRequest = PageRequest.of(1, 2, Sort.by("id").descending());
+        List<User> userList = Arrays.asList(
+                newMockUser(1L, "gamja", "감자", "USER", 2),
+                newMockUser(2L, "suckja", "숙자", "USER", 2),
+                newMockUser(3L, "goguma", "고구마", "USER", 2)
+        );
+        Page<Manage.UserManageDTO> userListPage = new PageImpl<>(userList.stream().map(user -> new Manage.UserManageDTO().toEntityOut(user)).collect(Collectors.toList()), pageRequest, userList.size());
+        Mockito.when(userService.회원목록보기(pageRequest)).thenReturn(userListPage);
 
-
-        // stub
-        User userPS1 = newMockUser(1L,"gamja","감자","USER",2);
-        User userPS2 = newMockUser(2L,"suckja","숙자","USER",2);
-        User userPS3 = newMockUser(3L,"goguma","고구마","USER",2);
-        User userPS4 = newMockUser(4L,"hama","하마","USER",2);
-        User userPS5 = newMockUser(5L,"saja","사자","USER",2);
-        User userPS6 = newMockUser(6L,"gogi","고기","USER",2);
-        User userPS7 = newMockUser(7L,"dodosa","도도새","USER",2);
-        User userPS8 = newMockUser(8L,"chicken","치킨","USER",2);
-        List<User> userList = Arrays.asList(userPS1, userPS2, userPS3, userPS4, userPS5, userPS6, userPS7, userPS8);
-
-
-        //when
+        // when
         ResultActions resultActions = mvc
-                .perform(get("/admin?page=2&size=5"));
+                .perform(get("/auth/admin").param("page", "1").param("size", "2"));
 
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
 
-        // then
+        resultActions.andExpect(jsonPath("$.data").exists());
+        resultActions.andExpect(jsonPath("$.data.content").isArray());
+        resultActions.andExpect(jsonPath("$.data.content.length()").value(userList.size()));
+        resultActions.andExpect(jsonPath("$.data.totalPages").value(1));
+        resultActions.andExpect(jsonPath("$.data.pageable.pageSize").value(20));
+        resultActions.andExpect(jsonPath("$.data.pageable.pageNumber").value(5));
+        resultActions.andReturn();
     }
+
 
 }
