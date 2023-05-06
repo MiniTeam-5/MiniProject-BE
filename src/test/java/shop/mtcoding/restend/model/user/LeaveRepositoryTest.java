@@ -52,7 +52,7 @@ public class LeaveRepositoryTest extends DummyEntity {
         userRepository.save(newUser("cos", true, 15));
         User cos = userRepository.findById(2L).orElseThrow(
                 () -> new RuntimeException("테스트 중 findById 에러 : 2번 유저가 없습니다")
-        );;
+        );
         Leave leave = newLeave(cos, LeaveType.DUTY, LocalDate.parse("2023-07-26"), LocalDate.parse("2023-07-26"), 0, LeaveStatus.WAITING);
 
         // when
@@ -149,5 +149,48 @@ public class LeaveRepositoryTest extends DummyEntity {
             Assertions.assertThat(userPS.getCreatedAt().toLocalDate()).isEqualTo(LocalDate.now());
             Assertions.assertThat(userPS.getUpdatedAt()).isNull();
         }
+    }
+
+    @Test
+    public void existsDuplicateDuty(){
+        // given
+        userRepository.save(newUser("cos", true, 15));
+        User cos = userRepository.findById(2L).orElseThrow(
+                () -> new RuntimeException("테스트 중 findById 에러 : 2번 유저가 없습니다")
+        );
+        leaveRepository.save(newLeave(cos, LeaveType.DUTY, LocalDate.parse("2023-08-01"),
+                LocalDate.parse("2023-08-01"), 0, LeaveStatus.WAITING));
+
+        LeaveType type = LeaveType.DUTY;
+        LocalDate startDate = LocalDate.parse("2023-08-01");
+        Long userId = 2L;
+
+        // when
+        boolean result = leaveRepository.existsDuplicateDuty(type, startDate, userId);
+
+        // then
+        Assertions.assertThat(result).isEqualTo(true);
+    }
+
+    @Test
+    public void existsDuplicateAnnual(){
+        // given
+        userRepository.save(newUser("cos", true, 15));
+        User cos = userRepository.findById(2L).orElseThrow(
+                () -> new RuntimeException("테스트 중 findById 에러 : 2번 유저가 없습니다")
+        );
+        leaveRepository.save(newLeave(cos, LeaveType.ANNUAL, LocalDate.parse("2023-06-20"),
+                LocalDate.parse("2023-06-23"), 0, LeaveStatus.WAITING));
+
+        LeaveType type = LeaveType.ANNUAL;
+        LocalDate startDate = LocalDate.parse("2023-06-19");
+        LocalDate endDate = LocalDate.parse("2023-06-21");
+        Long userId = 2L;
+
+        // when
+        boolean result = leaveRepository.existsDuplicateAnnual(type, startDate, endDate, userId);
+
+        // then
+        Assertions.assertThat(result).isEqualTo(true);
     }
 }
