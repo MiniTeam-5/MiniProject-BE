@@ -41,7 +41,7 @@ public class UserController {
         return ResponseEntity.ok().header(MyJwtProvider.HEADER, jwt).body(responseDTO);
     }
 
-    @GetMapping("/s/user/{id}")
+    @GetMapping("/auth/user/{id}")
     public ResponseEntity<?> detail(@PathVariable Long id, @AuthenticationPrincipal MyUserDetails myUserDetails) throws JsonProcessingException {
         if(id.longValue() != myUserDetails.getUser().getId()){
             throw new Exception403("권한이 없습니다");

@@ -1,9 +1,6 @@
 package shop.mtcoding.restend.dto.manage;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import shop.mtcoding.restend.model.user.User;
 
 import javax.validation.constraints.*;
@@ -29,7 +26,7 @@ public class Manage {
     }
 
 
-    @Getter @Setter
+    @Getter @Setter @NoArgsConstructor
     public static class AnnualRequestDTO{
 
         // 아무값도 없을경우, default = 0

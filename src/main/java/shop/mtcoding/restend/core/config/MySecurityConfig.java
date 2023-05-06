@@ -75,15 +75,15 @@ public class MySecurityConfig {
         // 10. 권한 실패 처리
         http.exceptionHandling().accessDeniedHandler((request, response, accessDeniedException) -> {
             log.warn("권한이 없는 사용자가 자원에 접근하려 합니다 : "+accessDeniedException.getMessage());
-            MyFilterResponseUtil.forbidden(response, new Exception403("권한이 없습니다"));
+            MyFilterResponseUtil.forbidden(response, new Exception403("권한이 없습니다 getBack"));
         });
 
         // 11. 인증, 권한 필터 설정
         http.authorizeRequests(
-                authorize -> authorize.antMatchers("/s/**").authenticated()
-                        .antMatchers("/manager/**")
-                        .access("hasRole('ADMIN') or hasRole('MANAGER')")
-                        .antMatchers("/admin/**").hasRole("ADMIN")
+                authorize -> authorize.antMatchers("/auth/**").authenticated()
+                        .antMatchers("/auth/admin/**")
+                        .access("hasRole('ADMIN') or hasRole('MASTER')")
+                        .antMatchers("/master/**").hasRole("MASTER")
                         .anyRequest().permitAll()
         );
 

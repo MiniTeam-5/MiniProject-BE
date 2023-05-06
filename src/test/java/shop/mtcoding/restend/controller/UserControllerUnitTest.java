@@ -121,7 +121,7 @@ public class UserControllerUnitTest extends DummyEntity {
 
         // when
         ResultActions resultActions = mvc
-                .perform(get("/s/user/"+id));
+                .perform(get("/auth/user/"+id));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : " + responseBody);
 

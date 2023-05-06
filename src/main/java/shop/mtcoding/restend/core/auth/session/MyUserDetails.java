@@ -7,18 +7,21 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import shop.mtcoding.restend.model.user.User;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Setter
 @Getter
 @NoArgsConstructor
-public class MyUserDetails implements UserDetails {
+public class MyUserDetails implements UserDetails{
     private User user;
 
     public MyUserDetails(User user) {
         this.user = user;
     }
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -1,72 +1,67 @@
 package shop.mtcoding.restend.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import static org.mockito.Mockito.*;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithSecurityContextFactory;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.transaction.annotation.Transactional;
-import shop.mtcoding.restend.core.MyWithMockUser;
 import shop.mtcoding.restend.core.advice.MyLogAdvice;
 import shop.mtcoding.restend.core.advice.MyValidAdvice;
+import shop.mtcoding.restend.core.annotation.MyErrorLog;
+import shop.mtcoding.restend.core.annotation.MyLog;
+import shop.mtcoding.restend.core.auth.jwt.MyJwtProvider;
 import shop.mtcoding.restend.core.auth.session.MyUserDetails;
 import shop.mtcoding.restend.core.config.MyFilterRegisterConfig;
 import shop.mtcoding.restend.core.config.MySecurityConfig;
 import shop.mtcoding.restend.core.dummy.DummyEntity;
-import shop.mtcoding.restend.dto.ResponseDTO;
 import shop.mtcoding.restend.dto.manage.Manage;
+import shop.mtcoding.restend.dto.user.UserRequest;
+import shop.mtcoding.restend.dto.user.UserResponse;
+import shop.mtcoding.restend.core.MyWithMockUser;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.service.UserService;
-import org.springframework.security.test.context.support.WithMockUser;
 
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 
-
-@WebMvcTest(controllers = AdminController.class)
-@Import({MySecurityConfig.class, MyFilterRegisterConfig.class})
+@ActiveProfiles("test")
+@EnableAspectJAutoProxy // AOP 활성화
+@Import({
+        MyValidAdvice.class,
+        MyLogAdvice.class,
+        MySecurityConfig.class,
+        MyFilterRegisterConfig.class
+}) // Advice 와 Security 설정 가져오기
+@WebMvcTest(
+        // 필요한 Controller 가져오기, 특정 필터를 제외하기
+        controllers = {AdminController.class}
+)
 public class AdminControllerUnitTest extends DummyEntity{
 
 
@@ -76,52 +71,47 @@ public class AdminControllerUnitTest extends DummyEntity{
     @MockBean
     private UserService userService;
 
-    private final ObjectMapper om = new ObjectMapper();
+    @Autowired
+    private ObjectMapper om;
 
-    User user = newMockUser(1L,"cos", "코스","ADMIN",2);
-    private MyUserDetails myUserDetails = new MyUserDetails(user);
 
+    @MyWithMockUser(id = 1L, username = "cos", role = "ADMIN", fullName = "코스")
     @Test
-    @WithMockUser(roles = "ADMIN")
     public void annualUpdate_test() throws Exception{
         // given
-        Long id = 1L;
+        Long id = 2L;
         Manage.AnnualRequestDTO annualRequestDTO = new Manage.AnnualRequestDTO(5);
-
         String requestBody = om.writeValueAsString(annualRequestDTO);
 
-        //stub
-        Manage manage = new Manage();
-        User userPS = newMockUser(1L,"cos","코스","ADMIN",2);
-        when(userService.연차수정(Mockito.any(Long.class), any(Manage.AnnualRequestDTO.class)))
-                .thenReturn(manage.toEntityOut(userPS));
 
-        // 설정
-        //SecurityContextHolder.getContext().setAuthentication((Authentication) myUserDetails);
+        User ssar = newMockUser(2L,"sockja","숙자","USER",5);
+        Manage manage = new Manage().toEntityOut(ssar);
+        Mockito.when(userService.연차수정(Mockito.any(Long.class), any(Manage.AnnualRequestDTO.class)))
+                .thenReturn(manage);
 
-        // when
-        ResultActions resultActions = mvc.perform(MockMvcRequestBuilders.post("/admin/annual/{id}", id)
+        //.with(SecurityMockMvcRequestPostProcessors.user("cos").roles("ADMIN"))
+
+        //when
+        ResultActions resultActions = mvc
+                .perform(post("/auth/admin/annual/"+id)
                         .content(requestBody)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(om.writeValueAsString(manage))
-                        .with(SecurityMockMvcRequestPostProcessors.user(myUserDetails))
-        );
+                        .contentType(MediaType.APPLICATION_JSON));
 
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-        System.out.println("테스트 : "+ responseBody);
+        System.out.println("테스트 : " + responseBody);
 
-        // then
-        resultActions.andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(jsonPath("$.msg").value("success"))
-                .andExpect(jsonPath("$.data").exists())
-                .andReturn();
+        //then
+        resultActions.andExpect(jsonPath("$.data.userId").value(2L));
+        resultActions.andExpect(jsonPath("$.data.remain_days").value(5));
+        resultActions.andExpect(status().isOk());
     }
 
     @MyWithMockUser(id = 1L, username = "cos", role = "ADMIN", fullName = "코스")
     public void userChart_test() throws Exception{
         // given
-        int size = 5;
-        PageRequest pageRequest = PageRequest.of(0, size, Sort.by(Sort.Direction.DESC, "id"));
+//        int page;
+//        int size;
+//        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
 
 
         // stub
@@ -135,10 +125,6 @@ public class AdminControllerUnitTest extends DummyEntity{
         User userPS8 = newMockUser(8L,"chicken","치킨","USER",2);
         List<User> userList = Arrays.asList(userPS1, userPS2, userPS3, userPS4, userPS5, userPS6, userPS7, userPS8);
 
-        Manage.UserManageDTO userManageDTO = new Manage.UserManageDTO();
-        Page<Manage.UserManageDTO> usersPG = new PageImpl<>(userList.stream().map(user -> userManageDTO.toEntityOut(user) ).collect(Collectors.toList()), pageRequest, userList.size());
-
-        Mockito.when(userService.회원목록보기(any())).thenReturn(usersPG);
 
         //when
         ResultActions resultActions = mvc
@@ -146,7 +132,6 @@ public class AdminControllerUnitTest extends DummyEntity{
 
 
         // then
-
     }
 
 }

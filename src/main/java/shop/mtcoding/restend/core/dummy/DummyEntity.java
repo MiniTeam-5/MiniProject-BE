@@ -1,6 +1,7 @@
 package shop.mtcoding.restend.core.dummy;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import shop.mtcoding.restend.core.auth.session.MyUserDetails;
 import shop.mtcoding.restend.model.user.User;
 
 import java.time.LocalDateTime;
@@ -35,4 +36,5 @@ public class DummyEntity {
                 .createdAt(LocalDateTime.now())
                 .build();
     }
+
 }
