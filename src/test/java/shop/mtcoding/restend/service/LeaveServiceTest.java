@@ -45,6 +45,9 @@ public class LeaveServiceTest extends DummyEntity {
     @Mock
     private AlarmRepository alarmRepository;
 
+    @Mock
+    private SseService sseService;
+
     @Test
     public void 연차당직신청하기_test() throws Exception{
 
