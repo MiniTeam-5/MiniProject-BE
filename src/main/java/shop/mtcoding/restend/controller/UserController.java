@@ -11,6 +11,7 @@ import shop.mtcoding.restend.core.annotation.MyErrorLog;
 import shop.mtcoding.restend.core.annotation.MyLog;
 import shop.mtcoding.restend.core.auth.jwt.MyJwtProvider;
 import shop.mtcoding.restend.core.auth.session.MyUserDetails;
+import shop.mtcoding.restend.core.exception.Exception400;
 import shop.mtcoding.restend.core.exception.Exception403;
 import shop.mtcoding.restend.dto.ResponseDTO;
 import shop.mtcoding.restend.dto.user.UserRequest;
@@ -62,11 +63,7 @@ public class UserController {
             throw new Exception403("권한이 없습니다");
         }
 
-        if (profile != null && !profile.isEmpty()) {
-            userService.프로필사진변경(modifiedInDTO, profile, id);
-        }
-
-        UserResponse.ModifiedOutDTO modifiedOutDTO = userService.개인정보수정(modifiedInDTO, id);
+        UserResponse.ModifiedOutDTO modifiedOutDTO = userService.개인정보수정(modifiedInDTO, profile, id);
         ResponseDTO<?> responseDTO = new ResponseDTO<>(modifiedOutDTO);
         return ResponseEntity.ok(responseDTO);
     }
