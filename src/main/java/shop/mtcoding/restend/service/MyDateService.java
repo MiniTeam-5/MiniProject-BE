@@ -1,20 +1,20 @@
-package shop.mtcoding.restend.core.util;
+package shop.mtcoding.restend.service;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.net.URISyntaxException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
 import java.util.Set;
 
-public class MyDateUtil {
+@RequiredArgsConstructor
+@Service
+public class MyDateService {
 
-    public static String toStringFormat(LocalDateTime localDateTime) {
-        return localDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-    }
+    private final MyHolidayService myHolidayService;
 
-    public static Integer getWeekDayCount(LocalDate startDate, LocalDate endDate) throws URISyntaxException {
+    public Integer getWeekDayCount(LocalDate startDate, LocalDate endDate) throws URISyntaxException {
         Integer weekdayCount = 0;
 
         for (LocalDate date = startDate; !date.isAfter(endDate); date = date.plusDays(1)) {
@@ -23,7 +23,7 @@ public class MyDateUtil {
                 // if 공휴일이면 continue;
                 String year = String.valueOf(date.getYear());
                 String month = String.format("%02d", date.getMonthValue());
-                Set<LocalDate> holidays = MyHolidayUtil.getHolidays(year, month);
+                Set<LocalDate> holidays = myHolidayService.getHolidays(year, month);
                 if(holidays.contains(date)) continue;
                 weekdayCount++;
             }
