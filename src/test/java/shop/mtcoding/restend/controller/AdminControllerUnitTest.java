@@ -69,7 +69,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         MyValidAdvice.class,
         MyLogAdvice.class,
         MySecurityConfig.class,
-        MyFilterRegisterConfig.class
+        MyFilterRegisterConfig.class,
 }) // Advice 와 Security 설정 가져오기
 @WebMvcTest(
         // 필요한 Controller 가져오기, 특정 필터를 제외하기
@@ -91,7 +91,8 @@ public class AdminControllerUnitTest extends DummyEntity{
     private ObjectMapper om;
 
 
-    @MyWithMockUser(id = 1L, username = "cos", role = "ADMIN", fullName = "코스")
+    //@WithMockUser(roles = "USER")
+    @MyWithMockUser(id = 1L, username = "cos", role = "USER", fullName = "코스")
     @Test
     public void annualUpdate_test() throws Exception{
         // given
@@ -116,6 +117,7 @@ public class AdminControllerUnitTest extends DummyEntity{
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : " + responseBody);
 
+
         //then
         resultActions.andExpect(jsonPath("$.data.userId").value(2L));
         resultActions.andExpect(jsonPath("$.data.remain_days").value(5));
@@ -123,7 +125,7 @@ public class AdminControllerUnitTest extends DummyEntity{
     }
 
 
-    @MyWithMockUser(id = 9L, username = "cos", role = "ADMIN", fullName = "코스")
+    @MyWithMockUser(id = 10L, username = "zelda", role = "USER", fullName = "젤다")
     @Test
     public void userChart_test() throws Exception {
         String img = "img";
@@ -180,7 +182,7 @@ public class AdminControllerUnitTest extends DummyEntity{
 
     }
 
-    @MyWithMockUser(id = 2L, username = "cos", role = "MASTER", fullName = "코스")
+    @MyWithMockUser(id = 2L, username = "ssar", role = "ADMIN", fullName = "코스")
     @Test
     public void roleUpdate_test() throws Exception{
         // given
