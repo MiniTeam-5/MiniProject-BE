@@ -144,7 +144,7 @@ public class LeaveControllerUnitTest extends DummyEntity {
         resultActions.andExpect(jsonPath("$.data.remainDays").value(14));
     }
 
-    @MyWithMockUser(id = 1L, username = "cos", role = "USER", remainDays = 15)
+    @MyWithMockUser(id = 1L, username = "cos", role = UserRole.ROLE_USER, remainDays = 15)
     @Test
     public void getLeaveData_test() throws Exception {
         // 준비

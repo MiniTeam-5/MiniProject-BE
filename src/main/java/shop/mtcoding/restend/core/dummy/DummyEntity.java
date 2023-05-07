@@ -60,6 +60,20 @@ public class DummyEntity {
                 .createdAt(LocalDateTime.now())
                 .build();
     }
+    public User newMockUserRole(Long id, String username, Integer remainDays,UserRole userRole){
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        return User.builder()
+                .id(id)
+                .username(username)
+                .password(passwordEncoder.encode("1234"))
+                .email(username+"@nate.com")
+                .role(userRole)
+                .status(true)
+                .hireDate(LocalDate.now().minusYears(1).minusWeeks(1)) // 입사 1년차라 가정
+                .remainDays(remainDays)
+                .createdAt(LocalDateTime.now())
+                .build();
+    }
 
     public Leave newMockLeave(Long id, User user, LeaveType type, LocalDate startDate, LocalDate endDate, Integer usingDays){
         return Leave.builder()

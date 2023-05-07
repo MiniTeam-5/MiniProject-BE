@@ -29,7 +29,7 @@ public class AdminController {
     private final UserService userService;
 
     // 회원 정보 변경 로직
-    @PostMapping("/auth/admin/annual/{id}")
+    @PostMapping("/admin/annual/{id}")
     public ResponseEntity<?> annualUpdate(@PathVariable Long id, @RequestBody @Valid Manage.AnnualRequestDTO annualRequestDTO) throws JsonProcessingException {
         // 1. 권한 확인  이미 Filter에서 권한 확인 마침. 이상하게,테스트 환경에서 myUserDetails에 객체 권한이 USER이다.
 
@@ -43,7 +43,7 @@ public class AdminController {
 
     }
 
-    @GetMapping("/auth/admin") //  /admin?page=5&size=20
+    @GetMapping("/admin") //  /admin?page=5&size=20
     public ResponseEntity<?> userChart(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size) {
         PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("id").descending());
         Page<Manage.UserManageDTO> userListPS = userService.회원목록보기(pageRequest);
@@ -52,7 +52,7 @@ public class AdminController {
     }
 
     // role까지 변경가능, master로 접근해야, role변경이 가능하다.
-    @PostMapping("/auth/master/{id}")
+    @PostMapping("/master/{id}")
     public ResponseEntity<?> roleUpdate(@PathVariable Long id,@RequestBody Manage.MasterInDTO masterIn, @AuthenticationPrincipal MyUserDetails myUserDetails){
 
         Manage.MasterOutDTO masterOut = userService.권한수정(id,masterIn);

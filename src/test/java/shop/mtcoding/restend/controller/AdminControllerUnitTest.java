@@ -94,7 +94,7 @@ public class AdminControllerUnitTest extends DummyEntity{
 
 
     //@WithMockUser(roles = "USER")
-    @MyWithMockUser(id = 1L, username = "cos", role = UserRole.ROLE_USER)
+    @MyWithMockUser(id = 1L, username = "cos", role = UserRole.ROLE_ADMIN)
     @Test
     public void annualUpdate_test() throws Exception{
         // given
@@ -112,7 +112,7 @@ public class AdminControllerUnitTest extends DummyEntity{
 
         //when
         ResultActions resultActions = mvc
-                .perform(post("/auth/admin/annual/"+id)
+                .perform(post("/admin/annual/"+id)
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON));
 
@@ -127,7 +127,7 @@ public class AdminControllerUnitTest extends DummyEntity{
     }
 
 
-    @MyWithMockUser(id = 10L, username = "zelda", role = UserRole.ROLE_USER)
+    @MyWithMockUser(id = 10L, username = "zelda", role = UserRole.ROLE_ADMIN)
     @Test
     public void userChart_test() throws Exception {
         String img = "img";
@@ -151,7 +151,7 @@ public class AdminControllerUnitTest extends DummyEntity{
         Mockito.when(userService.회원목록보기(any())).thenReturn(userListPG);
 
         // when
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/auth/admin")
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/admin")
                         .param("page", "0")
                         .param("size", "3")
                         .accept(MediaType.APPLICATION_JSON))
@@ -184,7 +184,7 @@ public class AdminControllerUnitTest extends DummyEntity{
 
     }
 
-    @MyWithMockUser(id = 2L, username = "ssar", role = UserRole.ROLE_USER)
+    @MyWithMockUser(id = 2L, username = "ssar", role = UserRole.ROLE_MASTER)
     @Test
     public void roleUpdate_test() throws Exception{
         // given
@@ -194,20 +194,20 @@ public class AdminControllerUnitTest extends DummyEntity{
         String requestBody = om.writeValueAsString(masterIn);
 
         // stub
-        User ssar = newMockUser(1L,"sockja",5);
+        User ssar = newMockUserRole(1L,"sockja",5,UserRole.ROLE_ADMIN);
         Manage.MasterOutDTO masterOutDTO = new Manage.MasterOutDTO().toEntityOut(ssar);
         Mockito.when(userService.권한수정(any(Long.class), any(Manage.MasterInDTO.class))).thenReturn(masterOutDTO);
 
         // when
         ResultActions resultActions = mvc
-                .perform(post("/auth/master/"+id)
+                .perform(post("/master/"+id)
                                 .content(requestBody).contentType(MediaType.APPLICATION_JSON));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : "+responseBody);
 
         // then
         resultActions.andExpect(jsonPath("$.data.userId").value(1L));
-        resultActions.andExpect(jsonPath("$.data.role").value("ROLE_USER"));
+        resultActions.andExpect(jsonPath("$.data.role").value("ROLE_ADMIN"));
         resultActions.andExpect(status().isOk());
     }
 }
