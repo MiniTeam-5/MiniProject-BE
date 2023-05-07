@@ -45,9 +45,11 @@ import shop.mtcoding.restend.dto.user.UserResponse;
 import shop.mtcoding.restend.core.MyWithMockUser;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRepository;
+import shop.mtcoding.restend.model.user.UserRole;
 import shop.mtcoding.restend.service.UserService;
 
 import javax.persistence.EntityManager;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -92,7 +94,7 @@ public class AdminControllerUnitTest extends DummyEntity{
 
 
     //@WithMockUser(roles = "USER")
-    @MyWithMockUser(id = 1L, username = "cos", role = "USER", fullName = "코스")
+    @MyWithMockUser(id = 1L, username = "cos", role = UserRole.ROLE_USER)
     @Test
     public void annualUpdate_test() throws Exception{
         // given
@@ -101,7 +103,7 @@ public class AdminControllerUnitTest extends DummyEntity{
         String requestBody = om.writeValueAsString(annualRequestDTO);
 
 
-        User ssar = newMockUser(2L,"sockja","숙자","USER",5);
+        User ssar = newMockUser(2L,"sockja",5);
         Manage manage = new Manage().toEntityOut(ssar);
         Mockito.when(userService.연차수정(Mockito.any(Long.class), any(Manage.AnnualRequestDTO.class)))
                 .thenReturn(manage);
@@ -125,21 +127,21 @@ public class AdminControllerUnitTest extends DummyEntity{
     }
 
 
-    @MyWithMockUser(id = 10L, username = "zelda", role = "USER", fullName = "젤다")
+    @MyWithMockUser(id = 10L, username = "zelda", role = UserRole.ROLE_USER)
     @Test
     public void userChart_test() throws Exception {
         String img = "img";
         // Given
         Manage.UserManageDTO userManageDTO = new Manage.UserManageDTO();
         List<Manage.UserManageDTO> userList = new ArrayList<>();
-        Manage.UserManageDTO userPS1 = newMockChartUser(1L,"USER","gamja", LocalDateTime.of(2023, 5, 10, 12, 30),2,img);
-        Manage.UserManageDTO userPS2 = newMockChartUser(2L,"USER","suckja", LocalDateTime.of(2023, 5, 10, 12, 30),2,img);
-        Manage.UserManageDTO userPS3 = newMockChartUser(3L,"USER","nana", LocalDateTime.of(2023, 5, 10, 12, 30),2,img);
-        Manage.UserManageDTO userPS4 = newMockChartUser(4L,"USER","po", LocalDateTime.of(2023, 5, 10, 12, 30),2,img);
-        Manage.UserManageDTO userPS5 = newMockChartUser(5L,"USER","bora", LocalDateTime.of(2023, 5, 10, 12, 30),2,img);
-        Manage.UserManageDTO userPS6 = newMockChartUser(6L,"USER","zelda", LocalDateTime.of(2023, 5, 10, 12, 30),2,img);
-        Manage.UserManageDTO userPS7 = newMockChartUser(7L,"USER","link", LocalDateTime.of(2023, 5, 10, 12, 30),2,img);
-        Manage.UserManageDTO userPS8 = newMockChartUser(8L,"USER","ribal", LocalDateTime.of(2023, 5, 10, 12, 30),2,img);
+        Manage.UserManageDTO userPS1 = newMockChartUser(1L, UserRole.ROLE_USER,"gamja", LocalDate.of(2023, 5, 10),2,img);
+        Manage.UserManageDTO userPS2 = newMockChartUser(2L,UserRole.ROLE_USER,"suckja", LocalDate.of(2023, 5, 10),2,img);
+        Manage.UserManageDTO userPS3 = newMockChartUser(3L,UserRole.ROLE_USER,"nana", LocalDate.of(2023, 5, 10),2,img);
+        Manage.UserManageDTO userPS4 = newMockChartUser(4L,UserRole.ROLE_USER,"po", LocalDate.of(2023, 5, 10),2,img);
+        Manage.UserManageDTO userPS5 = newMockChartUser(5L,UserRole.ROLE_USER,"bora", LocalDate.of(2023, 5, 10),2,img);
+        Manage.UserManageDTO userPS6 = newMockChartUser(6L,UserRole.ROLE_USER,"zelda", LocalDate.of(2023, 5, 10),2,img);
+        Manage.UserManageDTO userPS7 = newMockChartUser(7L,UserRole.ROLE_USER,"link", LocalDate.of(2023, 5, 10),2,img);
+        Manage.UserManageDTO userPS8 = newMockChartUser(8L,UserRole.ROLE_USER,"ribal", LocalDate.of(2023, 5, 10),2,img);
 
         //        Pageable pageable = PageRequest.of(pageValue, sizeValue);
         //        Page<Manage.UserManageDTO> pageSizePG = new PageImpl<>(Arrays.asList(userPS1, userPS2, userPS3, userPS4, userPS5, userPS6, userPS7, userPS8), pageable, 8);
@@ -172,27 +174,27 @@ public class AdminControllerUnitTest extends DummyEntity{
         assertEquals(0,Integer.parseInt(mvcResult.getRequest().getParameter("page")));
         assertEquals(3,Integer.parseInt(mvcResult.getRequest().getParameter("size")));
         assertEquals(1L, contentArray.getJSONObject(0).getLong("userId"));
-        assertEquals("USER", contentArray.getJSONObject(0).getString("role"));
+        assertEquals("ROLE_USER", contentArray.getJSONObject(0).getString("role"));
         assertEquals("gamja", contentArray.getJSONObject(0).getString("username"));
-        assertEquals("2023-05-10T12:30:00", contentArray.getJSONObject(0).getString("hire_date"));
+        assertEquals("2023-05-10", contentArray.getJSONObject(0).getString("hireDate"));
         assertEquals(2L, contentArray.getJSONObject(1).getLong("userId"));
-        assertEquals("USER", contentArray.getJSONObject(1).getString("role"));
+        assertEquals("ROLE_USER", contentArray.getJSONObject(1).getString("role"));
         assertEquals("suckja", contentArray.getJSONObject(1).getString("username"));
-        assertEquals("2023-05-10T12:30:00", contentArray.getJSONObject(1).getString("hire_date"));
+        assertEquals("2023-05-10", contentArray.getJSONObject(1).getString("hireDate"));
 
     }
 
-    @MyWithMockUser(id = 2L, username = "ssar", role = "ADMIN", fullName = "코스")
+    @MyWithMockUser(id = 2L, username = "ssar", role = UserRole.ROLE_USER)
     @Test
     public void roleUpdate_test() throws Exception{
         // given
         Long id = 1L;
         Manage.MasterInDTO masterIn = new Manage.MasterInDTO();
-        masterIn.setRole("ADMIN");
+        masterIn.setRole(UserRole.ROLE_ADMIN);
         String requestBody = om.writeValueAsString(masterIn);
 
         // stub
-        User ssar = newMockUser(1L,"sockja","숙자","ADMIN",5);
+        User ssar = newMockUser(1L,"sockja",5);
         Manage.MasterOutDTO masterOutDTO = new Manage.MasterOutDTO().toEntityOut(ssar);
         Mockito.when(userService.권한수정(any(Long.class), any(Manage.MasterInDTO.class))).thenReturn(masterOutDTO);
 
@@ -205,7 +207,7 @@ public class AdminControllerUnitTest extends DummyEntity{
 
         // then
         resultActions.andExpect(jsonPath("$.data.userId").value(1L));
-        resultActions.andExpect(jsonPath("$.data.role").value("ADMIN"));
+        resultActions.andExpect(jsonPath("$.data.role").value("ROLE_USER"));
         resultActions.andExpect(status().isOk());
     }
 }

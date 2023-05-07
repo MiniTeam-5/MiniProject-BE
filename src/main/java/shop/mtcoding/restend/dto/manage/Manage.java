@@ -2,8 +2,10 @@ package shop.mtcoding.restend.dto.manage;
 
 import lombok.*;
 import shop.mtcoding.restend.model.user.User;
+import shop.mtcoding.restend.model.user.UserRole;
 
 import javax.validation.constraints.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -21,7 +23,7 @@ public class Manage {
     public Manage toEntityOut(User user){
         return Manage.builder()
                 .userId(user.getId())
-                .remain_days(user.getRemain_days())
+                .remain_days(user.getRemainDays())
                 .build();
     }
 
@@ -40,7 +42,7 @@ public class Manage {
         }
         public User toEntityIn() {
             return User.builder()
-                    .remain_days(remain_days)
+                    .remainDays(remain_days)
                     .build();
         }
     }
@@ -55,11 +57,10 @@ public class Manage {
         @NotEmpty
         private String username;
         @NotEmpty
-        @Pattern(regexp = "ADMIN|USER|MASTER")
-        private String role;
+        private UserRole role;
 
         @NotEmpty
-        private LocalDateTime hire_date;
+        private LocalDate hireDate;
         @NotNull
         @Min(0)
         @Max(100)
@@ -67,11 +68,11 @@ public class Manage {
 
         private String profile;
         @Builder
-        public UserManageDTO(Long userId, String role, String username, LocalDateTime hire_date, Integer remain_days, String profile) {
+        public UserManageDTO(Long userId, UserRole role, String username, LocalDate hireDate, Integer remain_days, String profile) {
                 this.userId = userId;
                 this.role = role;
                 this.username = username;
-                this.hire_date = hire_date;
+                this.hireDate = hireDate;
                 this.remain_days = remain_days;
                 this.profile = profile;
             }
@@ -81,8 +82,8 @@ public class Manage {
                     .id(fk)
                     .role(role)
                     .username(username)
-                    .hire_date(hire_date)
-                    .remain_days(remain_days)
+                    .hireDate(hireDate)
+                    .remainDays(remain_days)
                     .profile(profile)
                     .build();
         }
@@ -92,8 +93,8 @@ public class Manage {
                     .userId(user.getId())
                     .role(user.getRole())
                     .username(user.getUsername())
-                    .hire_date(user.getHire_date())
-                    .remain_days(user.getRemain_days())
+                    .hireDate(user.getHireDate())
+                    .remain_days(user.getRemainDays())
                     .profile(user.getProfile())
                     .build();
         }
@@ -103,10 +104,9 @@ public class Manage {
     public static class MasterInDTO {
 
         @NotEmpty
-        @Pattern(regexp = "ADMIN|USER|MASTER")
-        private String role;
+        private UserRole role;
 
-        public MasterInDTO(String role) {
+        public MasterInDTO(UserRole role) {
             this.role = role;
         }
 
@@ -125,10 +125,10 @@ public class Manage {
         private Long userId;
 
         @NotEmpty
-        private String role;
+        private UserRole role;
 
         @Builder
-        public MasterOutDTO(Long userId, String role) {
+        public MasterOutDTO(Long userId, UserRole role) {
             this.userId = userId;
             this.role = role;
         }

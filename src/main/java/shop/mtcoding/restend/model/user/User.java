@@ -3,6 +3,8 @@ package shop.mtcoding.restend.model.user;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import javax.validation.constraints.Min;
 import java.time.LocalDateTime;
 
 
@@ -24,28 +26,44 @@ public class User {
 
     @Column(nullable = false, length = 20)
     private String email;
-    @Column(nullable = false, length = 20)
-    private String fullName;
-    @Column(nullable = false)
-    private String role;
-    @Column(nullable = false)
+
+
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
     private Boolean status; // true, false
 
     @Column(nullable = false)
-    private Integer annual_limit;
-
-    @Column(nullable = false)
-    private Integer remain_days;
-
-    @Column(nullable = false)
-    private LocalDateTime hire_date;
+    private LocalDate hireDate;
 
     private String profile;
+
+    private Integer annualLimit;
+
+    @Min(0)
+    private Integer remainDays; // 남은 연차수
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    public void changeProfile(String profile) {
+        this.profile = profile;
+    }
+
+    public void changeEmail(String email) {
+        this.email = email;
+    }
+
+
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
+    public void changeUsername(String username) {
+        this.username = username;
+    }
 
     @PrePersist
     protected void onCreate() {
@@ -56,19 +74,25 @@ public class User {
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+    public void useAnnualLeave(Integer usingDays) {
+        this.remainDays -= usingDays;
+    }
+
+    public void increaseRemainDays(Integer days) {
+        this.remainDays += days;
+    }
 
     @Builder
-    public User(Long id, String username, String password, String email, String fullName, String role, Boolean status, Integer annual_limit, Integer remain_days, LocalDateTime hire_date, String profile, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public User(Long id, String username, String password, String email, UserRole role, Boolean status, Integer annualLimit, Integer remainDays, LocalDate hireDate, String profile, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
-        this.fullName = fullName;
         this.role = role;
         this.status = status;
-        this.annual_limit = annual_limit;
-        this.remain_days = remain_days;
-        this.hire_date = hire_date;
+        this.annualLimit = annualLimit;
+        this.remainDays = remainDays;
+        this.hireDate = hireDate;
         this.profile = profile;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -77,7 +101,7 @@ public class User {
     public void update(User user){
         this.username = user.getUsername();
         this.role = user.getRole();
-        this.hire_date = user.getHire_date();
+        this.hireDate = user.getHireDate();
         //this.annual_limit = user.getAnnual_limit();
     }
 }

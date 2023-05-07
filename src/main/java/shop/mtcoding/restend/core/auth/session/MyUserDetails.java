@@ -22,11 +22,13 @@ public class MyUserDetails implements UserDetails{
     }
 
 
-
+    /**
+     * user 의 role 타입이 string -> enum 으로 변경 됨에 따른 코드 수정
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> collector = new ArrayList<>();
-        collector.add(() -> user.getRole());
+        collector.add(() -> user.getRole().toString());
         return collector;
     }
 

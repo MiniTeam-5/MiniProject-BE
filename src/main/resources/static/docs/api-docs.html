@@ -472,14 +472,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /join HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 107
+Content-Length: 165
 Host: localhost:8080
 
 {
   "username" : "love",
   "password" : "1234",
+  "checkPassword" : "1234",
   "email" : "love@nate.com",
-  "fullName" : "러브"
+  "hireDate" : "2022-12-12",
+  "annualLimit" : null
 }</code></pre>
 </div>
 </div>
@@ -498,7 +500,7 @@ X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-Content-Length: 131
+Content-Length: 128
 
 {
   "status" : 200,
@@ -506,7 +508,7 @@ Content-Length: 131
   "data" : {
     "id" : 3,
     "username" : "love",
-    "fullName" : "러브"
+    "annualLimit" : 15
   }
 }</code></pre>
 </div>
@@ -521,8 +523,10 @@ Content-Length: 131
     -d '{
   "username" : "love",
   "password" : "1234",
+  "checkPassword" : "1234",
   "email" : "love@nate.com",
-  "fullName" : "러브"
+  "hireDate" : "2022-12-12",
+  "annualLimit" : null
 }'</code></pre>
 </div>
 </div>
@@ -536,14 +540,16 @@ Content-Length: 131
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /join HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 104
+Content-Length: 165
 Host: localhost:8080
 
 {
   "username" : "ssar",
   "password" : "1234",
+  "checkPassword" : "1234",
   "email" : "ssar@nate.com",
-  "fullName" : "쌀"
+  "hireDate" : "2022-12-12",
+  "annualLimit" : null
 }</code></pre>
 </div>
 </div>
@@ -584,8 +590,10 @@ Content-Length: 141
     -d '{
   "username" : "ssar",
   "password" : "1234",
+  "checkPassword" : "1234",
   "email" : "ssar@nate.com",
-  "fullName" : "쌀"
+  "hireDate" : "2022-12-12",
+  "annualLimit" : null
 }'</code></pre>
 </div>
 </div>
@@ -599,14 +607,16 @@ Content-Length: 141
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /join HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 101
+Content-Length: 162
 Host: localhost:8080
 
 {
   "username" : "s",
   "password" : "1234",
+  "checkPassword" : "1234",
   "email" : "ssar@nate.com",
-  "fullName" : "쌀"
+  "hireDate" : "2023-05-05",
+  "annualLimit" : null
 }</code></pre>
 </div>
 </div>
@@ -647,8 +657,10 @@ Content-Length: 160
     -d '{
   "username" : "s",
   "password" : "1234",
+  "checkPassword" : "1234",
   "email" : "ssar@nate.com",
-  "fullName" : "쌀"
+  "hireDate" : "2023-05-05",
+  "annualLimit" : null
 }'</code></pre>
 </div>
 </div>
@@ -662,11 +674,11 @@ Content-Length: 160
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /login HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 51
+Content-Length: 57
 Host: localhost:8080
 
 {
-  "username" : "ssar",
+  "email" : "ssar@nate.com",
   "password" : "1234"
 }</code></pre>
 </div>
@@ -680,19 +692,22 @@ Host: localhost:8080
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJVU0VSIiwiaWQiOjEsImV4cCI6MTY4MjU5NDYyNX0.oh4abq1e7w5c4GVXkS1JbEx-K7-rSJwCYyBOJRG5G810ZvcM2jTreCnKGydIqcdbSoR_TgYctKig7VUErixN6g
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJVU0VSIiwiaWQiOjEsImV4cCI6MTY4MzQ2NDI0NX0.idAI02nwU6LvrvBDxlJrXHB02aqdCElcy7jq5MD1wYoVLoGzbzB3pmpdZA9preNW8sHFToJkgCU0ZmCeSSGB-Q
 Content-Type: application/json;charset=UTF-8
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-Content-Length: 61
+Content-Length: 99
 
 {
   "status" : 200,
   "msg" : "성공",
-  "data" : null
+  "data" : {
+    "id" : 1,
+    "role" : "USER"
+  }
 }</code></pre>
 </div>
 </div>
@@ -704,7 +719,7 @@ Content-Length: 61
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/login' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
     -d '{
-  "username" : "ssar",
+  "email" : "ssar@nate.com",
   "password" : "1234"
 }'</code></pre>
 </div>
@@ -719,11 +734,11 @@ Content-Length: 61
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /login HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 52
+Content-Length: 57
 Host: localhost:8080
 
 {
-  "username" : "ssar",
+  "email" : "abc@nate.com",
   "password" : "12345"
 }</code></pre>
 </div>
@@ -760,7 +775,7 @@ Content-Length: 93
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/login' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
     -d '{
-  "username" : "ssar",
+  "email" : "abc@nate.com",
   "password" : "12345"
 }'</code></pre>
 </div>
@@ -773,7 +788,7 @@ Content-Length: 93
 <h5 id="_request_example_6">Request Example</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /s/user/1 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /auth/user/1 HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -792,17 +807,15 @@ X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-Content-Length: 182
+Content-Length: 143
 
 {
   "status" : 200,
   "msg" : "성공",
   "data" : {
-    "id" : 1,
-    "username" : "ssar",
     "email" : "ssar@nate.com",
-    "fullName" : "쌀",
-    "role" : "USER"
+    "username" : "ssar",
+    "profile" : null
   }
 }</code></pre>
 </div>
@@ -812,7 +825,7 @@ Content-Length: 182
 <h5 id="_curl_6">Curl</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/s/user/1' -i -X GET</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user/1' -i -X GET</code></pre>
 </div>
 </div>
 </div>
@@ -823,7 +836,7 @@ Content-Length: 182
 <h5 id="_request_example_7">Request Example</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /s/user/1 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /auth/user/1 HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -856,7 +869,7 @@ Content-Length: 93
 <h5 id="_curl_7">Curl</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/s/user/1' -i -X GET</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user/1' -i -X GET</code></pre>
 </div>
 </div>
 </div>
@@ -867,7 +880,7 @@ Content-Length: 93
 <h5 id="_request_example_8">Request Example</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /s/user/1 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /auth/user/1 HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -900,7 +913,7 @@ Content-Length: 84
 <h5 id="_curl_8">Curl</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/s/user/1' -i -X GET</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user/1' -i -X GET</code></pre>
 </div>
 </div>
 </div>
@@ -911,7 +924,7 @@ Content-Length: 84
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-04-26 20:23:04 +0900
+Last updated 2023-05-02 17:58:49 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

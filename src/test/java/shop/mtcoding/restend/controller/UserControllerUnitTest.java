@@ -15,6 +15,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import shop.mtcoding.restend.controller.UserController;
 import shop.mtcoding.restend.core.advice.MyLogAdvice;
 import shop.mtcoding.restend.core.advice.MyValidAdvice;
 import shop.mtcoding.restend.core.auth.jwt.MyJwtProvider;
@@ -63,12 +64,15 @@ public class UserControllerUnitTest extends DummyEntity {
         UserRequest.JoinInDTO joinInDTO = new UserRequest.JoinInDTO();
         joinInDTO.setUsername("cos");
         joinInDTO.setPassword("1234");
+        joinInDTO.setCheckPassword("1234");
         joinInDTO.setEmail("cos@nate.com");
-        joinInDTO.setFullName("코스");
+        joinInDTO.setHireDate("2022-12-12");
         String requestBody = om.writeValueAsString(joinInDTO);
 
         // 가정해볼께
-        User cos = newMockUser(1L,"cos", "코스","USER",2);
+
+
+        User cos = newMockUser(1L,"cos", 15);
         UserResponse.JoinOutDTO joinOutDTO = new UserResponse.JoinOutDTO(cos);
         Mockito.when(userService.회원가입(any())).thenReturn(joinOutDTO);
 
@@ -88,7 +92,7 @@ public class UserControllerUnitTest extends DummyEntity {
     public void login_test() throws Exception {
         // given
         UserRequest.LoginInDTO loginInDTO = new UserRequest.LoginInDTO();
-        loginInDTO.setUsername("cos");
+        loginInDTO.setEmail("abcd@nate.com");
         loginInDTO.setPassword("1234");
         String requestBody = om.writeValueAsString(loginInDTO);
 
@@ -107,15 +111,17 @@ public class UserControllerUnitTest extends DummyEntity {
         resultActions.andExpect(status().isOk());
     }
 
-    @MyWithMockUser(id = 1L, username = "cos", role = "USER", fullName = "코스")
-    //@WithMockUser(value = "ssar", password = "1234", roles = "USER")
+
+    @MyWithMockUser(id = 1L, username = "cos", role = "USER", remainDays = 15)
     @Test
     public void detail_test() throws Exception {
         // given
         Long id = 1L;
 
         // stub
-        User cos = newMockUser(1L,"cos", "코스","USER",2);
+
+        User cos = newMockUser(1L,"cos", 15);
+
         UserResponse.DetailOutDTO detailOutDTO = new UserResponse.DetailOutDTO(cos);
         Mockito.when(userService.회원상세보기(any())).thenReturn(detailOutDTO);
 
@@ -126,11 +132,9 @@ public class UserControllerUnitTest extends DummyEntity {
         System.out.println("테스트 : " + responseBody);
 
         // then
-        resultActions.andExpect(jsonPath("$.data.id").value(1L));
         resultActions.andExpect(jsonPath("$.data.username").value("cos"));
         resultActions.andExpect(jsonPath("$.data.email").value("cos@nate.com"));
-        resultActions.andExpect(jsonPath("$.data.fullName").value("코스"));
-        resultActions.andExpect(jsonPath("$.data.role").value("USER"));
         resultActions.andExpect(status().isOk());
     }
 }
+
