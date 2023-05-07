@@ -95,12 +95,13 @@ public class UserService {
     // role까지 변경가능
     @MyLog
     @Transactional
-    public Manage.MasterDTO 권한수정(Long id, Manage.MasterDTO masterDTO) {
+    public Manage.MasterOutDTO 권한수정(Long id, Manage.MasterInDTO masterIn) {
+        Manage.MasterOutDTO managePS = new Manage.MasterOutDTO();
         User userPS = userRepository.findById(id)
                 .orElseThrow(()->new Exception400("id", "해당 유저가 존재하지 않습니다"));
         // 정보 수정
-        userPS.update(masterDTO.toEntityIn(id));
-        return masterDTO.toEntityOut(userPS);
+        userPS.update(masterIn.toEntityIn(id));
+        return managePS.toEntityOut(userPS);
     } // 더티체킹
 
     // checkpoint : 유저 목록을 Page객체로 전달할것인가, List객체로 전달할 것인가.

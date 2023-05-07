@@ -180,9 +180,30 @@ public class AdminControllerUnitTest extends DummyEntity{
 
     }
 
-
+    @MyWithMockUser(id = 2L, username = "cos", role = "MASTER", fullName = "코스")
     @Test
-    public void roleUpdate_test(){
+    public void roleUpdate_test() throws Exception{
+        // given
+        Long id = 1L;
+        Manage.MasterInDTO masterIn = new Manage.MasterInDTO();
+        masterIn.setRole("ADMIN");
+        String requestBody = om.writeValueAsString(masterIn);
 
+        // stub
+        User ssar = newMockUser(1L,"sockja","숙자","ADMIN",5);
+        Manage.MasterOutDTO masterOutDTO = new Manage.MasterOutDTO().toEntityOut(ssar);
+        Mockito.when(userService.권한수정(any(Long.class), any(Manage.MasterInDTO.class))).thenReturn(masterOutDTO);
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(post("/auth/master/"+id)
+                                .content(requestBody).contentType(MediaType.APPLICATION_JSON));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : "+responseBody);
+
+        // then
+        resultActions.andExpect(jsonPath("$.data.userId").value(1L));
+        resultActions.andExpect(jsonPath("$.data.role").value("ADMIN"));
+        resultActions.andExpect(status().isOk());
     }
 }

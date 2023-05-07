@@ -45,8 +45,6 @@ public class AdminController {
 
     @GetMapping("/auth/admin") //  /admin?page=5&size=20
     public ResponseEntity<?> userChart(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size) {
-        // 1. 권한 확인
-        //if ("MASTER".equals(myUserDetails.getUser().getRole()) || "ADMIN".equals(myUserDetails.getUser().getRole())) {
         PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("id").descending());
         Page<Manage.UserManageDTO> userListPS = userService.회원목록보기(pageRequest);
         ResponseDTO<Page> responseDTO = new ResponseDTO<>(userListPS);
@@ -54,12 +52,10 @@ public class AdminController {
     }
 
     // role까지 변경가능, master로 접근해야, role변경이 가능하다.
-    @PostMapping("/master/role/{id}")
-    public ResponseEntity<?> roleUpdate(@PathVariable Long id,@RequestBody Manage.MasterDTO masterDTO, @AuthenticationPrincipal MyUserDetails myUserDetails){
-        if(!"MASTER".equals(myUserDetails.getUser().getRole())){
-            throw new Exception403("권한이 없습니다.");
-        }
-        Manage.MasterDTO masterOut = userService.권한수정(id,masterDTO);
+    @PostMapping("/auth/master/{id}")
+    public ResponseEntity<?> roleUpdate(@PathVariable Long id,@RequestBody Manage.MasterInDTO masterIn, @AuthenticationPrincipal MyUserDetails myUserDetails){
+
+        Manage.MasterOutDTO masterOut = userService.권한수정(id,masterIn);
         ResponseDTO<?>responseDTO = new ResponseDTO<>(HttpStatus.OK,"success",masterOut);
         return ResponseEntity.ok().body(responseDTO);
     }

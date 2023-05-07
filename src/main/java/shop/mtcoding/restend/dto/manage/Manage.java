@@ -35,7 +35,6 @@ public class Manage {
         @Max(100)
         private Integer remain_days;
 
-        @Builder
         public AnnualRequestDTO(Integer remain_days) {
             this.remain_days = remain_days;
         }
@@ -101,18 +100,16 @@ public class Manage {
     }
     @NoArgsConstructor
     @Getter @Setter
-    public static class MasterDTO {
+    public static class MasterInDTO {
 
-        @NotEmpty
-        private Long userId;
         @NotEmpty
         @Pattern(regexp = "ADMIN|USER|MASTER")
         private String role;
-        @Builder
-        public MasterDTO(Long id, String role) {
-            this.userId = id;
+
+        public MasterInDTO(String role) {
             this.role = role;
         }
+
         public User toEntityIn(Long fk) {
             return User.builder()
                     .id(fk)
@@ -120,13 +117,31 @@ public class Manage {
                     .build();
         }
 
-        public Manage.MasterDTO toEntityOut(User user) {
-            return Manage.MasterDTO.builder()
-                    .id(user.getId())
+    }
+    @NoArgsConstructor
+    @Getter @Setter
+    public static class MasterOutDTO{
+        @NotNull
+        private Long userId;
+
+        @NotEmpty
+        private String role;
+
+        @Builder
+        public MasterOutDTO(Long userId, String role) {
+            this.userId = userId;
+            this.role = role;
+        }
+
+        public Manage.MasterOutDTO toEntityOut(User user) {
+            return MasterOutDTO.builder()
+                    .userId (user.getId())
                     .role(user.getRole())
                     .build();
         }
     }
+
+
 
 
 }

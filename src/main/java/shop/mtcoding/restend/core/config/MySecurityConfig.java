@@ -83,7 +83,7 @@ public class MySecurityConfig {
                 authorize -> authorize.antMatchers("/auth/**").authenticated()
                         .antMatchers("/auth/admin/**")
                         .access("hasRole('ADMIN') or hasRole('MASTER')")
-                        .antMatchers("/master/**").hasRole("MASTER")
+                        .antMatchers("/auth/master/**").hasRole("MASTER")
                         .anyRequest().permitAll()
         );
 

@@ -156,13 +156,13 @@ public class UserServiceTest extends DummyEntity {
     public void 권한수정_test() throws Exception {
         //given
         Long id = 1L;
-        Manage.MasterDTO masterDTO = new Manage.MasterDTO(id, "ADMIN");
+        Manage.MasterInDTO masterIn = new Manage.MasterInDTO("ADMIN");
         //stub
         User cos = newMockUser(1L, "cos", "코스모","USER",2); // role = USER
         Mockito.when(userRepository.findById(any())).thenReturn(Optional.of(cos));
 
         //when
-        Manage.MasterDTO masterPS = userService.권한수정(id, masterDTO);
+        Manage.MasterOutDTO masterPS = userService.권한수정(id, masterIn);
 
         //then
         Assertions.assertThat(masterPS.getUserId().equals(1L));
