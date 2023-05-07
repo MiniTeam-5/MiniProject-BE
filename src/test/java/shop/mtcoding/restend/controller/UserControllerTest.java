@@ -36,6 +36,9 @@ import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -205,7 +208,7 @@ public class UserControllerTest extends MyRestDoc {
 
         // when
         ResultActions resultActions = mvc
-                .perform(get("/auth/user/"+id));
+                .perform(get("/auth/user/" + id));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : " + responseBody);
 
@@ -225,7 +228,7 @@ public class UserControllerTest extends MyRestDoc {
 
         // when
         ResultActions resultActions = mvc
-                .perform(get("/auth/user/"+id));
+                .perform(get("/auth/user/" + id));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : " + responseBody);
 
@@ -246,7 +249,7 @@ public class UserControllerTest extends MyRestDoc {
 
         // when
         ResultActions resultActions = mvc
-                .perform(get("/auth/user/"+id));
+                .perform(get("/auth/user/" + id));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : " + responseBody);
 
@@ -287,7 +290,8 @@ public class UserControllerTest extends MyRestDoc {
                 .andExpect(jsonPath("$.data.email").value("asdf@nate.com"))
                 .andExpect(jsonPath("$.data.username").value("asdf"))
                 .andExpect(jsonPath("$.data.passwordReset").value(true))
-                .andExpect(jsonPath("$.data.profileReset").value(true));
+                .andExpect(jsonPath("$.data.profileReset").value(true))
+                .andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @DisplayName("사원명, 이메일, 비밀번호 변경")
@@ -302,18 +306,113 @@ public class UserControllerTest extends MyRestDoc {
         modifiedInDTO.setNewPassword("1234");
         modifiedInDTO.setCheckPassword("1234");
 
-//        String modifiedInJson = om.writeValueAsString(modifiedInDTO);
-//        MockMultipartFile json = new MockMultipartFile("modifiedInDTO", "modifiedInDTO", "application/json", modifiedInJson.getBytes(StandardCharsets.UTF_8));
-//        MockMultipartFile jsonPart = new MockMultipartFile("modifiedInDTO", null, "application/json", om.writeValueAsBytes(modifiedInDTO));
-//
-//        //When
-//        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.multipart("/auth/user/1")
-//                .file(jsonPart)
-//                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE);
-//
-//        //Then
-//        mvc.perform(request)
-//                .andExpect(status().isOk());
+        //when
+        MockMultipartFile profile = new MockMultipartFile("profile", "".getBytes());
+
+        // modifiedInDTO 객체를 JSON 문자열로 변환
+        String modifiedInJson = om.writeValueAsString(modifiedInDTO);
+        MockMultipartFile json = new MockMultipartFile("modifiedInDTO", "modifiedInDTO", "application/json", modifiedInJson.getBytes(StandardCharsets.UTF_8));
+
+        //then
+//        mvc.perform(
+//                        multipart("/auth/user/1")
+//                                .file(profile)
+//                                .file(json))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.data.email").value("asdf@nate.com"))
+//                .andExpect(jsonPath("$.data.username").value("asdf"))
+//                .andExpect(jsonPath("$.data.passwordReset").value(true))
+//                .andExpect(jsonPath("$.data.profileReset").value(false))
+//                .andDo(MockMvcResultHandlers.print())
+//                .andDo(document);
+
+        mockMvc.perform(
+                        multipart("/auth/user/1")
+                                .file(profile)
+                                .file(json))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.email").value("asdf@nate.com"))
+                .andExpect(jsonPath("$.data.username").value("asdf"))
+                .andExpect(jsonPath("$.data.passwordReset").value(true))
+                .andExpect(jsonPath("$.data.profileReset").value(false))
+                .andDo(MockMvcResultHandlers.print())
+                .andDo(document("auth/user/1", requestParts(
+                        partWithName("profile").description("The file to upload"),
+                        partWithName("modifiedInDTO").description("modifiedInDTO"))
+                ));
+    }
+
+    @DisplayName("사원명, 이메일만 변경")
+    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void modify_username_email() throws Exception {
+
+        //Given
+        UserRequest.ModifiedInDTO modifiedInDTO = new UserRequest.ModifiedInDTO();
+        modifiedInDTO.setEmail("asdf@nate.com");
+        modifiedInDTO.setUsername("asdf");
+
+        //when
+        MockMultipartFile profile = new MockMultipartFile("profile", "".getBytes());
+
+        // modifiedInDTO 객체를 JSON 문자열로 변환
+        String modifiedInJson = om.writeValueAsString(modifiedInDTO);
+        MockMultipartFile json = new MockMultipartFile("modifiedInDTO", "modifiedInDTO", "application/json", modifiedInJson.getBytes(StandardCharsets.UTF_8));
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(
+                        multipart("/auth/user/1")
+                                .file(profile)
+                                .file(json));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        //then
+        resultActions.andExpect(jsonPath("$.status").value(200));
+        resultActions.andExpect(jsonPath("$.msg").value("성공"));
+        resultActions.andExpect(jsonPath("$.data.email").value("asdf@nate.com"));
+        resultActions.andExpect(jsonPath("$.data.username").value("asdf"));
+        resultActions.andExpect(jsonPath("$.data.passwordReset").value(false));
+        resultActions.andExpect(jsonPath("$.data.profileReset").value(false));
+        resultActions.andExpect(status().isOk());
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @DisplayName("비밀번호 변경 실패")
+    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void modify_password_fail() throws Exception {
+
+        //Given
+        UserRequest.ModifiedInDTO modifiedInDTO = new UserRequest.ModifiedInDTO();
+        modifiedInDTO.setEmail("asdf@nate.com");
+        modifiedInDTO.setUsername("asdf");
+        modifiedInDTO.setNewPassword("1234");
+        modifiedInDTO.setCheckPassword("12345");
+
+        //when
+        MockMultipartFile profile = new MockMultipartFile("profile", "".getBytes());
+
+        // modifiedInDTO 객체를 JSON 문자열로 변환
+        String modifiedInJson = om.writeValueAsString(modifiedInDTO);
+        MockMultipartFile json = new MockMultipartFile("modifiedInDTO", "modifiedInDTO", "application/json", modifiedInJson.getBytes(StandardCharsets.UTF_8));
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(
+                        multipart("/auth/user/1")
+                                .file(profile)
+                                .file(json));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        //then
+        resultActions.andExpect(jsonPath("$.status").value(400));
+        resultActions.andExpect(jsonPath("$.msg").value("badRequest"));
+        resultActions.andExpect(jsonPath("$.data.value").value("비밀번호 재확인 필요"));
+        resultActions.andExpect(status().isBadRequest());
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 }
 

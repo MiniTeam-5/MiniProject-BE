@@ -90,3 +90,43 @@ include::{snippets}/{user}/detail_fail_forbidden_test/http-response.adoc[]
 
 ===== Curl
 include::{snippets}/{user}/detail_fail_forbidden_test/curl-request.adoc[]
+
+=== 프로필, 사원명, 이메일, 비밀번호 변경
+===== Request Example
+include::{snippets}/{user}/modify_all_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{user}/modify_all_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{user}/modify_all_test/curl-request.adoc[]
+
+=== 사원명, 이메일, 비밀번호 변경
+===== Request Example
+include::{snippets}/{user}/modify_name_email_password_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{user}/modify_name_email_password_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{user}/modify_name_email_password_test/curl-request.adoc[]
+
+=== 사원명, 이메일만 변경
+===== Request Example
+include::{snippets}/{user}/modify_username_email/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{user}/modify_username_email/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{user}/modify_username_email/curl-request.adoc[]
+
+=== 비밀번호 변경 실패
+===== Request Example
+include::{snippets}/{user}/modify_password_fail/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{user}/modify_password_fail/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{user}/modify_password_fail/curl-request.adoc[]
