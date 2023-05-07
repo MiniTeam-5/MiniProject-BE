@@ -23,7 +23,7 @@ class MyHolidayServiceTest {
 
     @BeforeEach
     void setUp() {
-        myHolidayService = new MyHolidayService("키값");
+//        myHolidayService = new MyHolidayService("키값직접넣어줘야함");
     }
 
     @Test
@@ -35,7 +35,7 @@ class MyHolidayServiceTest {
                 LocalDate.parse("2023-05-27"), LocalDate.parse("2023-05-05")));
 
         // when
-        Set<LocalDate> actual = myHolidayService.getHolidays("2023", "05");
+//        Set<LocalDate> actual = myHolidayService.getHolidays("2023", "05");
 
         // then
 //        Assertions.assertThat(actual).isEqualTo(expected);

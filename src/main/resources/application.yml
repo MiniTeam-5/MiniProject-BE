@@ -3,3 +3,6 @@ spring:
     active:
       - dev
     include: API-KEY
+
+key:
+  holiday: ${HOLIDAY_KEY}

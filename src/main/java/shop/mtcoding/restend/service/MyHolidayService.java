@@ -15,7 +15,7 @@ import java.util.Set;
 public class MyHolidayService {
     private final String key;
 
-    public MyHolidayService(@Value("${key}") String key) {
+    public MyHolidayService(@Value("${key.holiday}") String key) {
         this.key = key;
     }
 

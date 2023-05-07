@@ -34,8 +34,6 @@ public class LeaveService {
 
     private final MyDateService myDateService;
     private final SseService sseService;
-    @Value("${key}")
-    private String key;
 
     @Transactional
     public LeaveResponse.ApplyOutDTO 연차당직신청하기(LeaveRequest.ApplyInDTO applyInDTO, Long userId) {
