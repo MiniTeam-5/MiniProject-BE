@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 
 import java.time.LocalDate;
 
-import static shop.mtcoding.restend.model.user.UserRole.USER;
+import static shop.mtcoding.restend.model.user.UserRole.ROLE_USER;
 
 public class UserRequest {
     @Setter
@@ -58,7 +58,7 @@ public class UserRequest {
                     .email(email)
                     .hireDate(localDate)
                     .annualLimit(annualLimit)
-                    .role(USER)
+                    .role(ROLE_USER)
                     .status(true)
                     .remainDays(15)
                     .build();
