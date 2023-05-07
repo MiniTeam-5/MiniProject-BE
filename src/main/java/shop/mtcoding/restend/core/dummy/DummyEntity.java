@@ -19,7 +19,7 @@ public class DummyEntity {
                 .username(username)
                 .password(passwordEncoder.encode("1234"))
                 .email(username+"@nate.com")
-                .role(UserRole.USER)
+                .role(UserRole.ROLE_USER)
                 .status(status)
                 .hireDate(LocalDate.now().minusYears(1).minusWeeks(1)) // 입사 1년차라 가정
                 .remainDays(remainDays)
@@ -52,7 +52,7 @@ public class DummyEntity {
                 .username(username)
                 .password(passwordEncoder.encode("1234"))
                 .email(username+"@nate.com")
-                .role(UserRole.USER)
+                .role(UserRole.ROLE_USER)
                 .status(true)
                 .hireDate(LocalDate.now().minusYears(1).minusWeeks(1)) // 입사 1년차라 가정
                 .remainDays(remainDays)
