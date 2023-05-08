@@ -18,6 +18,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u from User u where u.email = :email")
     Optional<User> findByEmail(@Param("email") String email);
 
-    // staus = true 사원만 조회
+    // staus = true,status 사원만 조회
+    @Query("select u from User u where u.status = : status")
+    Optional<User> findByStatus(@Param("status") boolean status);
 
 }
