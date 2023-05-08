@@ -9,32 +9,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.mock.web.MockPart;
 import org.springframework.security.test.context.support.TestExecutionEvent;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import shop.mtcoding.restend.core.MyRestDoc;
 import shop.mtcoding.restend.core.auth.jwt.MyJwtProvider;
 import shop.mtcoding.restend.core.dummy.DummyEntity;
 import shop.mtcoding.restend.dto.user.UserRequest;
 import shop.mtcoding.restend.model.user.UserRepository;
-import shop.mtcoding.restend.model.user.UserRole;
 
 import javax.persistence.EntityManager;
 
 import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
@@ -66,6 +60,7 @@ public class UserControllerTest extends MyRestDoc {
     public void setUp() {
         userRepository.save(dummy.newUser("ssar", true, 15));
         userRepository.save(dummy.newUser("cos", true, 15));
+        userRepository.save(dummy.newUser("resign", true, 15));
         em.clear();
     }
 
@@ -88,7 +83,7 @@ public class UserControllerTest extends MyRestDoc {
         System.out.println("테스트 : " + responseBody);
 
         // then
-        resultActions.andExpect(jsonPath("$.data.id").value(3L));
+        resultActions.andExpect(jsonPath("$.data.id").value(4L));
         resultActions.andExpect(jsonPath("$.data.username").value("love"));
         resultActions.andExpect(status().isOk());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
@@ -412,6 +407,48 @@ public class UserControllerTest extends MyRestDoc {
         resultActions.andExpect(jsonPath("$.msg").value("badRequest"));
         resultActions.andExpect(jsonPath("$.data.value").value("비밀번호 재확인 필요"));
         resultActions.andExpect(status().isBadRequest());
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @DisplayName("유저 삭제(비활성) 성공")
+    @WithMockUser(username="admin", roles={"ADMIN"})
+    @Test
+    public void resign_test() throws Exception {
+        // given
+        Long id = 3L;
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(post("/admin/resign/"+id));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // then
+        resultActions.andExpect(jsonPath("$.status").value(200));
+        resultActions.andExpect(jsonPath("$.msg").value("성공"));
+        resultActions.andExpect(jsonPath("$.data").isEmpty());
+        resultActions.andExpect(status().isOk());
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @DisplayName("유저 삭제(비활성) 실패 (없는 유저)")
+    @WithMockUser(username="admin", roles={"ADMIN"})
+    @Test
+    public void resign_fail_test() throws Exception {
+        // given
+        Long id = 5L;
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(post("/admin/resign/"+id));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // then
+        resultActions.andExpect(jsonPath("$.status").value(500));
+        resultActions.andExpect(jsonPath("$.msg").value("serverError"));
+        resultActions.andExpect(jsonPath("$.data").value("로그인 된 유저가 DB에 존재하지 않음"));
+        resultActions.andExpect(status().is5xxServerError());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 }

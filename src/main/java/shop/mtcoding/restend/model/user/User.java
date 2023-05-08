@@ -102,6 +102,9 @@ public class User {
         this.username = user.getUsername();
         this.role = user.getRole();
         this.hireDate = user.getHireDate();
-        //this.annual_limit = user.getAnnual_limit();
+    }
+
+    public void resign() { // 퇴사
+        this.status = false;
     }
 }

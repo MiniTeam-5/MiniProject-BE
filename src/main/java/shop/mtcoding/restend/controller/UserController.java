@@ -14,6 +14,7 @@ import shop.mtcoding.restend.core.auth.session.MyUserDetails;
 import shop.mtcoding.restend.core.exception.Exception400;
 import shop.mtcoding.restend.core.exception.Exception403;
 import shop.mtcoding.restend.dto.ResponseDTO;
+import shop.mtcoding.restend.dto.leave.LeaveResponse;
 import shop.mtcoding.restend.dto.user.UserRequest;
 import shop.mtcoding.restend.dto.user.UserResponse;
 import shop.mtcoding.restend.service.UserService;
@@ -66,6 +67,14 @@ public class UserController {
 
         UserResponse.ModifiedOutDTO modifiedOutDTO = userService.개인정보수정(modifiedInDTO, profile, id);
         ResponseDTO<?> responseDTO = new ResponseDTO<>(modifiedOutDTO);
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @PostMapping("/admin/resign/{id}")
+    public ResponseEntity<?> resign(@PathVariable Long id){
+        userService.퇴사(id);
+        ResponseDTO<?> responseDTO = new ResponseDTO<>();
+
         return ResponseEntity.ok(responseDTO);
     }
 }
