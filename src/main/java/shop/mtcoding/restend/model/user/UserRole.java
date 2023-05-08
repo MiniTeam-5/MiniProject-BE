@@ -1,5 +1,5 @@
 package shop.mtcoding.restend.model.user;
 
 public enum UserRole {
-    USER, ADMIN, MASTER
+    ROLE_USER, ROLE_ADMIN, ROLE_MASTER
 }

@@ -38,7 +38,7 @@ public class LeaveRepositoryTest extends DummyEntity {
     public void setUp() {
         em.createNativeQuery("ALTER TABLE user_tb ALTER COLUMN `id` RESTART WITH 1").executeUpdate();
         em.createNativeQuery("ALTER TABLE leave_tb ALTER COLUMN `id` RESTART WITH 1").executeUpdate();
-        userRepository.save(newUser("ssar", true, 15));
+        userRepository.save(newUser("ssar", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
         User ssar = userRepository.findById(1L).orElseThrow(
                 () -> new RuntimeException("테스트 중 findById 에러 : 1번 유저가 없습니다")
         );;
@@ -49,7 +49,7 @@ public class LeaveRepositoryTest extends DummyEntity {
     @Test
     public void save() {
         // given
-        userRepository.save(newUser("cos", true, 15));
+        userRepository.save(newUser("cos", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
         User cos = userRepository.findById(2L).orElseThrow(
                 () -> new RuntimeException("테스트 중 findById 에러 : 2번 유저가 없습니다")
         );
@@ -142,7 +142,7 @@ public class LeaveRepositoryTest extends DummyEntity {
                     passwordEncoder.matches("1234", userPS.getPassword())
             ).isEqualTo(true);
             Assertions.assertThat(userPS.getEmail()).isEqualTo("ssar@nate.com");
-            Assertions.assertThat(userPS.getRole()).isEqualTo(UserRole.USER);
+            Assertions.assertThat(userPS.getRole()).isEqualTo(UserRole.ROLE_USER);
             Assertions.assertThat(userPS.getStatus()).isEqualTo(true);
             Assertions.assertThat(userPS.getHireDate()).isEqualTo(LocalDate.now().minusYears(1).minusWeeks(1));
             Assertions.assertThat(userPS.getRemainDays()).isEqualTo(15);
@@ -154,7 +154,7 @@ public class LeaveRepositoryTest extends DummyEntity {
     @Test
     public void existsDuplicateDuty(){
         // given
-        userRepository.save(newUser("cos", true, 15));
+        userRepository.save(newUser("cos", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
         User cos = userRepository.findById(2L).orElseThrow(
                 () -> new RuntimeException("테스트 중 findById 에러 : 2번 유저가 없습니다")
         );
@@ -175,7 +175,7 @@ public class LeaveRepositoryTest extends DummyEntity {
     @Test
     public void existsDuplicateAnnual(){
         // given
-        userRepository.save(newUser("cos", true, 15));
+        userRepository.save(newUser("cos", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
         User cos = userRepository.findById(2L).orElseThrow(
                 () -> new RuntimeException("테스트 중 findById 에러 : 2번 유저가 없습니다")
         );

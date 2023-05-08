@@ -26,6 +26,7 @@ import shop.mtcoding.restend.dto.user.UserRequest;
 import shop.mtcoding.restend.dto.user.UserResponse;
 import shop.mtcoding.restend.core.MyWithMockUser;
 import shop.mtcoding.restend.model.user.User;
+import shop.mtcoding.restend.model.user.UserRole;
 import shop.mtcoding.restend.service.UserService;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -71,6 +72,7 @@ public class UserControllerUnitTest extends DummyEntity {
 
         // 가정해볼께
 
+
         User cos = newMockUser(1L,"cos", 15);
         UserResponse.JoinOutDTO joinOutDTO = new UserResponse.JoinOutDTO(cos);
         Mockito.when(userService.회원가입(any())).thenReturn(joinOutDTO);
@@ -111,7 +113,7 @@ public class UserControllerUnitTest extends DummyEntity {
     }
 
 
-    @MyWithMockUser(id = 1L, username = "cos", role = "USER", remainDays = 15)
+    @MyWithMockUser(id = 1L, username = "cos", role = UserRole.ROLE_USER, remainDays = 15)
     @Test
     public void detail_test() throws Exception {
         // given

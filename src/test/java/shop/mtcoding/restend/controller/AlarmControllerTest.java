@@ -26,6 +26,8 @@ import shop.mtcoding.restend.model.user.UserRole;
 
 import javax.persistence.EntityManager;
 
+import java.time.LocalDate;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -52,9 +54,9 @@ public class AlarmControllerTest {
 
     @BeforeEach
     public void setUp() {
-        userRepository.save(dummy.newUser("ssar", true, 15));
-        userRepository.save(dummy.newUser("cos", true, 15));
-        user = userRepository.save(dummy.newUser("dotori", true, 15));
+        userRepository.save(dummy.newUser("ssar", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
+        userRepository.save(dummy.newUser("cos", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
+        user = userRepository.save(dummy.newUser("dotori", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
         em.clear();
     }
 

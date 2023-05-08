@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.mtcoding.restend.core.exception.Exception400;
 import shop.mtcoding.restend.core.exception.Exception500;
-import shop.mtcoding.restend.core.util.MyDateUtil;
 import shop.mtcoding.restend.dto.alarm.AlarmResponse;
 import shop.mtcoding.restend.dto.leave.LeaveRequest;
 import shop.mtcoding.restend.dto.leave.LeaveResponse;
@@ -32,10 +31,12 @@ public class LeaveService {
     private final LeaveRepository leaveRepository;
     private final AlarmRepository alarmRepository;
 
+    private final DateService dateService;
     private final SseService sseService;
 
     @Transactional
     public LeaveResponse.ApplyOutDTO 연차당직신청하기(LeaveRequest.ApplyInDTO applyInDTO, Long userId) {
+
         // 1. 유저 존재 확인
         User userPS = userRepository.findById(userId).orElseThrow(
                 () -> new Exception500("로그인 된 유저가 DB에 존재하지 않음")
@@ -63,7 +64,7 @@ public class LeaveService {
         // 1) 사용할 연차 일수 계산하기: 평일만 계산 + 공휴일 계산 by 공공 API
         Integer usingDays = -1;
         try{
-            usingDays = MyDateUtil.getWeekDayCount(applyInDTO.getStartDate(), applyInDTO.getEndDate());
+            usingDays = dateService.getWeekDayCount(applyInDTO.getStartDate(), applyInDTO.getEndDate());
         }catch (URISyntaxException e){
             throw new Exception500(e.getMessage());
         }
