@@ -196,4 +196,12 @@ public class UserService {
         }
         return modifiedOutDTO;
     }
+
+    @Transactional
+    public void 퇴사(Long id) {
+        User userPS = userRepository.findById(id).orElseThrow(
+                () -> new Exception500("로그인 된 유저가 DB에 존재하지 않음")
+        );
+        userPS.resign();
+    }
 }
