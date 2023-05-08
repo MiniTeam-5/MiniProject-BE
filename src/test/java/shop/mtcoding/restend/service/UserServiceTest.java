@@ -138,7 +138,7 @@ public class UserServiceTest extends DummyEntity {
         Assertions.assertThat(detailOutDTO.getId()).isEqualTo(1L);
         Assertions.assertThat(detailOutDTO.getUsername()).isEqualTo("cos");
         Assertions.assertThat(detailOutDTO.getEmail()).isEqualTo("cos@nate.com");
-        Assertions.assertThat(detailOutDTO.getRole()).isEqualTo(UserRole.USER);
+        Assertions.assertThat(detailOutDTO.getRole()).isEqualTo(UserRole.ROLE_USER);
     }
 
     @Test

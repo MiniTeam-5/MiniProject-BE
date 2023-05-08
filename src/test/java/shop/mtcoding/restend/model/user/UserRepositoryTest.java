@@ -91,7 +91,7 @@ public class UserRepositoryTest extends DummyEntity {
         Assertions.assertThat(userPS.getEmail()).isEqualTo("ssar@nate.com");
         Assertions.assertThat(userPS.getRole()).isEqualTo(UserRole.ROLE_USER);
         Assertions.assertThat(userPS.getStatus()).isEqualTo(true);
-        Assertions.assertThat(userPS.getHireDate()).isEqualTo(LocalDate.now().minusYears(1));
+        Assertions.assertThat(userPS.getHireDate()).isEqualTo(LocalDate.now().minusYears(1).minusWeeks(1));
         Assertions.assertThat(userPS.getRemainDays()).isEqualTo(15);
         Assertions.assertThat(userPS.getCreatedAt().toLocalDate()).isEqualTo(LocalDate.now());
         Assertions.assertThat(userPS.getUpdatedAt()).isNull();
@@ -106,7 +106,7 @@ public class UserRepositoryTest extends DummyEntity {
         User userPS = userRepository.save(love);
 
         // then (beforeEach에서 2건이 insert 되어 있음)
-        Assertions.assertThat(userPS.getId()).isEqualTo(3L);
+        Assertions.assertThat(userPS.getId()).isEqualTo(5L);
         Assertions.assertThat(userPS.getUsername()).isEqualTo("love");
         Assertions.assertThat(
                 passwordEncoder.matches("1234", userPS.getPassword())
