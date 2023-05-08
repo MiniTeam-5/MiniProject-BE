@@ -7,7 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.TestPropertySource;
-import shop.mtcoding.restend.service.MyHolidayService;
+import shop.mtcoding.restend.service.HolidayService;
 
 import java.net.URISyntaxException;
 import java.time.LocalDate;
@@ -19,7 +19,7 @@ import java.util.Set;
 @ExtendWith(MockitoExtension.class)
 class MyHolidayServiceTest {
     @InjectMocks
-    private MyHolidayService myHolidayService;
+    private HolidayService holidayService;
 
     @BeforeEach
     void setUp() {

@@ -12,10 +12,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Service
-public class MyHolidayService {
+public class HolidayService {
     private final String key;
 
-    public MyHolidayService(@Value("${key.holiday}") String key) {
+    public HolidayService(@Value("${key.holiday}") String key) {
         this.key = key;
     }
 

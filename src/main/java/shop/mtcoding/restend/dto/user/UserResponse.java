@@ -29,12 +29,10 @@ public class UserResponse {
     public static class JoinOutDTO {
         private Long id;
         private String username;
-        private Integer annualLimit;
 
         public JoinOutDTO(User user) {
             this.id = user.getId();
             this.username = user.getUsername();
-            this.annualLimit = user.getAnnualLimit();
         }
     }
 

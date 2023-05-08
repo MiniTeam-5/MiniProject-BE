@@ -38,8 +38,7 @@ public class User {
 
     private String profile;
 
-    private Integer annualLimit;
-
+    @Setter
     @Min(0)
     private Integer remainDays; // 남은 연차수
 
@@ -83,14 +82,13 @@ public class User {
     }
 
     @Builder
-    public User(Long id, String username, String password, String email, UserRole role, Boolean status, Integer annualLimit, Integer remainDays, LocalDate hireDate, String profile, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public User(Long id, String username, String password, String email, UserRole role, Boolean status, Integer remainDays, LocalDate hireDate, String profile, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
         this.role = role;
         this.status = status;
-        this.annualLimit = annualLimit;
         this.remainDays = remainDays;
         this.hireDate = hireDate;
         this.profile = profile;
@@ -102,6 +100,5 @@ public class User {
         this.username = user.getUsername();
         this.role = user.getRole();
         this.hireDate = user.getHireDate();
-        //this.annual_limit = user.getAnnual_limit();
     }
 }
