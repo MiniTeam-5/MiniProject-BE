@@ -27,17 +27,13 @@ public class UserRequest {
     @Setter
     @Getter
     public static class JoinInDTO {
-        @Pattern(regexp = "^[a-zA-Z0-9]{2,20}$", message = "영문/숫자 2~20자 이내로 작성해주세요")
+        @Pattern(regexp = "^[가-힣]{2,10}$", message = "이름은 2~20자 이내로 작성해주세요")
         @NotEmpty
         private String username;
 
         @NotEmpty
         @Size(min = 4, max = 20)
         private String password;
-
-        @NotEmpty
-        @Size(min = 4, max = 20)
-        private String checkPassword;
 
         @NotEmpty
         @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$", message = "이메일 형식으로 작성해주세요")
@@ -68,11 +64,11 @@ public class UserRequest {
         @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$", message = "이메일 형식으로 작성해주세요")
         @NotEmpty
         private String email;
+        @Pattern(regexp = "^[가-힣]{2,10}$", message = "이름은 2~20자 이내로 작성해주세요")
         @NotEmpty
         private String username;
 
         private String newPassword;
-        private String checkPassword;
         private Boolean deletedProfile;
 
     }

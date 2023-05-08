@@ -76,7 +76,6 @@ public class UserServiceTest extends DummyEntity {
         UserRequest.JoinInDTO joinInDTO = new UserRequest.JoinInDTO();
         joinInDTO.setUsername("cos");
         joinInDTO.setPassword("1234");
-        joinInDTO.setCheckPassword("1234");
         joinInDTO.setEmail("cos@nate.com");
         joinInDTO.setHireDate("2022-12-12");
 

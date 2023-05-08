@@ -63,9 +63,8 @@ public class UserControllerUnitTest extends DummyEntity {
     public void join_test() throws Exception {
         // 준비
         UserRequest.JoinInDTO joinInDTO = new UserRequest.JoinInDTO();
-        joinInDTO.setUsername("cos");
+        joinInDTO.setUsername("코스");
         joinInDTO.setPassword("1234");
-        joinInDTO.setCheckPassword("1234");
         joinInDTO.setEmail("cos@nate.com");
         joinInDTO.setHireDate("2022-12-12");
         String requestBody = om.writeValueAsString(joinInDTO);
@@ -128,7 +127,7 @@ public class UserControllerUnitTest extends DummyEntity {
 
         // when
         ResultActions resultActions = mvc
-                .perform(get("/auth/user/"+id));
+                .perform(get("/auth/user"));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : " + responseBody);
 
