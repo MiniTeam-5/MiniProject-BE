@@ -6,14 +6,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
-import org.mockito.internal.matchers.Equals;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -25,20 +23,17 @@ import shop.mtcoding.restend.core.advice.MyValidAdvice;
 import shop.mtcoding.restend.core.config.MyFilterRegisterConfig;
 import shop.mtcoding.restend.core.config.MySecurityConfig;
 import shop.mtcoding.restend.core.dummy.DummyEntity;
-import shop.mtcoding.restend.dto.manage.Manage;
+import shop.mtcoding.restend.dto.manage.ManageUserDTO;
 import shop.mtcoding.restend.core.MyWithMockUser;
-import shop.mtcoding.restend.dto.manage.ResponsePagenation;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRepository;
 import shop.mtcoding.restend.model.user.UserRole;
 import shop.mtcoding.restend.service.ManageService;
-import shop.mtcoding.restend.service.ManageServiceTest;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -83,14 +78,14 @@ public class AdminControllerUnitTest extends DummyEntity{
     public void annualUpdate_test() throws Exception{
         // given
         Long id = 2L;
-        Manage.AnnualRequestDTO annualRequestDTO = new Manage.AnnualRequestDTO(5);
+        ManageUserDTO.AnnualRequestDTO annualRequestDTO = new ManageUserDTO.AnnualRequestDTO(5);
         String requestBody = om.writeValueAsString(annualRequestDTO);
 
 
         User ssar = newMockUser(2L,"sockja",5);
-        Manage manage = new Manage().toEntityOut(ssar);
-        Mockito.when(manageService.연차수정(Mockito.any(Long.class), any(Manage.AnnualRequestDTO.class)))
-                .thenReturn(manage);
+        ManageUserDTO manageUserDTO = new ManageUserDTO().toEntityOut(ssar);
+        Mockito.when(manageService.연차수정(Mockito.any(Long.class), any(ManageUserDTO.AnnualRequestDTO.class)))
+                .thenReturn(manageUserDTO);
 
         //.with(SecurityMockMvcRequestPostProcessors.user("cos").roles("ADMIN"))
 
@@ -106,7 +101,7 @@ public class AdminControllerUnitTest extends DummyEntity{
 
         //then
         resultActions.andExpect(jsonPath("$.data.userId").value(2L));
-        resultActions.andExpect(jsonPath("$.data.remain_days").value(5));
+        resultActions.andExpect(jsonPath("$.data.remainDays").value(5));
         resultActions.andExpect(status().isOk());
     }
 
@@ -118,18 +113,18 @@ public class AdminControllerUnitTest extends DummyEntity{
         // Given
         String img = "img";
         int expectedPageSize = 3;
-        List<Manage.UserManageDTO> userList = new ArrayList<>();
-        Manage.UserManageDTO userPS1 = newMockChartUser(1L, UserRole.ROLE_USER,"gamja", LocalDate.of(2023, 5, 10),2,img);
-        Manage.UserManageDTO userPS2 = newMockChartUser(2L,UserRole.ROLE_USER,"suckja", LocalDate.of(2023, 5, 10),2,img);
-        Manage.UserManageDTO userPS3 = newMockChartUser(3L,UserRole.ROLE_USER,"nana", LocalDate.of(2023, 5, 10),2,img);
-        Manage.UserManageDTO userPS4 = newMockChartUser(4L,UserRole.ROLE_USER,"po", LocalDate.of(2023, 5, 10),2,img);
-        Manage.UserManageDTO userPS5 = newMockChartUser(5L,UserRole.ROLE_USER,"bora", LocalDate.of(2023, 5, 10),2,img);
-        Manage.UserManageDTO userPS6 = newMockChartUser(6L,UserRole.ROLE_USER,"zelda", LocalDate.of(2023, 5, 10),2,img);
-        Manage.UserManageDTO userPS7 = newMockChartUser(7L,UserRole.ROLE_USER,"link", LocalDate.of(2023, 5, 10),2,img);
-        Manage.UserManageDTO userPS8 = newMockChartUser(8L,UserRole.ROLE_USER,"ribal", LocalDate.of(2023, 5, 10),2,img);
+        List<ManageUserDTO.ManageUserListDTO> userList = new ArrayList<>();
+        ManageUserDTO.ManageUserListDTO userPS1 = newMockChartUser(1L, UserRole.ROLE_USER,"gamja", LocalDate.of(2023, 5, 10),2,img);
+        ManageUserDTO.ManageUserListDTO userPS2 = newMockChartUser(2L,UserRole.ROLE_USER,"suckja", LocalDate.of(2023, 5, 10),2,img);
+        ManageUserDTO.ManageUserListDTO userPS3 = newMockChartUser(3L,UserRole.ROLE_USER,"nana", LocalDate.of(2023, 5, 10),2,img);
+        ManageUserDTO.ManageUserListDTO userPS4 = newMockChartUser(4L,UserRole.ROLE_USER,"po", LocalDate.of(2023, 5, 10),2,img);
+        ManageUserDTO.ManageUserListDTO userPS5 = newMockChartUser(5L,UserRole.ROLE_USER,"bora", LocalDate.of(2023, 5, 10),2,img);
+        ManageUserDTO.ManageUserListDTO userPS6 = newMockChartUser(6L,UserRole.ROLE_USER,"zelda", LocalDate.of(2023, 5, 10),2,img);
+        ManageUserDTO.ManageUserListDTO userPS7 = newMockChartUser(7L,UserRole.ROLE_USER,"link", LocalDate.of(2023, 5, 10),2,img);
+        ManageUserDTO.ManageUserListDTO userPS8 = newMockChartUser(8L,UserRole.ROLE_USER,"ribal", LocalDate.of(2023, 5, 10),2,img);
 
 
-        Page<Manage.UserManageDTO> userListPG = new PageImpl<>(Arrays.asList(userPS1, userPS2, userPS3, userPS4, userPS5, userPS6, userPS7, userPS8));
+        Page<ManageUserDTO.ManageUserListDTO> userListPG = new PageImpl<>(Arrays.asList(userPS1, userPS2, userPS3, userPS4, userPS5, userPS6, userPS7, userPS8));
 
         Mockito.when(manageService.회원목록보기(any())).thenReturn(userListPG);
 
@@ -173,14 +168,14 @@ public class AdminControllerUnitTest extends DummyEntity{
     public void roleUpdate_test() throws Exception{
         // given
         Long id = 1L;
-        Manage.MasterInDTO masterIn = new Manage.MasterInDTO();
+        ManageUserDTO.MasterInDTO masterIn = new ManageUserDTO.MasterInDTO();
         masterIn.setRole(UserRole.ROLE_ADMIN);
         String requestBody = om.writeValueAsString(masterIn);
 
         // stub
         User ssar = newMockUserRole(1L,"sockja",5,UserRole.ROLE_ADMIN);
-        Manage.MasterOutDTO masterOutDTO = new Manage.MasterOutDTO().toEntityOut(ssar);
-        Mockito.when(manageService.권한수정(any(Long.class), any(Manage.MasterInDTO.class))).thenReturn(masterOutDTO);
+        ManageUserDTO.MasterOutDTO masterOutDTO = new ManageUserDTO.MasterOutDTO().toEntityOut(ssar);
+        Mockito.when(manageService.권한수정(any(Long.class), any(ManageUserDTO.MasterInDTO.class))).thenReturn(masterOutDTO);
 
         // when
         ResultActions resultActions = mvc

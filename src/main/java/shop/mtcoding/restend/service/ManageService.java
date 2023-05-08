@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.mtcoding.restend.core.annotation.MyLog;
 import shop.mtcoding.restend.core.exception.Exception400;
-import shop.mtcoding.restend.dto.manage.Manage;
+import shop.mtcoding.restend.dto.manage.ManageUserDTO;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRepository;
 
@@ -27,22 +27,22 @@ public class ManageService {
     // 회원 관리 페이지, 회원 정보 수정 ( 5/2 김형준 추가)
     @MyLog
     @Transactional
-    public Manage 연차수정(Long id, Manage.AnnualRequestDTO annualRequestDTO) {
-        Manage manage = new Manage();
-        User userPS = userRepository.findById(id)
+    public ManageUserDTO 연차수정(Long id, ManageUserDTO.AnnualRequestDTO annualRequestDTO) {
+        ManageUserDTO manageUserDTO = new ManageUserDTO();
+        User userPS = userRepository.findByStatusAndId(true,id)
                 .orElseThrow(()->new Exception400("id", "해당 유저가 존재하지 않습니다"));
         // 정보 수정
-        Manage.AnnualRequestDTO managePS = new Manage.AnnualRequestDTO(annualRequestDTO.getRemain_days());
+        ManageUserDTO.AnnualRequestDTO managePS = new ManageUserDTO.AnnualRequestDTO(annualRequestDTO.getRemainDays());
         userPS.update(managePS.toEntityIn());
-        return manage.toEntityOut(userPS);
+        return manageUserDTO.toEntityOut(userPS);
     } // 더티체킹
 
     // role까지 변경가능
     @MyLog
     @Transactional
-    public Manage.MasterOutDTO 권한수정(Long id, Manage.MasterInDTO masterIn) {
-        Manage.MasterOutDTO managePS = new Manage.MasterOutDTO();
-        User userPS = userRepository.findById(id)
+    public ManageUserDTO.MasterOutDTO 권한수정(Long id, ManageUserDTO.MasterInDTO masterIn) {
+        ManageUserDTO.MasterOutDTO managePS = new ManageUserDTO.MasterOutDTO();
+        User userPS = userRepository.findByStatusAndId(true,id)
                 .orElseThrow(()->new Exception400("id", "해당 유저가 존재하지 않습니다"));
         // 정보 수정
         userPS.update(masterIn.toEntityIn(id));
@@ -52,12 +52,14 @@ public class ManageService {
     // checkpoint : 유저 목록을 Page객체로 전달할것인가, List객체로 전달할 것인가.
     @MyLog
     @Transactional(readOnly = true)
-    public Page<Manage.UserManageDTO> 회원목록보기(Pageable pageable){
+    public Page<ManageUserDTO.ManageUserListDTO> 회원목록보기(Pageable pageable){
 
-        Manage.UserManageDTO userManageDTO = new Manage.UserManageDTO();
+        ManageUserDTO.ManageUserListDTO manageUserListDTO = new ManageUserDTO.ManageUserListDTO();
         List<User> userList = userRepository.findAll();
 
-        Page<Manage.UserManageDTO> usersPG = new PageImpl<>(userList.stream().map(user -> userManageDTO.toEntityOut(user) ).collect(Collectors.toList()), pageable, userList.size());
+        Page<ManageUserDTO.ManageUserListDTO> usersPG = new PageImpl<>(userList.stream()
+                .map(user -> manageUserListDTO.toEntityOut(user))
+                .collect(Collectors.toList()), pageable, userList.size());
         return usersPG;
     }
 }

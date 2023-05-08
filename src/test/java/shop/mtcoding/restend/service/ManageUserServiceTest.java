@@ -13,7 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import shop.mtcoding.restend.core.dummy.DummyEntity;
-import shop.mtcoding.restend.dto.manage.Manage;
+import shop.mtcoding.restend.dto.manage.ManageUserDTO;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRepository;
 import shop.mtcoding.restend.model.user.UserRole;
@@ -31,7 +31,7 @@ import static org.mockito.ArgumentMatchers.any;
 @ExtendWith(MockitoExtension.class)
 @Transactional
 // @SpringBootTest 어노테이션을 붙이게되면 JUnit5의 Mockito기능이 없어지고, 의존성 주입을 하게 된다.
-public class ManageServiceTest extends DummyEntity {
+public class ManageUserServiceTest extends DummyEntity {
 
     @InjectMocks
     private ManageService manageService;
@@ -45,42 +45,45 @@ public class ManageServiceTest extends DummyEntity {
     public void 연차수정_test() throws Exception {
         //given
         Long id = 1L;
-        Manage.AnnualRequestDTO annualRequestDTO = new Manage.AnnualRequestDTO(5);
+        ManageUserDTO.AnnualRequestDTO annualRequestDTO = new ManageUserDTO.AnnualRequestDTO(5);
 
         //stub
         User cos = newMockUser(1L, "cos",2); //Annual_limit = 2
-        Mockito.when(userRepository.findById(any())).thenReturn(Optional.of(cos));
+        Mockito.when(userRepository.findByStatusAndId(true,id)).thenReturn(Optional.of(cos));
 
         //when
-        Manage managePS = manageService.연차수정(id, annualRequestDTO);
+        ManageUserDTO manageUserDTOPS = manageService.연차수정(id, annualRequestDTO);
 
         //then
-        Assertions.assertThat(managePS.getUserId().equals(1L));
-        Assertions.assertThat(managePS.getRemain_days().equals(5));
+        Assertions.assertThat(manageUserDTOPS.getUserId().equals(1L));
+        Assertions.assertThat(manageUserDTOPS.getRemainDays().equals(5));
     }
 
     @Test
     public void 권한수정_test() throws Exception {
         //given
+
         Long id = 1L;
-        Manage.MasterInDTO masterIn = new Manage.MasterInDTO(UserRole.ROLE_ADMIN);
+        ManageUserDTO.MasterInDTO masterIn = new ManageUserDTO.MasterInDTO(UserRole.ROLE_ADMIN);
         //stub
-        User cos = newMockUser(1L, "cos",2); // role = USER
-        Mockito.when(userRepository.findById(any())).thenReturn(Optional.of(cos));
+        User expectedUser = newMockStateUser(1L, "cos",2,true); // role = USER
+
+
+        Mockito.when(userRepository.findByStatusAndId(true, id)).thenReturn(Optional.of(expectedUser));
 
         //when
-        Manage.MasterOutDTO masterPS = manageService.권한수정(id, masterIn);
+        ManageUserDTO.MasterOutDTO masterPS = manageService.권한수정(id, masterIn);
 
         //then
         Assertions.assertThat(masterPS.getUserId().equals(1L));
-        Assertions.assertThat(masterPS.getRole().equals("ADMIN"));
+        Assertions.assertThat(masterPS.getRole()).isEqualTo(UserRole.ROLE_ADMIN);
     }
 
 
     @Test
     void 회원목록보기_test() {
         // given
-        Manage.UserManageDTO userManageDTO = new Manage.UserManageDTO();
+        ManageUserDTO.ManageUserListDTO manageUserListDTO = new ManageUserDTO.ManageUserListDTO();
         int page = 0;
         PageRequest pageRequest = PageRequest.of(page, 3, Sort.by("id").descending());
 
@@ -98,7 +101,7 @@ public class ManageServiceTest extends DummyEntity {
         Mockito.when(userRepository.findAll()).thenReturn(userList);
 
         // when
-        Page<Manage.UserManageDTO> usersPG = manageService.회원목록보기(pageRequest);
+        Page<ManageUserDTO.ManageUserListDTO> usersPG = manageService.회원목록보기(pageRequest);
         String responsBody = usersPG.getContent().toString();
         System.out.println("Test : "+ responsBody);
 
