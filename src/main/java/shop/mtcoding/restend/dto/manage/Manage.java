@@ -59,22 +59,28 @@ public class Manage {
         @NotEmpty
         private UserRole role;
 
+        @NotNull
+        private Integer pageSize;
+
         @NotEmpty
         private LocalDate hireDate;
+
         @NotNull
         @Min(0)
         @Max(100)
-        private Integer remain_days;
+        private Integer remainDays;
+
 
         private String profile;
         @Builder
-        public UserManageDTO(Long userId, UserRole role, String username, LocalDate hireDate, Integer remain_days, String profile) {
+        public UserManageDTO(Long userId, UserRole role, String username, LocalDate hireDate, Integer remainDays, String profile, Integer pageSize) {
                 this.userId = userId;
                 this.role = role;
                 this.username = username;
                 this.hireDate = hireDate;
-                this.remain_days = remain_days;
+                this.remainDays = remainDays;
                 this.profile = profile;
+                this.pageSize = pageSize;
             }
 
             public User toEntityIn(Long fk){
@@ -83,7 +89,7 @@ public class Manage {
                     .role(role)
                     .username(username)
                     .hireDate(hireDate)
-                    .remainDays(remain_days)
+                    .remainDays(remainDays)
                     .profile(profile)
                     .build();
         }
@@ -94,8 +100,9 @@ public class Manage {
                     .role(user.getRole())
                     .username(user.getUsername())
                     .hireDate(user.getHireDate())
-                    .remain_days(user.getRemainDays())
+                    .remainDays(user.getRemainDays())
                     .profile(user.getProfile())
+                    .pageSize(pageSize)
                     .build();
         }
     }
