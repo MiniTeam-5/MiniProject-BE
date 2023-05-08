@@ -26,6 +26,7 @@ import shop.mtcoding.restend.model.leave.Leave;
 import shop.mtcoding.restend.model.leave.enums.LeaveStatus;
 import shop.mtcoding.restend.model.leave.enums.LeaveType;
 import shop.mtcoding.restend.model.user.User;
+import shop.mtcoding.restend.model.user.UserRole;
 import shop.mtcoding.restend.service.LeaveService;
 
 import java.time.LocalDate;
@@ -65,7 +66,7 @@ public class LeaveControllerUnitTest extends DummyEntity {
     @MockBean
     private MyUserDetails myUserDetails;
 
-    @MyWithMockUser(id = 1L, username = "cos", role = "USER", remainDays = 15)
+    @MyWithMockUser(id = 1L, username = "cos", role = UserRole.ROLE_USER, remainDays = 15)
     @Test
     public void apply_test() throws Exception {
         // 준비
@@ -97,7 +98,7 @@ public class LeaveControllerUnitTest extends DummyEntity {
         resultActions.andExpect(status().isOk());
     }
 
-    @MyWithMockUser(id = 1L, username = "cos", role = "USER", remainDays = 15)
+    @MyWithMockUser(id = 1L, username = "cos", role = UserRole.ROLE_USER, remainDays = 15)
     @Test
     public void cancel_test() throws Exception {
         // given
@@ -143,7 +144,7 @@ public class LeaveControllerUnitTest extends DummyEntity {
         resultActions.andExpect(jsonPath("$.data.remainDays").value(14));
     }
 
-    @MyWithMockUser(id = 1L, username = "cos", role = "USER", remainDays = 15)
+    @MyWithMockUser(id = 1L, username = "cos", role = UserRole.ROLE_USER, remainDays = 15)
     @Test
     public void getLeaveData_test() throws Exception {
         // 준비

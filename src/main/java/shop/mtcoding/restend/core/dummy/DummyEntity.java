@@ -1,6 +1,8 @@
 package shop.mtcoding.restend.core.dummy;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import shop.mtcoding.restend.core.auth.session.MyUserDetails;
+import shop.mtcoding.restend.dto.manage.Manage;
 import shop.mtcoding.restend.model.alarm.Alarm;
 import shop.mtcoding.restend.model.leave.Leave;
 import shop.mtcoding.restend.model.leave.enums.LeaveStatus;
@@ -19,7 +21,7 @@ public class DummyEntity {
                 .username(username)
                 .password(passwordEncoder.encode("1234"))
                 .email(username+"@nate.com")
-                .role(UserRole.USER)
+                .role(UserRole.ROLE_USER)
                 .status(status)
                 .hireDate(LocalDate.now().minusYears(1).minusWeeks(1)) // 입사 1년차라 가정
                 .remainDays(remainDays)
@@ -45,14 +47,27 @@ public class DummyEntity {
     }
 
     public User newMockUser(Long id, String username, Integer remainDays){
-
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return User.builder()
                 .id(id)
                 .username(username)
                 .password(passwordEncoder.encode("1234"))
                 .email(username+"@nate.com")
-                .role(UserRole.USER)
+                .role(UserRole.ROLE_USER)
+                .status(true)
+                .hireDate(LocalDate.now().minusYears(1).minusWeeks(1)) // 입사 1년차라 가정
+                .remainDays(remainDays)
+                .createdAt(LocalDateTime.now())
+                .build();
+    }
+    public User newMockUserRole(Long id, String username, Integer remainDays,UserRole userRole){
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        return User.builder()
+                .id(id)
+                .username(username)
+                .password(passwordEncoder.encode("1234"))
+                .email(username+"@nate.com")
+                .role(userRole)
                 .status(true)
                 .hireDate(LocalDate.now().minusYears(1).minusWeeks(1)) // 입사 1년차라 가정
                 .remainDays(remainDays)
@@ -81,4 +96,16 @@ public class DummyEntity {
                 .createdAt(LocalDateTime.now())
                 .build();
     }
+
+    public Manage.UserManageDTO newMockChartUser(Long userId, UserRole role, String username, LocalDate hireDate, Integer remainDays, String profile){
+        return Manage.UserManageDTO.builder()
+                .userId(userId)
+                .role(role)
+                .username(username)
+                .hireDate(hireDate)
+                .remain_days(remainDays)
+                .profile(profile)
+                .build();
+    }
+
 }

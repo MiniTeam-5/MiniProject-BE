@@ -142,7 +142,7 @@ public class LeaveRepositoryTest extends DummyEntity {
                     passwordEncoder.matches("1234", userPS.getPassword())
             ).isEqualTo(true);
             Assertions.assertThat(userPS.getEmail()).isEqualTo("ssar@nate.com");
-            Assertions.assertThat(userPS.getRole()).isEqualTo(UserRole.USER);
+            Assertions.assertThat(userPS.getRole()).isEqualTo(UserRole.ROLE_USER);
             Assertions.assertThat(userPS.getStatus()).isEqualTo(true);
             Assertions.assertThat(userPS.getHireDate()).isEqualTo(LocalDate.now().minusYears(1).minusWeeks(1));
             Assertions.assertThat(userPS.getRemainDays()).isEqualTo(15);

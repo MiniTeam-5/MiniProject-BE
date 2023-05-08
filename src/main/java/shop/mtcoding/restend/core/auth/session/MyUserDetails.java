@@ -1,22 +1,26 @@
 package shop.mtcoding.restend.core.auth.session;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import shop.mtcoding.restend.model.user.User;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Collection;
 
 @Setter
 @Getter
-public class MyUserDetails implements UserDetails {
+@NoArgsConstructor
+public class MyUserDetails implements UserDetails{
     private User user;
 
     public MyUserDetails(User user) {
         this.user = user;
     }
+
 
     /**
      * user 의 role 타입이 string -> enum 으로 변경 됨에 따른 코드 수정
