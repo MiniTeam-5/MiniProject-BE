@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import shop.mtcoding.restend.core.auth.session.MyUserDetails;
 import shop.mtcoding.restend.core.exception.Exception400;
+import shop.mtcoding.restend.core.exception.Exception500;
 import shop.mtcoding.restend.dto.alarm.AlarmResponse;
 import shop.mtcoding.restend.service.SseService;
 
@@ -37,7 +38,7 @@ public class SseController {
         catch (IOException e)
         {
             sseService.remove(userId);
-            throw new RuntimeException(e);
+            throw new Exception500("sse 전송실패");
         }
 
         return ResponseEntity.ok(emitter);

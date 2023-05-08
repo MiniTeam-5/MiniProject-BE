@@ -7,6 +7,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.util.Pair;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,6 +25,8 @@ import shop.mtcoding.restend.dto.manage.Manage;
 import shop.mtcoding.restend.core.util.MyFileUtil;
 import shop.mtcoding.restend.dto.user.UserRequest;
 import shop.mtcoding.restend.dto.user.UserResponse;
+import shop.mtcoding.restend.model.token.RefreshTokenEntity;
+import shop.mtcoding.restend.model.token.TokenRepository;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRepository;
 
@@ -39,6 +42,8 @@ import java.util.stream.Collectors;
 public class UserService {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
+
+    private final TokenRepository tokenRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     @Value("${file.path}")
     private String uploadFolder;
@@ -74,13 +79,20 @@ public class UserService {
     }
 
     @MyLog
-    public String 로그인(UserRequest.LoginInDTO loginInDTO) {
+    public Pair<String, String> 로그인(UserRequest.LoginInDTO loginInDTO) {
         try {
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
                     = new UsernamePasswordAuthenticationToken(loginInDTO.getEmail(), loginInDTO.getPassword());
             Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
             MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
-            return MyJwtProvider.create(myUserDetails.getUser());
+
+            String accessjwt = MyJwtProvider.createAccess(myUserDetails.getUser());
+            Pair<String, RefreshTokenEntity> rtInfo = MyJwtProvider.createRefresh();
+
+            //로그인 성공하면 액세스 토큰, 리프레시 토큰 발급. 리프레시 토큰의 uuid은 DB에 저장
+            tokenRepository.save(rtInfo.getSecond());
+
+            return Pair.of(accessjwt, rtInfo.getFirst());
         } catch (Exception e) {
             throw new Exception401("인증되지 않았습니다");
         }
