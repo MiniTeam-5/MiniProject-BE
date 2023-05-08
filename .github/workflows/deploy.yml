@@ -11,6 +11,7 @@ env:
   RESOURCE_PATH: ./src/main/resources/application-prod.yml
   CODE_DEPLOY_APPLICATION_NAME: mini-code-deploy
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: miniBE
+  HOLIDAY_KEY: ${{ secrets.HOLIDAY_KEY }}
 
 jobs:
   build:
