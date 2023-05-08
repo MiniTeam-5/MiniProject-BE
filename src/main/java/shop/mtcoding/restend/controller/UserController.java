@@ -43,12 +43,9 @@ public class UserController {
         return ResponseEntity.ok().header(MyJwtProvider.HEADER, jwt).body(responseDTO);
     }
 
-    @GetMapping("/auth/user/{id}")
-    public ResponseEntity<?> detail(@PathVariable Long id, @AuthenticationPrincipal MyUserDetails myUserDetails) throws JsonProcessingException {
-        if (id.longValue() != myUserDetails.getUser().getId()) {
-            throw new Exception403("권한이 없습니다");
-        }
-        UserResponse.DetailOutDTO detailOutDTO = userService.회원상세보기(id);
+    @GetMapping("/auth/user")
+    public ResponseEntity<?> detail(@AuthenticationPrincipal MyUserDetails myUserDetails) throws JsonProcessingException {
+        UserResponse.DetailOutDTO detailOutDTO = userService.회원상세보기(myUserDetails.getUser().getId());
         ResponseDTO<?> responseDTO = new ResponseDTO<>(detailOutDTO);
         return ResponseEntity.ok().body(responseDTO);
     }

@@ -455,34 +455,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_회원상세보기_성공">회원상세보기 (성공)</a></li>
 <li><a href="#_회원상세보기_인증_안됨_실패">회원상세보기 (인증 안됨 실패)</a></li>
 <li><a href="#_회원상세보기_권한_없음_실패">회원상세보기 (권한 없음 실패)</a></li>
-</ul>
-</li>
-<li><a href="#_프로필_사원명_이메일_비밀번호_변경">프로필, 사원명, 이메일, 비밀번호 변경</a>
-<ul class="sectlevel4">
-<li><a href="#_request_example_9">Request Example</a></li>
-<li><a href="#_response_example_9">Response Example</a></li>
-<li><a href="#_curl_9">Curl</a></li>
-</ul>
-</li>
-<li><a href="#_사원명_이메일_비밀번호_변경">사원명, 이메일, 비밀번호 변경</a>
-<ul class="sectlevel4">
-<li><a href="#_request_example_10">Request Example</a></li>
-<li><a href="#_response_example_10">Response Example</a></li>
-<li><a href="#_curl_10">Curl</a></li>
-</ul>
-</li>
-<li><a href="#_사원명_이메일만_변경">사원명, 이메일만 변경</a>
-<ul class="sectlevel4">
-<li><a href="#_request_example_11">Request Example</a></li>
-<li><a href="#_response_example_11">Response Example</a></li>
-<li><a href="#_curl_11">Curl</a></li>
-</ul>
-</li>
-<li><a href="#_비밀번호_변경_실패">비밀번호 변경 실패</a>
-<ul class="sectlevel4">
-<li><a href="#_request_example_12">Request Example</a></li>
-<li><a href="#_response_example_12">Response Example</a></li>
-<li><a href="#_curl_12">Curl</a></li>
+<li><a href="#_프로필_사원명_이메일_비밀번호_변경">프로필, 사원명, 이메일, 비밀번호 변경</a></li>
+<li><a href="#_사원명_이메일_비밀번호_변경">사원명, 이메일, 비밀번호 변경</a></li>
+<li><a href="#_사원명_이메일만_변경">사원명, 이메일만 변경</a></li>
+<li><a href="#_비밀번호_변경_실패">비밀번호 변경 실패</a></li>
 </ul>
 </li>
 </ul>
@@ -720,7 +696,7 @@ Host: localhost:8080
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJVU0VSIiwiaWQiOjEsImV4cCI6MTY4MzUyODA0Nn0.LNJ4bWXqMRVvWGzom3MLmlHaJT4qe1UOiMra95iuO-KLq4yjRsSoOD-9OOTVuB80Ey6lcoL1m4Sjp4AsjcI1Kw
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJVU0VSIiwiaWQiOjEsImV4cCI6MTY4MzYyODYxN30.N0EnzsELlE_7aARqkBvg7FsG_yXT-LpNP4bN_Gi846Wwie2svoCZP0eX7myq5MBGQq9ZISPerJ-RwUUfx9nlMw
 Content-Type: application/json;charset=UTF-8
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -835,15 +811,17 @@ X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-Content-Length: 143
+Content-Length: 180
 
 {
   "status" : 200,
   "msg" : "성공",
   "data" : {
+    "id" : 1,
     "email" : "ssar@nate.com",
     "username" : "ssar",
-    "profile" : null
+    "profile" : null,
+    "role" : "USER"
   }
 }</code></pre>
 </div>
@@ -946,11 +924,8 @@ Content-Length: 84
 </div>
 </div>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_프로필_사원명_이메일_비밀번호_변경">프로필, 사원명, 이메일, 비밀번호 변경</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_프로필_사원명_이메일_비밀번호_변경">프로필, 사원명, 이메일, 비밀번호 변경</h3>
 <div class="sect4">
 <h5 id="_request_example_9">Request Example</h5>
 <div class="listingblock">
@@ -1033,10 +1008,8 @@ Content-Length: 177
 </div>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_사원명_이메일_비밀번호_변경">사원명, 이메일, 비밀번호 변경</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_사원명_이메일_비밀번호_변경">사원명, 이메일, 비밀번호 변경</h3>
 <div class="sect4">
 <h5 id="_request_example_10">Request Example</h5>
 <div class="listingblock">
@@ -1099,10 +1072,8 @@ Content-Length: 178
 </div>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_사원명_이메일만_변경">사원명, 이메일만 변경</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_사원명_이메일만_변경">사원명, 이메일만 변경</h3>
 <div class="sect4">
 <h5 id="_request_example_11">Request Example</h5>
 <div class="listingblock">
@@ -1165,10 +1136,8 @@ Content-Length: 179
 </div>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_비밀번호_변경_실패">비밀번호 변경 실패</h2>
-<div class="sectionbody">
+<div class="sect2">
+<h3 id="_비밀번호_변경_실패">비밀번호 변경 실패</h3>
 <div class="sect4">
 <h5 id="_request_example_12">Request Example</h5>
 <div class="listingblock">
@@ -1231,10 +1200,11 @@ Content-Length: 139
 </div>
 </div>
 </div>
+</div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-05-07 14:53:06 +0900
+Last updated 2023-05-08 13:30:31 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
