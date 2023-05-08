@@ -101,4 +101,8 @@ public class User {
         this.role = user.getRole();
         this.hireDate = user.getHireDate();
     }
+
+    public void resign() { // 퇴사
+        this.status = false;
+    }
 }
