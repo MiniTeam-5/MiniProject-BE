@@ -84,8 +84,6 @@ public class UserServiceTest extends DummyEntity {
         Mockito.when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
 
         // stub 2
-
-
         User cos = newMockUser(1L, "cos", 15);
         Mockito.when(userRepository.save(any())).thenReturn(cos);
 
@@ -137,10 +135,10 @@ public class UserServiceTest extends DummyEntity {
         UserResponse.DetailOutDTO detailOutDTO = userService.회원상세보기(id);
 
         // then
-//        Assertions.assertThat(detailOutDTO.getId()).isEqualTo(1L);
-//        Assertions.assertThat(detailOutDTO.getUsername()).isEqualTo("cos");
+        Assertions.assertThat(detailOutDTO.getId()).isEqualTo(1L);
+        Assertions.assertThat(detailOutDTO.getUsername()).isEqualTo("cos");
         Assertions.assertThat(detailOutDTO.getEmail()).isEqualTo("cos@nate.com");
-//        Assertions.assertThat(detailOutDTO.getRole()).isEqualTo(UserRole.USER);
+        Assertions.assertThat(detailOutDTO.getRole()).isEqualTo(UserRole.USER);
     }
 
     @Test

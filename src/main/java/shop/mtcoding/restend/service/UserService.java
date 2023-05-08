@@ -47,21 +47,22 @@ public class UserService {
     @MyLog
     @Transactional
     public UserResponse.JoinOutDTO 회원가입(UserRequest.JoinInDTO joinInDTO) {
+        //1. 이름으로 회원조회
         Optional<User> userByName = userRepository.findByUsername(joinInDTO.getUsername());
         if (userByName.isPresent()) {
             // 이 부분이 try catch 안에 있으면 Exception500에게 제어권을 뺏긴다.
             throw new Exception400("username", "유저네임이 존재합니다");
         }
-
+        //2. 이메일로 회원조회
         Optional<User> userByEmail = userRepository.findByEmail(joinInDTO.getEmail());
         if (userByEmail.isPresent()) {
             throw new Exception400("email", "해당 이메일 주소는 사용중입니다");
         }
-
+        //3. 비밀번호, 비밀번호 확인 일치하는지 확인
         if (!joinInDTO.getPassword().equals(joinInDTO.getCheckPassword())) {
             throw new Exception400("password", "패스워드가 일치하지 않습니다");
         }
-
+        //4. 비밀번호 암호화
         String encPassword = passwordEncoder.encode(joinInDTO.getPassword()); // 60Byte
         joinInDTO.setPassword(encPassword);
 
@@ -105,7 +106,6 @@ public class UserService {
     public UserResponse.DetailOutDTO 회원상세보기(Long id) {
         User userPS = userRepository.findById(id).orElseThrow(
                 () -> new Exception400("id", "해당 유저를 찾을 수 없습니다")
-
         );
         return new UserResponse.DetailOutDTO(userPS);
     }
@@ -158,10 +158,12 @@ public class UserService {
     @Transactional
     public UserResponse.ModifiedOutDTO 개인정보수정(UserRequest.ModifiedInDTO modifiedInDTO, MultipartFile profile, Long id) {
 
+        //1. 아이디로 회원 조회
         User user = userRepository.findById(id).orElseThrow(() -> new Exception400("id", "해당 유저가 존재하지 않습니다"));
+        //2. ModifiedOutDTO 생성
         UserResponse.ModifiedOutDTO modifiedOutDTO = new UserResponse.ModifiedOutDTO(user);
 
-        //수정사항 없는 경우
+        //3. 수정사항 없는 경우
         if (profile.isEmpty() && modifiedInDTO.getDeletedProfile() == null &&
                 modifiedInDTO.getNewPassword() == null &&
                 user.getEmail().equals(modifiedInDTO.getEmail()) &&
@@ -169,33 +171,33 @@ public class UserService {
             throw new Exception400("id", "수정사항이 없습니다.");
         }
 
-        //프로필 사진 등록 시
+        //4. 프로필 사진 등록 시
         if (profile != null && !profile.isEmpty()) {
             //서버에 사진 저장
             String uuidImageName = MyFileUtil.write(uploadFolder, profile);
             try {
-                user.changeProfile(uploadFolder+uuidImageName);
+                user.changeProfile(uploadFolder + uuidImageName);
                 modifiedOutDTO.setProfileReset(true);
             } catch (Exception e) {
                 throw new Exception500("프로필사진 변경 실패 : " + e.getMessage());
             }
         }
-        //프로필 사진 삭제 시
+        //5. 프로필 사진 삭제 시
         if (modifiedInDTO.getDeletedProfile() != null && modifiedInDTO.getDeletedProfile().equals(true)) {
             user.changeProfile(uploadFolder + "person.png");
             modifiedOutDTO.setProfileReset(true);
         }
-        //이메일 주소 변경 시
+        //6. 이메일 주소 변경 시
         if (user.getEmail() != modifiedInDTO.getEmail()) {
             user.changeEmail(modifiedInDTO.getEmail());
             modifiedOutDTO.setEmail(modifiedInDTO.getEmail());
         }
-        //사원명 변경 시
+        //7. 사원명 변경 시
         if (user.getUsername() != modifiedInDTO.getUsername()) {
             user.changeUsername(modifiedInDTO.getUsername());
             modifiedOutDTO.setUsername(modifiedInDTO.getUsername());
         }
-        //비밀번호 변경 시
+        //8. 비밀번호 변경 시
         if (modifiedInDTO.getNewPassword() != null && !modifiedInDTO.getNewPassword().isEmpty()) {
             if (modifiedInDTO.getNewPassword().equals(modifiedInDTO.getCheckPassword())) {
                 String encodePassword = passwordEncoder.encode(modifiedInDTO.getNewPassword());
@@ -205,7 +207,6 @@ public class UserService {
                 throw new Exception400("password", "비밀번호 재확인 필요");
             }
         }
-
         return modifiedOutDTO;
     }
 }
