@@ -9,14 +9,18 @@ public class UserResponse {
 
     @Getter @Setter
     public static class DetailOutDTO{
+        private Long id;
         private String email;
         private String username;
         private String profile;
+        private UserRole role;
 
         public DetailOutDTO(User user) {
+            this.id = user.getId();
             this.email = user.getEmail();
             this.username = user.getUsername();
             this.profile = user.getProfile();
+            this.role = user.getRole();
         }
     }
 
@@ -25,12 +29,10 @@ public class UserResponse {
     public static class JoinOutDTO {
         private Long id;
         private String username;
-        private Integer annualLimit;
 
         public JoinOutDTO(User user) {
             this.id = user.getId();
             this.username = user.getUsername();
-            this.annualLimit = user.getAnnualLimit();
         }
     }
 

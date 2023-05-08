@@ -84,6 +84,7 @@ public class MySecurityConfig {
                         .antMatchers("/admin/**")
                         .access("hasRole('ADMIN') or hasRole('MASTER')")
                         .antMatchers("/master/**").hasRole("MASTER")
+
                         .anyRequest().permitAll()
         );
 

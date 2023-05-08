@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.TestExecutionEvent;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -28,8 +29,12 @@ import javax.persistence.EntityManager;
 
 import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -57,8 +62,9 @@ public class UserControllerTest extends MyRestDoc {
 
     @BeforeEach
     public void setUp() {
-        userRepository.save(dummy.newUser("ssar", true, 15));
-        userRepository.save(dummy.newUser("cos", true, 15));
+        userRepository.save(dummy.newUser("ssar", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
+        userRepository.save(dummy.newUser("cos", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
+        userRepository.save(dummy.newUser("resign", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
         em.clear();
     }
 
@@ -67,9 +73,8 @@ public class UserControllerTest extends MyRestDoc {
     public void join_test() throws Exception {
         // given
         UserRequest.JoinInDTO joinInDTO = new UserRequest.JoinInDTO();
-        joinInDTO.setUsername("love");
+        joinInDTO.setUsername("러브");
         joinInDTO.setPassword("1234");
-        joinInDTO.setCheckPassword("1234");
         joinInDTO.setEmail("love@nate.com");
         joinInDTO.setHireDate("2022-12-12");
         String requestBody = om.writeValueAsString(joinInDTO);
@@ -81,8 +86,10 @@ public class UserControllerTest extends MyRestDoc {
         System.out.println("테스트 : " + responseBody);
 
         // then
-        resultActions.andExpect(jsonPath("$.data.id").value(3L));
-        resultActions.andExpect(jsonPath("$.data.username").value("love"));
+
+        //resultActions.andExpect(jsonPath("$.data.id").value(3L)); //3을 보장할 수 없습니다.
+        resultActions.andExpect(jsonPath("$.data.username").value("러브"));
+
         resultActions.andExpect(status().isOk());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
@@ -94,7 +101,6 @@ public class UserControllerTest extends MyRestDoc {
         UserRequest.JoinInDTO joinInDTO = new UserRequest.JoinInDTO();
         joinInDTO.setUsername("ssar");
         joinInDTO.setPassword("1234");
-        joinInDTO.setCheckPassword("1234");
         joinInDTO.setEmail("ssar@nate.com");
         joinInDTO.setHireDate("2022-12-12");
         String requestBody = om.writeValueAsString(joinInDTO);
@@ -109,7 +115,7 @@ public class UserControllerTest extends MyRestDoc {
         resultActions.andExpect(jsonPath("$.status").value(400));
         resultActions.andExpect(jsonPath("$.msg").value("badRequest"));
         resultActions.andExpect(jsonPath("$.data.key").value("username"));
-        resultActions.andExpect(jsonPath("$.data.value").value("유저네임이 존재합니다"));
+        resultActions.andExpect(jsonPath("$.data.value").value("이름은 2~20자 이내로 작성해주세요"));
         resultActions.andExpect(status().isBadRequest());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
@@ -121,7 +127,6 @@ public class UserControllerTest extends MyRestDoc {
         UserRequest.JoinInDTO joinInDTO = new UserRequest.JoinInDTO();
         joinInDTO.setUsername("s");
         joinInDTO.setPassword("1234");
-        joinInDTO.setCheckPassword("1234");
         joinInDTO.setEmail("ssar@nate.com");
         joinInDTO.setHireDate("2023-05-05");//이게 없으면 Username, HireDate 에서 번갈아 가면서 오류가 발생합니다. JoinInDTO 객체를 참고하세요.
         String requestBody = om.writeValueAsString(joinInDTO);
@@ -136,7 +141,7 @@ public class UserControllerTest extends MyRestDoc {
         resultActions.andExpect(jsonPath("$.status").value(400));
         resultActions.andExpect(jsonPath("$.msg").value("badRequest"));
         resultActions.andExpect(jsonPath("$.data.key").value("username"));
-        resultActions.andExpect(jsonPath("$.data.value").value("영문/숫자 2~20자 이내로 작성해주세요"));
+        resultActions.andExpect(jsonPath("$.data.value").value("이름은 2~20자 이내로 작성해주세요"));
         resultActions.andExpect(status().isBadRequest());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
@@ -205,7 +210,7 @@ public class UserControllerTest extends MyRestDoc {
 
         // when
         ResultActions resultActions = mvc
-                .perform(get("/auth/user/"+id));
+                .perform(get("/auth/user"));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : " + responseBody);
 
@@ -225,7 +230,7 @@ public class UserControllerTest extends MyRestDoc {
 
         // when
         ResultActions resultActions = mvc
-                .perform(get("/auth/user/"+id));
+                .perform(get("/auth/user"));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : " + responseBody);
 
@@ -237,26 +242,26 @@ public class UserControllerTest extends MyRestDoc {
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
-    @DisplayName("회원상세보기 권한 실패")
-    @WithUserDetails(value = "cos@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
-    @Test
-    public void detail_fail_forbidden_test() throws Exception {
-        // given
-        Long id = 1L;
-
-        // when
-        ResultActions resultActions = mvc
-                .perform(get("/auth/user/"+id));
-        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-        System.out.println("테스트 : " + responseBody);
-
-        // then
-        resultActions.andExpect(jsonPath("$.status").value(403));
-        resultActions.andExpect(jsonPath("$.msg").value("forbidden"));
-        resultActions.andExpect(jsonPath("$.data").value("권한이 없습니다"));
-        resultActions.andExpect(status().isForbidden());
-        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
-    }
+//    @DisplayName("회원상세보기 권한 실패")
+//    @WithUserDetails(value = "cos@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+//    @Test
+//    public void detail_fail_forbidden_test() throws Exception {
+//        // given
+//        Long id = 1L;
+//
+//        // when
+//        ResultActions resultActions = mvc
+//                .perform(get("/auth/user"));
+//        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+//        System.out.println("테스트 : " + responseBody);
+//
+//        // then
+//        resultActions.andExpect(jsonPath("$.status").value(403));
+//        resultActions.andExpect(jsonPath("$.msg").value("forbidden"));
+//        resultActions.andExpect(jsonPath("$.data").value("권한이 없습니다"));
+//        resultActions.andExpect(status().isForbidden());
+//        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+//    }
 
     @DisplayName("프로필, 사원명, 이메일, 비밀번호 변경")
     @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
@@ -266,9 +271,8 @@ public class UserControllerTest extends MyRestDoc {
         //Given
         UserRequest.ModifiedInDTO modifiedInDTO = new UserRequest.ModifiedInDTO();
         modifiedInDTO.setEmail("asdf@nate.com");
-        modifiedInDTO.setUsername("asdf");
+        modifiedInDTO.setUsername("김이박");
         modifiedInDTO.setNewPassword("1234");
-        modifiedInDTO.setCheckPassword("1234");
 
         //when
         MockMultipartFile profile = new MockMultipartFile(
@@ -280,14 +284,15 @@ public class UserControllerTest extends MyRestDoc {
 
         //then
         mvc.perform(
-                        multipart("/auth/user/1")
+                        multipart("/auth/user")
                                 .file(profile)
                                 .file(json))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.email").value("asdf@nate.com"))
-                .andExpect(jsonPath("$.data.username").value("asdf"))
+                .andExpect(jsonPath("$.data.username").value("김이박"))
                 .andExpect(jsonPath("$.data.passwordReset").value(true))
-                .andExpect(jsonPath("$.data.profileReset").value(true));
+                .andExpect(jsonPath("$.data.profileReset").value(true))
+                .andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @DisplayName("사원명, 이메일, 비밀번호 변경")
@@ -298,22 +303,109 @@ public class UserControllerTest extends MyRestDoc {
         //Given
         UserRequest.ModifiedInDTO modifiedInDTO = new UserRequest.ModifiedInDTO();
         modifiedInDTO.setEmail("asdf@nate.com");
-        modifiedInDTO.setUsername("asdf");
+        modifiedInDTO.setUsername("테스터");
         modifiedInDTO.setNewPassword("1234");
-        modifiedInDTO.setCheckPassword("1234");
 
-//        String modifiedInJson = om.writeValueAsString(modifiedInDTO);
-//        MockMultipartFile json = new MockMultipartFile("modifiedInDTO", "modifiedInDTO", "application/json", modifiedInJson.getBytes(StandardCharsets.UTF_8));
-//        MockMultipartFile jsonPart = new MockMultipartFile("modifiedInDTO", null, "application/json", om.writeValueAsBytes(modifiedInDTO));
-//
-//        //When
-//        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.multipart("/auth/user/1")
-//                .file(jsonPart)
-//                .contentType(MediaType.MULTIPART_FORM_DATA_VALUE);
-//
-//        //Then
-//        mvc.perform(request)
-//                .andExpect(status().isOk());
+        //when
+        MockMultipartFile profile = new MockMultipartFile("profile", "".getBytes());
+
+        // modifiedInDTO 객체를 JSON 문자열로 변환
+        String modifiedInJson = om.writeValueAsString(modifiedInDTO);
+        MockMultipartFile json = new MockMultipartFile("modifiedInDTO", "modifiedInDTO", "application/json", modifiedInJson.getBytes(StandardCharsets.UTF_8));
+
+        mockMvc.perform(
+                        multipart("/auth/user")
+                                .file(profile)
+                                .file(json))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.email").value("asdf@nate.com"))
+                .andExpect(jsonPath("$.data.username").value("테스터"))
+                .andExpect(jsonPath("$.data.passwordReset").value(true))
+                .andExpect(jsonPath("$.data.profileReset").value(false))
+                .andDo(MockMvcResultHandlers.print())
+                .andDo(document("auth/user", requestParts(
+                        partWithName("profile").description("The file to upload"),
+                        partWithName("modifiedInDTO").description("modifiedInDTO"))
+                ));
+    }
+
+    @DisplayName("사원명, 이메일만 변경")
+    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void modify_username_email() throws Exception {
+
+        //Given
+        UserRequest.ModifiedInDTO modifiedInDTO = new UserRequest.ModifiedInDTO();
+        modifiedInDTO.setEmail("asdf@nate.com");
+        modifiedInDTO.setUsername("키키");
+
+        //when
+        MockMultipartFile profile = new MockMultipartFile("profile", "".getBytes());
+
+        // modifiedInDTO 객체를 JSON 문자열로 변환
+        String modifiedInJson = om.writeValueAsString(modifiedInDTO);
+        MockMultipartFile json = new MockMultipartFile("modifiedInDTO", "modifiedInDTO", "application/json", modifiedInJson.getBytes(StandardCharsets.UTF_8));
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(
+                        multipart("/auth/user")
+                                .file(profile)
+                                .file(json));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        //then
+        resultActions.andExpect(jsonPath("$.status").value(200));
+        resultActions.andExpect(jsonPath("$.msg").value("성공"));
+        resultActions.andExpect(jsonPath("$.data.email").value("asdf@nate.com"));
+        resultActions.andExpect(jsonPath("$.data.username").value("키키"));
+        resultActions.andExpect(jsonPath("$.data.passwordReset").value(false));
+        resultActions.andExpect(jsonPath("$.data.profileReset").value(false));
+        resultActions.andExpect(status().isOk());
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @DisplayName("유저 삭제(비활성) 성공")
+    @WithMockUser(username="admin", roles={"ADMIN"})
+    @Test
+    public void resign_test() throws Exception {
+        // given
+        Long id = 3L;
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(post("/admin/resign/"+id));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // then
+        resultActions.andExpect(jsonPath("$.status").value(200));
+        resultActions.andExpect(jsonPath("$.msg").value("성공"));
+        resultActions.andExpect(jsonPath("$.data").isEmpty());
+        resultActions.andExpect(status().isOk());
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @DisplayName("유저 삭제(비활성) 실패 (없는 유저)")
+    @WithMockUser(username="admin", roles={"ADMIN"})
+    @Test
+    public void resign_fail_test() throws Exception {
+        // given
+        Long id = 5L;
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(post("/admin/resign/"+id));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // then
+        resultActions.andExpect(jsonPath("$.status").value(500));
+        resultActions.andExpect(jsonPath("$.msg").value("serverError"));
+        resultActions.andExpect(jsonPath("$.data").value("로그인 된 유저가 DB에 존재하지 않음"));
+        resultActions.andExpect(status().is5xxServerError());
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 }
 

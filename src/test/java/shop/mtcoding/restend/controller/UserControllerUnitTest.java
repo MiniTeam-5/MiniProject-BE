@@ -75,14 +75,14 @@ public class UserControllerUnitTest extends DummyEntity {
     public void join_test() throws Exception {
         // 준비
         UserRequest.JoinInDTO joinInDTO = new UserRequest.JoinInDTO();
-        joinInDTO.setUsername("cos");
+        joinInDTO.setUsername("코스");
         joinInDTO.setPassword("1234");
-        joinInDTO.setCheckPassword("1234");
         joinInDTO.setEmail("cos@nate.com");
         joinInDTO.setHireDate("2022-12-12");
         String requestBody = om.writeValueAsString(joinInDTO);
 
         // 가정해볼께
+
 
         User cos = newMockUser(1L,"cos", 15);
         UserResponse.JoinOutDTO joinOutDTO = new UserResponse.JoinOutDTO(cos);
@@ -113,7 +113,7 @@ public class UserControllerUnitTest extends DummyEntity {
         Mockito.when(userService.로그인(any())).thenReturn(tokenInfo);
 
         UserResponse.LoginOutDTO loginOutDTO = new UserResponse.LoginOutDTO(
-                1L, UserRole.USER);
+                1L, UserRole.ROLE_USER);
         Mockito.when(userService.이메일로회원조회(any())).thenReturn(loginOutDTO);
 
         // when
@@ -133,7 +133,7 @@ public class UserControllerUnitTest extends DummyEntity {
     }
 
 
-    @MyWithMockUser(id = 1L, username = "cos", role = "USER", remainDays = 15)
+    @MyWithMockUser(id = 1L, username = "cos", role = UserRole.ROLE_USER, remainDays = 15)
     @Test
     public void detail_test() throws Exception {
         // given
@@ -148,7 +148,7 @@ public class UserControllerUnitTest extends DummyEntity {
 
         // when
         ResultActions resultActions = mvc
-                .perform(get("/auth/user/"+id));
+                .perform(get("/auth/user"));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : " + responseBody);
 
