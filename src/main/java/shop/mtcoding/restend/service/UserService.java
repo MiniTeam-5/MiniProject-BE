@@ -183,13 +183,9 @@ public class UserService {
         }
         //8. 비밀번호 변경 시
         if (modifiedInDTO.getNewPassword() != null && !modifiedInDTO.getNewPassword().isEmpty()) {
-            if (modifiedInDTO.getNewPassword().equals(modifiedInDTO.getCheckPassword())) {
                 String encodePassword = passwordEncoder.encode(modifiedInDTO.getNewPassword());
                 user.changePassword(encodePassword);
                 modifiedOutDTO.setPasswordReset(true);
-            } else {
-                throw new Exception400("password", "비밀번호 재확인 필요");
-            }
         }
         return modifiedOutDTO;
     }

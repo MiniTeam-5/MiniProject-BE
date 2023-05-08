@@ -120,13 +120,3 @@ include::{snippets}/{user}/modify_username_email/http-response.adoc[]
 
 ===== Curl
 include::{snippets}/{user}/modify_username_email/curl-request.adoc[]
-
-=== 비밀번호 변경 실패
-===== Request Example
-include::{snippets}/{user}/modify_password_fail/http-request.adoc[]
-
-===== Response Example
-include::{snippets}/{user}/modify_password_fail/http-response.adoc[]
-
-===== Curl
-include::{snippets}/{user}/modify_password_fail/curl-request.adoc[]

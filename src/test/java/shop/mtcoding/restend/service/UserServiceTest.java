@@ -76,7 +76,6 @@ public class UserServiceTest extends DummyEntity {
         UserRequest.JoinInDTO joinInDTO = new UserRequest.JoinInDTO();
         joinInDTO.setUsername("cos");
         joinInDTO.setPassword("1234");
-        joinInDTO.setCheckPassword("1234");
         joinInDTO.setEmail("cos@nate.com");
         joinInDTO.setHireDate("2022-12-12");
 
@@ -138,7 +137,7 @@ public class UserServiceTest extends DummyEntity {
         Assertions.assertThat(detailOutDTO.getId()).isEqualTo(1L);
         Assertions.assertThat(detailOutDTO.getUsername()).isEqualTo("cos");
         Assertions.assertThat(detailOutDTO.getEmail()).isEqualTo("cos@nate.com");
-        Assertions.assertThat(detailOutDTO.getRole()).isEqualTo(UserRole.USER);
+        Assertions.assertThat(detailOutDTO.getRole()).isEqualTo(UserRole.ROLE_USER);
     }
 
     @Test

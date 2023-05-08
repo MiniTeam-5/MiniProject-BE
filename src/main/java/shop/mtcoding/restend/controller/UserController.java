@@ -51,17 +51,12 @@ public class UserController {
     }
 
 
-    @PostMapping("/auth/user/{id}")
-    public ResponseEntity<?> modifyProfile(@PathVariable Long id,
-                                           @RequestPart(value = "profile", required = false) MultipartFile profile,
+    @PostMapping("/auth/user")
+    public ResponseEntity<?> modifyProfile(@RequestPart(value = "profile", required = false) MultipartFile profile,
                                            @RequestPart(value = "modifiedInDTO") @Valid UserRequest.ModifiedInDTO modifiedInDTO, Errors errors,
                                            @AuthenticationPrincipal MyUserDetails myUserDetails) {
 
-        if (id.longValue() != myUserDetails.getUser().getId()) {
-            throw new Exception403("권한이 없습니다");
-        }
-
-        UserResponse.ModifiedOutDTO modifiedOutDTO = userService.개인정보수정(modifiedInDTO, profile, id);
+        UserResponse.ModifiedOutDTO modifiedOutDTO = userService.개인정보수정(modifiedInDTO, profile, myUserDetails.getUser().getId());
         ResponseDTO<?> responseDTO = new ResponseDTO<>(modifiedOutDTO);
         return ResponseEntity.ok(responseDTO);
     }
