@@ -93,7 +93,7 @@ public class AdminControllerUnitTest extends DummyEntity{
     private ObjectMapper om;
 
 
-    //@WithMockUser(roles = "USER")
+    //@WithMockUser(roles = {"ADMIN"}) 이것도 된다.
     @MyWithMockUser(id = 1L, username = "cos", role = UserRole.ROLE_ADMIN)
     @Test
     public void annualUpdate_test() throws Exception{
