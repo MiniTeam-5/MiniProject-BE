@@ -37,10 +37,6 @@ public class UserRequest {
         private String password;
 
         @NotEmpty
-        @Size(min = 4, max = 20)
-        private String checkPassword;
-
-        @NotEmpty
         @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$", message = "이메일 형식으로 작성해주세요")
         private String email;
 

@@ -50,11 +50,8 @@ public class UserService {
         if (userByEmail.isPresent()) {
             throw new Exception400("email", "해당 이메일 주소는 사용중입니다");
         }
-        //3. 비밀번호, 비밀번호 확인 일치하는지 확인
-        if (!joinInDTO.getPassword().equals(joinInDTO.getCheckPassword())) {
-            throw new Exception400("password", "패스워드가 일치하지 않습니다");
-        }
-        //4. 비밀번호 암호화
+
+        //3. 비밀번호 암호화
         String encPassword = passwordEncoder.encode(joinInDTO.getPassword()); // 60Byte
         joinInDTO.setPassword(encPassword);
 
