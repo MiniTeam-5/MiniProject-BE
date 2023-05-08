@@ -1,7 +1,6 @@
 package shop.mtcoding.restend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,36 +8,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.mock.web.MockPart;
 import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import shop.mtcoding.restend.core.MyRestDoc;
 import shop.mtcoding.restend.core.auth.jwt.MyJwtProvider;
 import shop.mtcoding.restend.core.dummy.DummyEntity;
 import shop.mtcoding.restend.dto.user.UserRequest;
 import shop.mtcoding.restend.model.user.UserRepository;
-import shop.mtcoding.restend.model.user.UserRole;
 
 import javax.persistence.EntityManager;
 
 import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static shop.mtcoding.restend.core.auth.jwt.MyJwtProvider.HEADER;
+import static shop.mtcoding.restend.core.auth.jwt.MyJwtProvider.HEADER_REFRESH;
 
 @DisplayName("회원 API")
 @AutoConfigureRestDocs(uriScheme = "http", uriHost = "localhost", uriPort = 8080)
@@ -160,9 +156,13 @@ public class UserControllerTest extends MyRestDoc {
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : " + responseBody);
 
+        MvcResult mvcResult = resultActions.andReturn();
+        String accessToken = mvcResult.getResponse().getHeader(HEADER);
+        String refreshToken = mvcResult.getResponse().getHeader(HEADER_REFRESH);
+
         // then
-        String jwtToken = resultActions.andReturn().getResponse().getHeader(MyJwtProvider.HEADER);
-        Assertions.assertThat(jwtToken.startsWith(MyJwtProvider.TOKEN_PREFIX)).isTrue();
+        assertThat(accessToken).startsWith(MyJwtProvider.TOKEN_PREFIX);
+        assertThat(refreshToken).startsWith(MyJwtProvider.TOKEN_PREFIX);
         resultActions.andExpect(status().isOk());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }

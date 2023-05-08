@@ -1,5 +1,6 @@
 package shop.mtcoding.restend.service;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,6 +17,7 @@ import shop.mtcoding.restend.core.exception.Exception400;
 import shop.mtcoding.restend.core.exception.Exception401;
 import shop.mtcoding.restend.core.exception.Exception500;
 import shop.mtcoding.restend.core.util.MyFileUtil;
+import shop.mtcoding.restend.dto.token.TokenResponse;
 import shop.mtcoding.restend.dto.user.UserRequest;
 import shop.mtcoding.restend.dto.user.UserResponse;
 import shop.mtcoding.restend.model.user.User;
@@ -81,13 +83,16 @@ public class UserService {
     }
 
     @MyLog
-    public String 로그인(UserRequest.LoginInDTO loginInDTO) {
+    public TokenResponse 로그인(UserRequest.LoginInDTO loginInDTO) {
         try {
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken
                     = new UsernamePasswordAuthenticationToken(loginInDTO.getEmail(), loginInDTO.getPassword());
             Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
             MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
-            return MyJwtProvider.create(myUserDetails.getUser());
+
+            String accessjwt = MyJwtProvider.createAccess(myUserDetails.getUser());
+            String refreshjwt = MyJwtProvider.createRefresh();
+            return new TokenResponse(accessjwt, refreshjwt);
         } catch (Exception e) {
             throw new Exception401("인증되지 않았습니다");
         }

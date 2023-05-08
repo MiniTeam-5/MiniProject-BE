@@ -2,6 +2,7 @@ package shop.mtcoding.restend.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.token.TokenService;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import shop.mtcoding.restend.controller.UserController;
 import shop.mtcoding.restend.core.advice.MyLogAdvice;
@@ -22,17 +25,22 @@ import shop.mtcoding.restend.core.auth.jwt.MyJwtProvider;
 import shop.mtcoding.restend.core.config.MyFilterRegisterConfig;
 import shop.mtcoding.restend.core.config.MySecurityConfig;
 import shop.mtcoding.restend.core.dummy.DummyEntity;
+import shop.mtcoding.restend.dto.token.TokenResponse;
 import shop.mtcoding.restend.dto.user.UserRequest;
 import shop.mtcoding.restend.dto.user.UserResponse;
 import shop.mtcoding.restend.core.MyWithMockUser;
 import shop.mtcoding.restend.model.user.User;
+import shop.mtcoding.restend.model.user.UserRole;
 import shop.mtcoding.restend.service.UserService;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static shop.mtcoding.restend.core.auth.jwt.MyJwtProvider.HEADER;
+import static shop.mtcoding.restend.core.auth.jwt.MyJwtProvider.HEADER_REFRESH;
 
 /**
  * @WebMvcTest는 웹 계층 컴포넌트만 테스트로 가져옴
@@ -96,7 +104,12 @@ public class UserControllerUnitTest extends DummyEntity {
         String requestBody = om.writeValueAsString(loginInDTO);
 
         // stub
-        Mockito.when(userService.로그인(any())).thenReturn("Bearer 1234");
+        TokenResponse tokenResponse = new TokenResponse("Bearer 1234", "Bearer 1234");
+        Mockito.when(userService.로그인(any())).thenReturn(tokenResponse);
+
+        UserResponse.LoginOutDTO loginOutDTO = new UserResponse.LoginOutDTO(
+                1L, UserRole.USER);
+        Mockito.when(userService.이메일로회원조회(any())).thenReturn(loginOutDTO);
 
         // when
         ResultActions resultActions = mvc
@@ -104,9 +117,13 @@ public class UserControllerUnitTest extends DummyEntity {
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : " + responseBody);
 
+        MvcResult mvcResult = resultActions.andReturn();
+        String accessToken = mvcResult.getResponse().getHeader(HEADER);
+        String refreshToken = mvcResult.getResponse().getHeader(HEADER_REFRESH);
+
         // then
-        String jwtToken = resultActions.andReturn().getResponse().getHeader(MyJwtProvider.HEADER);
-        Assertions.assertThat(jwtToken.startsWith(MyJwtProvider.TOKEN_PREFIX)).isTrue();
+        assertThat(accessToken).startsWith(MyJwtProvider.TOKEN_PREFIX);
+        assertThat(refreshToken).startsWith(MyJwtProvider.TOKEN_PREFIX);
         resultActions.andExpect(status().isOk());
     }
 

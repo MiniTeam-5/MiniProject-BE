@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import shop.mtcoding.restend.core.auth.session.MyUserDetails;
 import shop.mtcoding.restend.core.dummy.DummyEntity;
+import shop.mtcoding.restend.dto.token.TokenResponse;
 import shop.mtcoding.restend.dto.user.UserRequest;
 import shop.mtcoding.restend.dto.user.UserResponse;
 import shop.mtcoding.restend.model.user.User;
@@ -101,11 +102,13 @@ public class UserServiceTest extends DummyEntity {
         Mockito.when(authenticationManager.authenticate(any())).thenReturn(authentication);
 
         // when
-        String jwt = userService.로그인(loginInDTO);
-        System.out.println("디버그 : "+jwt);
+        TokenResponse tokenResponse = userService.로그인(loginInDTO);
+        System.out.println("디버그 : "+tokenResponse.getAccessToken());
+        System.out.println("디버그 : "+tokenResponse.getRefreshToken());
 
         // then
-        Assertions.assertThat(jwt.startsWith("Bearer ")).isTrue();
+        Assertions.assertThat(tokenResponse.getAccessToken().startsWith("Bearer ")).isTrue();
+        Assertions.assertThat(tokenResponse.getRefreshToken().startsWith("Bearer ")).isTrue();
     }
 
     @Test
