@@ -47,7 +47,7 @@ class RefreshServiceTest {
 
         String uuid = refreshInfo.getSecond().getUuid();
 
-        User testUser = User.builder().id(userId).username("testUser").role(UserRole.USER).build();
+        User testUser = User.builder().id(userId).username("testUser").role(UserRole.ROLE_USER).build();
         when(tokenRepository.findByUuidAndStatus(uuid, TokenStatus.VALID)).thenReturn(Optional.of(refreshInfo.getSecond()));
         when(userRepository.findById(userId)).thenReturn(Optional.ofNullable(testUser));
 

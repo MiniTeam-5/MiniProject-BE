@@ -57,7 +57,7 @@ class RefreshControllerTest extends MyRestDoc {
                 .email("testUser@nate.com")
                 .password("1234")
                 .hireDate(LocalDate.now())
-                .role(UserRole.USER)
+                .role(UserRole.ROLE_USER)
                 .build());
 
         // 리프레시 토큰 생성 및 저장
