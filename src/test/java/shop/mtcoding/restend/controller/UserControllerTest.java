@@ -29,6 +29,7 @@ import javax.persistence.EntityManager;
 
 import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
@@ -58,9 +59,9 @@ public class UserControllerTest extends MyRestDoc {
 
     @BeforeEach
     public void setUp() {
-        userRepository.save(dummy.newUser("ssar", true, 15));
-        userRepository.save(dummy.newUser("cos", true, 15));
-        userRepository.save(dummy.newUser("resign", true, 15));
+        userRepository.save(dummy.newUser("ssar", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
+        userRepository.save(dummy.newUser("cos", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
+        userRepository.save(dummy.newUser("resign", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
         em.clear();
     }
 
