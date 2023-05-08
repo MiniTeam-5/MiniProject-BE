@@ -103,7 +103,7 @@ public class DummyEntity {
                 .role(role)
                 .username(username)
                 .hireDate(hireDate)
-                .remain_days(remainDays)
+                .remainDays(remainDays)
                 .profile(profile)
                 .build();
     }
