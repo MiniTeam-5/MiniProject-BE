@@ -2,6 +2,7 @@ package shop.mtcoding.restend.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.util.Pair;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.Errors;
@@ -12,7 +13,6 @@ import shop.mtcoding.restend.core.annotation.MyLog;
 import shop.mtcoding.restend.core.auth.session.MyUserDetails;
 import shop.mtcoding.restend.core.exception.Exception403;
 import shop.mtcoding.restend.dto.ResponseDTO;
-import shop.mtcoding.restend.dto.token.TokenResponse;
 import shop.mtcoding.restend.dto.user.UserRequest;
 import shop.mtcoding.restend.dto.user.UserResponse;
 import shop.mtcoding.restend.service.RefreshService;
@@ -43,13 +43,13 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid UserRequest.LoginInDTO loginInDTO, Errors errors) {
-        TokenResponse tokenResponse = userService.로그인(loginInDTO);
+        Pair<String, String > tokenInfo = userService.로그인(loginInDTO);
         UserResponse.LoginOutDTO loginOutDTO = userService.이메일로회원조회(loginInDTO.getEmail());
 
         ResponseDTO<?> responseDTO = new ResponseDTO<>(loginOutDTO);
         return ResponseEntity.ok()
-                .header(HEADER, tokenResponse.getAccessToken())
-                .header(HEADER_REFRESH, tokenResponse.getRefreshToken())
+                .header(HEADER, tokenInfo.getFirst())
+                .header(HEADER_REFRESH, tokenInfo.getSecond())
                 .body(responseDTO);
     }
 

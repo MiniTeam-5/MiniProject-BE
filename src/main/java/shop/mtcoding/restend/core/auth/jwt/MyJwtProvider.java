@@ -5,7 +5,10 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
+import shop.mtcoding.restend.model.token.RefreshTokenEntity;
+import shop.mtcoding.restend.model.token.TokenStatus;
 import shop.mtcoding.restend.model.user.User;
 
 import java.util.Date;
@@ -37,17 +40,18 @@ public class MyJwtProvider {
         return TOKEN_PREFIX + jwt;
     }
 
-    public static String createRefresh() {
+    public static Pair<String, RefreshTokenEntity> createRefresh() {
 
         String uuid = UUID.randomUUID().toString();
-        //레디스 저장
+
+        RefreshTokenEntity refreshToken = new RefreshTokenEntity(uuid, TokenStatus.VALID);
 
         String jwt = JWT.create()
                 .withSubject(SUBJECT)
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXP_REFRESH))
                 .withClaim("uuid", uuid)
                 .sign(Algorithm.HMAC512(REFRESH_SECRET));
-        return TOKEN_PREFIX + jwt;
+        return Pair.of(TOKEN_PREFIX + jwt, refreshToken);
     }
 
     public static DecodedJWT verify(String jwt) throws SignatureVerificationException, TokenExpiredException {

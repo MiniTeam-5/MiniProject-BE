@@ -8,8 +8,10 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.util.Pair;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.token.TokenService;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -25,12 +27,12 @@ import shop.mtcoding.restend.core.auth.jwt.MyJwtProvider;
 import shop.mtcoding.restend.core.config.MyFilterRegisterConfig;
 import shop.mtcoding.restend.core.config.MySecurityConfig;
 import shop.mtcoding.restend.core.dummy.DummyEntity;
-import shop.mtcoding.restend.dto.token.TokenResponse;
 import shop.mtcoding.restend.dto.user.UserRequest;
 import shop.mtcoding.restend.dto.user.UserResponse;
 import shop.mtcoding.restend.core.MyWithMockUser;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRole;
+import shop.mtcoding.restend.service.RefreshService;
 import shop.mtcoding.restend.service.UserService;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -65,6 +67,9 @@ public class UserControllerUnitTest extends DummyEntity {
     private ObjectMapper om;
     @MockBean
     private UserService userService;
+
+    @MockBean
+    private RefreshService refreshService;
 
     @Test
     public void join_test() throws Exception {
@@ -104,8 +109,8 @@ public class UserControllerUnitTest extends DummyEntity {
         String requestBody = om.writeValueAsString(loginInDTO);
 
         // stub
-        TokenResponse tokenResponse = new TokenResponse("Bearer 1234", "Bearer 1234");
-        Mockito.when(userService.로그인(any())).thenReturn(tokenResponse);
+        Pair<String, String> tokenInfo = Pair.of("Bearer 1234", "Bearer 1234");
+        Mockito.when(userService.로그인(any())).thenReturn(tokenInfo);
 
         UserResponse.LoginOutDTO loginOutDTO = new UserResponse.LoginOutDTO(
                 1L, UserRole.USER);

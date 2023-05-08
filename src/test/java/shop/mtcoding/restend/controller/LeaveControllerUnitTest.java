@@ -151,16 +151,26 @@ public class LeaveControllerUnitTest extends DummyEntity {
         Leave leave = newMockLeave(1L, user, LeaveType.valueOf("ANNUAL"), LocalDate.parse("2023-07-27"),
                 LocalDate.parse("2023-08-02"), 5);
         LeaveResponse.InfoOutDTO infoOutDTO = new LeaveResponse.InfoOutDTO(leave, user);
+
+        Leave leave2 = newMockLeave(1L, user, LeaveType.valueOf("ANNUAL"), LocalDate.parse("2023-05-27"),
+                LocalDate.parse("2023-06-02"), 5);
+        LeaveResponse.InfoOutDTO infoOutDTO2 = new LeaveResponse.InfoOutDTO(leave2, user);
+
+        Leave leave3 = newMockLeave(1L, user, LeaveType.valueOf("ANNUAL"), LocalDate.parse("2023-08-27"),
+                LocalDate.parse("2023-09-02"), 5);
+        LeaveResponse.InfoOutDTO infoOutDTO3 = new LeaveResponse.InfoOutDTO(leave3, user);
+
         List<LeaveResponse.InfoOutDTO> infoOutDTOList = new ArrayList<>();
         infoOutDTOList.add(infoOutDTO);
+        infoOutDTOList.add(infoOutDTO2);
+        infoOutDTOList.add(infoOutDTO3);
 
         // 가정
-        Mockito.when(leaveService.getLeaves(any(), any(), any(), any())).thenReturn(infoOutDTOList);
+        Mockito.when(leaveService.getLeaves(any())).thenReturn(infoOutDTOList);
 
         // 테스트 진행
         ResultActions resultActions = mvc.perform(get("/auth/leave")
-                .param("id", "1")
-                .param("month", "2023-07-27")
+                .param("month", "2023-07")
                 .contentType(MediaType.APPLICATION_JSON));
 
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
@@ -173,6 +183,10 @@ public class LeaveControllerUnitTest extends DummyEntity {
         resultActions.andExpect(jsonPath("$.data[0].status").value("WAITING"));
         resultActions.andExpect(jsonPath("$.data[0].startDate").value("2023-07-27"));
         resultActions.andExpect(jsonPath("$.data[0].endDate").value("2023-08-02"));
+        resultActions.andExpect(jsonPath("$.data[1].startDate").value("2023-05-27"));
+        resultActions.andExpect(jsonPath("$.data[1].endDate").value("2023-06-02"));
+        resultActions.andExpect(jsonPath("$.data[2].startDate").value("2023-08-27"));
+        resultActions.andExpect(jsonPath("$.data[2].endDate").value("2023-09-02"));
         resultActions.andExpect(status().isOk());
     }
 }

@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,16 +16,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import shop.mtcoding.restend.core.auth.session.MyUserDetails;
 import shop.mtcoding.restend.core.dummy.DummyEntity;
-import shop.mtcoding.restend.dto.token.TokenResponse;
 import shop.mtcoding.restend.dto.user.UserRequest;
 import shop.mtcoding.restend.dto.user.UserResponse;
+import shop.mtcoding.restend.model.token.TokenRepository;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRepository;
-import shop.mtcoding.restend.model.user.UserRole;
 
-import javax.persistence.EntityManager;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -45,6 +41,9 @@ public class UserServiceTest extends DummyEntity {
     // 가짜 객체를 만들어서 Mockito 환경에 Load
     @Mock
     private AuthenticationManager authenticationManager;
+
+    @Mock
+    private TokenRepository tokenRepository;
 
     // 진짜 객체를 만들어서 Mockito 환경에 Load
     @Spy
@@ -89,7 +88,7 @@ public class UserServiceTest extends DummyEntity {
     public void 로그인_test() throws Exception{
         // given
         UserRequest.LoginInDTO loginInDTO = new UserRequest.LoginInDTO();
-        loginInDTO.setEmail("abcd@nate.com");
+        loginInDTO.setEmail("cos@nate.com");
         loginInDTO.setPassword("1234");
 
         // stub
@@ -102,13 +101,13 @@ public class UserServiceTest extends DummyEntity {
         Mockito.when(authenticationManager.authenticate(any())).thenReturn(authentication);
 
         // when
-        TokenResponse tokenResponse = userService.로그인(loginInDTO);
-        System.out.println("디버그 : "+tokenResponse.getAccessToken());
-        System.out.println("디버그 : "+tokenResponse.getRefreshToken());
+        Pair<String, String> tokenInfo = userService.로그인(loginInDTO);
+        System.out.println("디버그 : "+tokenInfo.getFirst());
+        System.out.println("디버그 : "+tokenInfo.getSecond());
 
         // then
-        Assertions.assertThat(tokenResponse.getAccessToken().startsWith("Bearer ")).isTrue();
-        Assertions.assertThat(tokenResponse.getRefreshToken().startsWith("Bearer ")).isTrue();
+        Assertions.assertThat(tokenInfo.getFirst().startsWith("Bearer ")).isTrue();
+        Assertions.assertThat(tokenInfo.getSecond().startsWith("Bearer ")).isTrue();
     }
 
     @Test

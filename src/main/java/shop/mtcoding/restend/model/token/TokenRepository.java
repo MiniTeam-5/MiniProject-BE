@@ -4,10 +4,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface TokenRepository extends JpaRepository<RefreshToken, Long> {
+public interface TokenRepository extends JpaRepository<RefreshTokenEntity, Long> {
 
-    Optional<RefreshToken> findByUuidAndStatus(String uuid, TokenStatus status);
+    Optional<RefreshTokenEntity> findByUuidAndStatus(String uuid, TokenStatus status);
 
-    Optional<RefreshToken> findByUuid(String uuid);
+    Optional<RefreshTokenEntity> findByUuid(String uuid);
 
 }

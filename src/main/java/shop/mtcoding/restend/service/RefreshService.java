@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import shop.mtcoding.restend.core.auth.jwt.MyJwtProvider;
 import shop.mtcoding.restend.core.exception.Exception400;
 import shop.mtcoding.restend.core.exception.Exception401;
-import shop.mtcoding.restend.model.token.RefreshToken;
+import shop.mtcoding.restend.model.token.RefreshTokenEntity;
 import shop.mtcoding.restend.model.token.TokenRepository;
 import shop.mtcoding.restend.model.token.TokenStatus;
 import shop.mtcoding.restend.model.user.User;
@@ -48,7 +48,7 @@ public class RefreshService {
             log.error("리프레시 토큰 만료됨");
 
             String uuid = decodedJWT.getClaim("uuid").asString();
-            RefreshToken RefreshTokenPS = tokenRepository.findByUuid(uuid)
+            RefreshTokenEntity RefreshTokenPS = tokenRepository.findByUuid(uuid)
                     .orElseThrow(() -> new Exception401("리프레시 토큰이 존재하지 않습니다."));
             RefreshTokenPS.setStatus(TokenStatus.EXPIRED);
             //tokenRepository.save(RefreshTokenPS);
@@ -72,7 +72,7 @@ public class RefreshService {
 
     //어차피 로그아웃이니까 401은 던지지 말자
     @Transactional
-    public void 리프레시토큰회수(HttpServletRequest request) {
+    public boolean 리프레시토큰회수(HttpServletRequest request) {
 
         String prefixJwt = request.getHeader(MyJwtProvider.HEADER_REFRESH);
         String refreshjwt = prefixJwt.replace(MyJwtProvider.TOKEN_PREFIX, "");
@@ -87,25 +87,27 @@ public class RefreshService {
             log.error("리프레시 토큰 만료됨");
 
             String uuid = decodedJWT.getClaim("uuid").asString();
-            RefreshToken RefreshTokenPS = tokenRepository.findByUuid(uuid)
+            RefreshTokenEntity RefreshTokenPS = tokenRepository.findByUuid(uuid)
                     .orElseThrow(()->{
                             log.error("리프레시 토큰 존재하지 않음");
                             return new Exception400("refreshtoken", "리프레시 토큰 존재하지 않음");
                     });
             RefreshTokenPS.setStatus(TokenStatus.EXPIRED);
 
-            return;
+            return false;
 
         }
 
         String uuid = decodedJWT.getClaim("uuid").asString();
         // UUID로 리프레시 토큰 조회 및 검증
-        RefreshToken RefreshTokenPS = tokenRepository.findByUuidAndStatus(uuid, TokenStatus.VALID)
+        RefreshTokenEntity RefreshTokenPS = tokenRepository.findByUuidAndStatus(uuid, TokenStatus.VALID)
                 .orElseThrow(() -> {
                     log.error("유효한 리프레시 토큰 존재하지 않음");
                     return new Exception400("refreshtoken", "유효한 리프레시 토큰이 존재하지 않습니다.");
                 });
 
         RefreshTokenPS.setStatus(TokenStatus.REVOKED);
+
+        return true;
     }
 }
