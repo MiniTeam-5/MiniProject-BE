@@ -65,10 +65,6 @@ public class UserService {
         String encPassword = passwordEncoder.encode(joinInDTO.getPassword()); // 60Byte
         joinInDTO.setPassword(encPassword);
 
-        LocalDate hireDate = LocalDate.parse(joinInDTO.getHireDate());
-        long days = ChronoUnit.DAYS.between(hireDate, LocalDate.now());
-        int limit = calPlusLimit(days);
-        joinInDTO.setAnnualLimit(limit <= 25 ? limit : 25);
 
         // 디비 save 되는 쪽만 try catch로 처리하자.
         try {
@@ -76,15 +72,6 @@ public class UserService {
             return new UserResponse.JoinOutDTO(userPS);
         } catch (Exception e) {
             throw new Exception500("회원가입 실패 : " + e.getMessage());
-        }
-    }
-
-    private int calPlusLimit(long days) {
-        if (days < 365 * 3) {
-            return 15;
-        } else {
-            int ceil = (int) Math.ceil((double) (days - 1095) / 730);
-            return 15 + ceil;
         }
     }
 

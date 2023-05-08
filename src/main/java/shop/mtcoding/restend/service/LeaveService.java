@@ -1,7 +1,6 @@
 package shop.mtcoding.restend.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.mtcoding.restend.core.exception.Exception400;
@@ -32,7 +31,7 @@ public class LeaveService {
     private final LeaveRepository leaveRepository;
     private final AlarmRepository alarmRepository;
 
-    private final MyDateService myDateService;
+    private final DateService dateService;
     private final SseService sseService;
 
     @Transactional
@@ -65,7 +64,7 @@ public class LeaveService {
         // 1) 사용할 연차 일수 계산하기: 평일만 계산 + 공휴일 계산 by 공공 API
         Integer usingDays = -1;
         try{
-            usingDays = myDateService.getWeekDayCount(applyInDTO.getStartDate(), applyInDTO.getEndDate());
+            usingDays = dateService.getWeekDayCount(applyInDTO.getStartDate(), applyInDTO.getEndDate());
         }catch (URISyntaxException e){
             throw new Exception500(e.getMessage());
         }
