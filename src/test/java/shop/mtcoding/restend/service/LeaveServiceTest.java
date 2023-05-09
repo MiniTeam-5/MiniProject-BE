@@ -163,15 +163,15 @@ public class LeaveServiceTest extends DummyEntity {
         Leave leave1 = Leave.builder()
                 .user(user1)
                 .type(ANNUAL)
-                .startDate(LocalDate.of(2023, 3, 25))
-                .endDate(LocalDate.of(2023, 4, 5))
+                .startDate(LocalDate.of(2023, 2, 25))
+                .endDate(LocalDate.of(2023, 3, 5))
                 .status(WAITING)
                 .build();
 
         Leave leave2 = Leave.builder()
                 .user(user2)
                 .type(DUTY)
-                .startDate(LocalDate.of(2023, 5, 3))
+                .startDate(LocalDate.of(2023, 4, 3))
                 .endDate(LocalDate.of(2023, 5, 4))
                 .status(APPROVAL)
                 .build();
@@ -179,8 +179,8 @@ public class LeaveServiceTest extends DummyEntity {
         Leave leave3 = Leave.builder()
                 .user(user3)
                 .type(ANNUAL)
-                .startDate(LocalDate.of(2023, 6, 27))
-                .endDate(LocalDate.of(2023, 7, 5))
+                .startDate(LocalDate.of(2023, 5, 27))
+                .endDate(LocalDate.of(2023, 6, 5))
                 .status(REJECTION)
                 .build();
 
@@ -190,7 +190,7 @@ public class LeaveServiceTest extends DummyEntity {
         Mockito.when(leaveRepository.findAll()).thenReturn(leaveList);
 
         // when
-        List<LeaveResponse.InfoOutDTO> result = leaveService.getLeaves("2023-05");
+        List<LeaveResponse.InfoOutDTO> result = leaveService.연차당직정보가져오기세달치("2023-04");
 
         // then
         assertEquals(3, result.size());
@@ -208,4 +208,49 @@ public class LeaveServiceTest extends DummyEntity {
         assertEquals(leave2.getEndDate().toString(), result.get(1).getEndDate().toString());
     }
 
+    @Test
+    public void 상태선택연차당직정보가져오기_Test() {
+
+        // given
+        User user1 = User.builder().id(1L).username("dotori").build();
+        User user2 = User.builder().id(2L).username("tomato").build();
+
+        Leave leave1 = Leave.builder()
+                .user(user1)
+                .type(ANNUAL)
+                .startDate(LocalDate.of(2023, 3, 25))
+                .endDate(LocalDate.of(2023, 3, 28))
+                .status(WAITING)
+                .build();
+
+        Leave leave2 = Leave.builder()
+                .user(user2)
+                .type(DUTY)
+                .startDate(LocalDate.of(2023, 4, 1))
+                .endDate(LocalDate.of(2023, 4, 1))
+                .status(WAITING)
+                .build();
+
+        List<Leave> leaveList = Arrays.asList(leave1, leave2);
+
+        Mockito.when(leaveRepository.findByStatus(LeaveStatus.WAITING)).thenReturn(leaveList);
+
+        // when
+        List<LeaveResponse.InfoOutDTO> result = leaveService.상태선택연차당직정보가져오기(LeaveStatus.WAITING);
+
+        // then
+        assertEquals(2, result.size());
+        assertEquals(leave1.getUser().getId(), result.get(0).getUserId());
+        assertEquals(leave1.getUser().getUsername(), result.get(0).getUsername());
+        assertEquals(leave1.getType(), result.get(0).getType());
+        assertEquals(leave1.getStatus(), result.get(0).getStatus());
+        assertEquals(leave1.getStartDate().toString(), result.get(0).getStartDate().toString());
+        assertEquals(leave1.getEndDate().toString(), result.get(0).getEndDate().toString());
+        assertEquals(leave2.getUser().getId(), result.get(1).getUserId());
+        assertEquals(leave2.getUser().getUsername(), result.get(1).getUsername());
+        assertEquals(leave2.getType(), result.get(1).getType());
+        assertEquals(leave2.getStatus(), result.get(1).getStatus());
+        assertEquals(leave2.getStartDate().toString(), result.get(1).getStartDate().toString());
+        assertEquals(leave2.getEndDate().toString(), result.get(1).getEndDate().toString());
+    }
 }
