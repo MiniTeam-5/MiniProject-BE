@@ -28,3 +28,4 @@ public interface LeaveRepository extends JpaRepository<Leave, Long> {
     boolean existsDuplicateAnnual(@Param("annual")LeaveType type, @Param("start") LocalDate startDate,
                                   @Param("end") LocalDate endDate, @Param("id") Long userId);
 }
+
