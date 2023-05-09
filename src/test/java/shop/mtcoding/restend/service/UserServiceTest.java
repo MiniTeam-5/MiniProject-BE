@@ -8,6 +8,9 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import org.springframework.data.util.Pair;
+import org.springframework.data.domain.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,10 +21,17 @@ import shop.mtcoding.restend.core.auth.session.MyUserDetails;
 import shop.mtcoding.restend.core.dummy.DummyEntity;
 import shop.mtcoding.restend.dto.user.UserRequest;
 import shop.mtcoding.restend.dto.user.UserResponse;
+import shop.mtcoding.restend.model.token.TokenRepository;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRepository;
 
 import java.util.Optional;
+import shop.mtcoding.restend.model.user.UserRole;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -45,6 +55,9 @@ public class UserServiceTest extends DummyEntity {
     @Mock
     private AuthenticationManager authenticationManager;
 
+    @Mock
+    private TokenRepository tokenRepository;
+
     // 진짜 객체를 만들어서 Mockito 환경에 Load
     @Spy
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -64,7 +77,6 @@ public class UserServiceTest extends DummyEntity {
         UserRequest.JoinInDTO joinInDTO = new UserRequest.JoinInDTO();
         joinInDTO.setUsername("cos");
         joinInDTO.setPassword("1234");
-        joinInDTO.setCheckPassword("1234");
         joinInDTO.setEmail("cos@nate.com");
         joinInDTO.setHireDate("2022-12-12");
 
@@ -72,8 +84,6 @@ public class UserServiceTest extends DummyEntity {
         Mockito.when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
 
         // stub 2
-
-
         User cos = newMockUser(1L, "cos", 15);
         Mockito.when(userRepository.save(any())).thenReturn(cos);
 
@@ -89,7 +99,7 @@ public class UserServiceTest extends DummyEntity {
     public void 로그인_test() throws Exception {
         // given
         UserRequest.LoginInDTO loginInDTO = new UserRequest.LoginInDTO();
-        loginInDTO.setEmail("abcd@nate.com");
+        loginInDTO.setEmail("cos@nate.com");
         loginInDTO.setPassword("1234");
 
         // stub
@@ -103,11 +113,13 @@ public class UserServiceTest extends DummyEntity {
         Mockito.when(authenticationManager.authenticate(any())).thenReturn(authentication);
 
         // when
-        String jwt = userService.로그인(loginInDTO);
-        System.out.println("디버그 : " + jwt);
+        Pair<String, String> tokenInfo = userService.로그인(loginInDTO);
+        System.out.println("디버그 : "+tokenInfo.getFirst());
+        System.out.println("디버그 : "+tokenInfo.getSecond());
 
         // then
-        Assertions.assertThat(jwt.startsWith("Bearer ")).isTrue();
+        Assertions.assertThat(tokenInfo.getFirst().startsWith("Bearer ")).isTrue();
+        Assertions.assertThat(tokenInfo.getSecond().startsWith("Bearer ")).isTrue();
     }
 
     @Test
@@ -125,10 +137,10 @@ public class UserServiceTest extends DummyEntity {
         UserResponse.DetailOutDTO detailOutDTO = userService.회원상세보기(id);
 
         // then
-//        Assertions.assertThat(detailOutDTO.getId()).isEqualTo(1L);
-//        Assertions.assertThat(detailOutDTO.getUsername()).isEqualTo("cos");
+        Assertions.assertThat(detailOutDTO.getId()).isEqualTo(1L);
+        Assertions.assertThat(detailOutDTO.getUsername()).isEqualTo("cos");
         Assertions.assertThat(detailOutDTO.getEmail()).isEqualTo("cos@nate.com");
-//        Assertions.assertThat(detailOutDTO.getRole()).isEqualTo(UserRole.USER);
+        Assertions.assertThat(detailOutDTO.getRole()).isEqualTo(UserRole.ROLE_USER);
     }
 
 }

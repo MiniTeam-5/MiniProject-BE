@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class DummyEntity {
-    public User newUser(String username, Boolean status, Integer remainDays){
+    public User newUser(String username, Boolean status, LocalDate hireDate, Integer remainDays){
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return User.builder()
                 .username(username)
@@ -21,7 +21,7 @@ public class DummyEntity {
                 .email(username+"@nate.com")
                 .role(UserRole.ROLE_USER)
                 .status(status)
-                .hireDate(LocalDate.now().minusYears(1).minusWeeks(1)) // 입사 1년차라 가정
+                .hireDate(hireDate) // 입사 1년차라 가정
                 .remainDays(remainDays)
                 .build();
     }
