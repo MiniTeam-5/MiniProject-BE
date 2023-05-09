@@ -16,15 +16,14 @@ import shop.mtcoding.restend.model.leave.enums.LeaveStatus;
 import shop.mtcoding.restend.model.leave.enums.LeaveType;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRepository;
+import shop.mtcoding.restend.model.user.UserRole;
 
 import java.net.URISyntaxException;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.TemporalAccessor;
-import java.time.temporal.TemporalAdjusters;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -90,9 +89,16 @@ public class LeaveService {
         // 4) 알림 등록
         String content = userPS.getUsername()+"님의 "+applyInDTO.getStartDate().toString()+"부터 "
                 +applyInDTO.getEndDate()+"까지, 총 "+usingDays+"일의 연차 신청이 완료되었습니다.";
-        alarmRepository.save(Alarm.builder().user(userPS).content(content).build());
+        Alarm alarmPS = alarmRepository.save(Alarm.builder().user(userPS).content(content).build());
 
-        // 5) 연차 등록
+        // 5) 모든 관리자에게 실시간 알람 전송
+        Set<UserRole> adminAndMasterRoles = new HashSet<>(Arrays.asList(UserRole.ROLE_ADMIN, UserRole.ROLE_MASTER));
+        List<User> managerList = userRepository.findByRoles(adminAndMasterRoles);
+        for (User manager : managerList) {
+            sseService.sendToUser(manager.getId(), "alarm", new AlarmResponse.AlarmOutDTO(alarmPS));
+        }
+
+        // 6) 연차 등록
         Leave leavePS = leaveRepository.save(applyInDTO.toEntity(userPS, usingDays));
         return new LeaveResponse.ApplyOutDTO(leavePS, userPS);
     }
@@ -169,8 +175,21 @@ public class LeaveService {
     }
 
 
+    public List<LeaveResponse.InfoOutDTO> 상태선택연차당직정보가져오기(LeaveStatus status)
+    {
+        // 대기 상태의 모든 연차/당직 정보 가져오기
+        List<Leave> leaves = leaveRepository.findByStatus(status);
+
+        // 반환할 DTO 리스트 생성
+        List<LeaveResponse.InfoOutDTO> infoOutDTOList = leaves.stream()
+                .map(leave -> new LeaveResponse.InfoOutDTO(leave, leave.getUser()))
+                .collect(Collectors.toList());
+
+        return infoOutDTOList;
+    }
+
     //모든 유저의 특정 월 정보
-    public List<LeaveResponse.InfoOutDTO> getLeaves(String month) {
+    public List<LeaveResponse.InfoOutDTO> 연차당직정보가져오기세달치(String month) {
 
         // '연도-월' 형식 검증
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
@@ -184,7 +203,7 @@ public class LeaveService {
 
         LocalDate currentDate = LocalDate.parse(month);
         LocalDate startDate = currentDate.minusMonths(1).withDayOfMonth(1); // 이전 달의 첫날
-        LocalDate endDate = currentDate.plusMonths(1).withDayOfMonth(currentDate.plusMonths(1).lengthOfMonth()); // 다음 달의 마지막 날
+        LocalDate endDate = currentDate.plusMonths(1).withDayOfMonth(currentDate.getMonth().plus(1).length(currentDate.isLeapYear())); // 다음 달의 마지막 날
 
         // startDate와 endDate 사이에 있는 모든 연차/당직 정보 가져오기
         List<Leave> leaves = leaveRepository.findAll()
@@ -201,4 +220,18 @@ public class LeaveService {
 
         return infoOutDTOList;
     }
+
+    public List<LeaveResponse.InfoOutDTO> 특정유저연차당직정보가져오기(Long userId) {
+
+        // 특정 유저의 모든 연차/당직 정보 가져오기
+        List<Leave> leaves = leaveRepository.findAllByUserId(userId);
+
+        // 반환할 DTO 리스트 생성
+        List<LeaveResponse.InfoOutDTO> infoOutDTOList = leaves.stream()
+                .map(leave -> new LeaveResponse.InfoOutDTO(leave, leave.getUser()))
+                .collect(Collectors.toList());
+
+        return infoOutDTOList;
+    }
+
 }

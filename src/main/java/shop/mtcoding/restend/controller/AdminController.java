@@ -11,11 +11,15 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import shop.mtcoding.restend.core.auth.session.MyUserDetails;
 import shop.mtcoding.restend.dto.ResponseDTO;
+import shop.mtcoding.restend.dto.leave.LeaveResponse;
+import shop.mtcoding.restend.model.leave.enums.LeaveStatus;
+import shop.mtcoding.restend.service.LeaveService;
 import shop.mtcoding.restend.dto.manage.ManageUserDTO;
 import shop.mtcoding.restend.dto.manage.ResponsePagenation;
 import shop.mtcoding.restend.service.ManageService;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,6 +27,8 @@ public class AdminController {
 
 
     private final ManageService manageService;
+
+    private final LeaveService leaveService;
 
     // 회원 정보 변경 로직
     @PostMapping("/admin/annual/{id}")
@@ -49,6 +55,13 @@ public class AdminController {
 
         ResponsePagenation<?,?> responsePagenation = new ResponsePagenation<>(userListPG,pageSize);
         return ResponseEntity.ok().body(responsePagenation);
+    }
+
+    @GetMapping("/admin/leave")
+    public ResponseEntity<?> getLeave() {
+        List<LeaveResponse.InfoOutDTO> waitingLeaves = leaveService.상태선택연차당직정보가져오기(LeaveStatus.WAITING);
+        ResponseDTO<List<LeaveResponse.InfoOutDTO>> responseDTO = new ResponseDTO<>(waitingLeaves);
+        return ResponseEntity.ok().body(responseDTO);
     }
 
     // role까지 변경가능, master로 접근해야, role변경이 가능하다.
