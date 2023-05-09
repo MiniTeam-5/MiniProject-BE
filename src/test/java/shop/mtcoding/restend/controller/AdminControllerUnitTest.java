@@ -39,13 +39,17 @@ import shop.mtcoding.restend.core.auth.session.MyUserDetails;
 import shop.mtcoding.restend.core.config.MyFilterRegisterConfig;
 import shop.mtcoding.restend.core.config.MySecurityConfig;
 import shop.mtcoding.restend.core.dummy.DummyEntity;
+import shop.mtcoding.restend.dto.leave.LeaveResponse;
 import shop.mtcoding.restend.dto.manage.Manage;
 import shop.mtcoding.restend.dto.user.UserRequest;
 import shop.mtcoding.restend.dto.user.UserResponse;
 import shop.mtcoding.restend.core.MyWithMockUser;
+import shop.mtcoding.restend.model.leave.enums.LeaveStatus;
+import shop.mtcoding.restend.model.leave.enums.LeaveType;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRepository;
 import shop.mtcoding.restend.model.user.UserRole;
+import shop.mtcoding.restend.service.LeaveService;
 import shop.mtcoding.restend.service.UserService;
 
 import javax.persistence.EntityManager;
@@ -85,6 +89,9 @@ public class AdminControllerUnitTest extends DummyEntity{
 
     @MockBean
     private UserService userService;
+
+    @MockBean
+    private LeaveService leaveService;
 
     @MockBean
     private  UserRepository userRepository;
@@ -210,4 +217,44 @@ public class AdminControllerUnitTest extends DummyEntity{
         resultActions.andExpect(jsonPath("$.data.role").value("ROLE_ADMIN"));
         resultActions.andExpect(status().isOk());
     }
+
+    @MyWithMockUser(id = 1L, username = "cos", role = UserRole.ROLE_ADMIN)
+    @Test
+    public void getLeave_test() throws Exception {
+        // given
+        LeaveResponse.InfoOutDTO leaveInfo1 = new LeaveResponse.InfoOutDTO(1L,
+                "user1",
+                LeaveType.DUTY,
+                LeaveStatus.WAITING,
+                LocalDateTime.now().toString(),
+                LocalDateTime.now().plusDays(3).toString());
+        LeaveResponse.InfoOutDTO leaveInfo2 = new LeaveResponse.InfoOutDTO(2L,
+                "user2",
+                LeaveType.ANNUAL,
+                LeaveStatus.WAITING,
+                LocalDateTime.now().toString(),
+                LocalDateTime.now().plusDays(2).toString());
+        List<LeaveResponse.InfoOutDTO> waitingLeaves = Arrays.asList(leaveInfo1, leaveInfo2);
+
+        Mockito.when(leaveService.상태선택연차당직정보가져오기(LeaveStatus.WAITING)).thenReturn(waitingLeaves);
+
+        // when
+        ResultActions resultActions = mvc.perform(get("/admin/leave").accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        // then
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        resultActions.andExpect(jsonPath("$.data", Matchers.hasSize(2)))
+                .andExpect(jsonPath("$.data[0].userId").value(1L))
+                .andExpect(jsonPath("$.data[0].username").value("user1"))
+                .andExpect(jsonPath("$.data[0].type").value("DUTY"))
+                .andExpect(jsonPath("$.data[0].status").value("WAITING"))
+                .andExpect(jsonPath("$.data[1].userId").value(2L))
+                .andExpect(jsonPath("$.data[1].username").value("user2"))
+                .andExpect(jsonPath("$.data[1].type").value("ANNUAL"))
+                .andExpect(jsonPath("$.data[1].status").value("WAITING"));
+    }
+
 }

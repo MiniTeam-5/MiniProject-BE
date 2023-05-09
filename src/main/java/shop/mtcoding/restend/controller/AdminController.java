@@ -7,26 +7,26 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import shop.mtcoding.restend.core.annotation.MyErrorLog;
-import shop.mtcoding.restend.core.annotation.MyLog;
 import shop.mtcoding.restend.core.auth.session.MyUserDetails;
-import shop.mtcoding.restend.core.exception.Exception403;
 import shop.mtcoding.restend.dto.ResponseDTO;
+import shop.mtcoding.restend.dto.leave.LeaveResponse;
 import shop.mtcoding.restend.dto.manage.Manage;
+import shop.mtcoding.restend.model.leave.enums.LeaveStatus;
+import shop.mtcoding.restend.service.LeaveService;
 import shop.mtcoding.restend.service.UserService;
-import javax.servlet.http.HttpSession;
+
 import javax.validation.Valid;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
 public class AdminController {
 
     private final UserService userService;
+
+    private final LeaveService leaveService;
 
     // 회원 정보 변경 로직
     @PostMapping("/admin/annual/{id}")
@@ -48,6 +48,13 @@ public class AdminController {
         PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("id").descending());
         Page<Manage.UserManageDTO> userListPS = userService.회원목록보기(pageRequest);
         ResponseDTO<Page> responseDTO = new ResponseDTO<>(userListPS);
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
+    @GetMapping("/admin/leave")
+    public ResponseEntity<?> getLeave() {
+        List<LeaveResponse.InfoOutDTO> waitingLeaves = leaveService.상태선택연차당직정보가져오기(LeaveStatus.WAITING);
+        ResponseDTO<List<LeaveResponse.InfoOutDTO>> responseDTO = new ResponseDTO<>(waitingLeaves);
         return ResponseEntity.ok().body(responseDTO);
     }
 
