@@ -7,8 +7,7 @@ import java.time.LocalDate;
 import javax.validation.constraints.Min;
 import java.time.LocalDateTime;
 
-@Builder
-@AllArgsConstructor
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Table(name = "user_tb")
@@ -28,6 +27,7 @@ public class User {
     @Column(nullable = false, length = 20)
     private String email;
 
+
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
@@ -38,8 +38,7 @@ public class User {
 
     private String profile;
 
-    private Integer annualLimit;
-
+    @Setter
     @Min(0)
     private Integer remainDays; // 남은 연차수
 
@@ -74,12 +73,36 @@ public class User {
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
-
     public void useAnnualLeave(Integer usingDays) {
         this.remainDays -= usingDays;
     }
 
     public void increaseRemainDays(Integer days) {
         this.remainDays += days;
+    }
+
+    @Builder
+    public User(Long id, String username, String password, String email, UserRole role, Boolean status, Integer remainDays, LocalDate hireDate, String profile, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.role = role;
+        this.status = status;
+        this.remainDays = remainDays;
+        this.hireDate = hireDate;
+        this.profile = profile;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
+    public void update(User user){
+        this.username = user.getUsername();
+        this.role = user.getRole();
+        this.hireDate = user.getHireDate();
+    }
+
+    public void resign() { // 퇴사
+        this.status = false;
     }
 }

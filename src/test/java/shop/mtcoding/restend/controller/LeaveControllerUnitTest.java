@@ -26,6 +26,7 @@ import shop.mtcoding.restend.model.leave.Leave;
 import shop.mtcoding.restend.model.leave.enums.LeaveStatus;
 import shop.mtcoding.restend.model.leave.enums.LeaveType;
 import shop.mtcoding.restend.model.user.User;
+import shop.mtcoding.restend.model.user.UserRole;
 import shop.mtcoding.restend.service.LeaveService;
 
 import java.time.LocalDate;
@@ -65,7 +66,7 @@ public class LeaveControllerUnitTest extends DummyEntity {
     @MockBean
     private MyUserDetails myUserDetails;
 
-    @MyWithMockUser(id = 1L, username = "cos", role = "USER", remainDays = 15)
+    @MyWithMockUser(id = 1L, username = "cos", role = UserRole.ROLE_USER, remainDays = 15)
     @Test
     public void apply_test() throws Exception {
         // 준비
@@ -97,7 +98,7 @@ public class LeaveControllerUnitTest extends DummyEntity {
         resultActions.andExpect(status().isOk());
     }
 
-    @MyWithMockUser(id = 1L, username = "cos", role = "USER", remainDays = 15)
+    @MyWithMockUser(id = 1L, username = "cos", role = UserRole.ROLE_USER, remainDays = 15)
     @Test
     public void cancel_test() throws Exception {
         // given
@@ -143,7 +144,7 @@ public class LeaveControllerUnitTest extends DummyEntity {
         resultActions.andExpect(jsonPath("$.data.remainDays").value(14));
     }
 
-    @MyWithMockUser(id = 1L, username = "cos", role = "USER", remainDays = 15)
+    @MyWithMockUser(id = 1L, username = "cos", role = UserRole.ROLE_USER, remainDays = 15)
     @Test
     public void getLeaveData_test() throws Exception {
         // 준비
@@ -151,16 +152,26 @@ public class LeaveControllerUnitTest extends DummyEntity {
         Leave leave = newMockLeave(1L, user, LeaveType.valueOf("ANNUAL"), LocalDate.parse("2023-07-27"),
                 LocalDate.parse("2023-08-02"), 5);
         LeaveResponse.InfoOutDTO infoOutDTO = new LeaveResponse.InfoOutDTO(leave, user);
+
+        Leave leave2 = newMockLeave(1L, user, LeaveType.valueOf("ANNUAL"), LocalDate.parse("2023-05-27"),
+                LocalDate.parse("2023-06-02"), 5);
+        LeaveResponse.InfoOutDTO infoOutDTO2 = new LeaveResponse.InfoOutDTO(leave2, user);
+
+        Leave leave3 = newMockLeave(1L, user, LeaveType.valueOf("ANNUAL"), LocalDate.parse("2023-08-27"),
+                LocalDate.parse("2023-09-02"), 5);
+        LeaveResponse.InfoOutDTO infoOutDTO3 = new LeaveResponse.InfoOutDTO(leave3, user);
+
         List<LeaveResponse.InfoOutDTO> infoOutDTOList = new ArrayList<>();
         infoOutDTOList.add(infoOutDTO);
+        infoOutDTOList.add(infoOutDTO2);
+        infoOutDTOList.add(infoOutDTO3);
 
         // 가정
-        Mockito.when(leaveService.getLeaves(any(), any(), any(), any())).thenReturn(infoOutDTOList);
+        Mockito.when(leaveService.연차당직정보가져오기세달치(any())).thenReturn(infoOutDTOList);
 
+        String month = "2023-07";
         // 테스트 진행
-        ResultActions resultActions = mvc.perform(get("/auth/leave")
-                .param("id", "1")
-                .param("month", "2023-07-27")
+        ResultActions resultActions = mvc.perform(get("/auth/leave/month/" + month)
                 .contentType(MediaType.APPLICATION_JSON));
 
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
@@ -173,6 +184,43 @@ public class LeaveControllerUnitTest extends DummyEntity {
         resultActions.andExpect(jsonPath("$.data[0].status").value("WAITING"));
         resultActions.andExpect(jsonPath("$.data[0].startDate").value("2023-07-27"));
         resultActions.andExpect(jsonPath("$.data[0].endDate").value("2023-08-02"));
+        resultActions.andExpect(jsonPath("$.data[1].startDate").value("2023-05-27"));
+        resultActions.andExpect(jsonPath("$.data[1].endDate").value("2023-06-02"));
+        resultActions.andExpect(jsonPath("$.data[2].startDate").value("2023-08-27"));
+        resultActions.andExpect(jsonPath("$.data[2].endDate").value("2023-09-02"));
+        resultActions.andExpect(status().isOk());
+    }
+
+    @MyWithMockUser(id = 1L, username = "cos", role = UserRole.ROLE_USER, remainDays = 15)
+    @Test
+    public void getById_test() throws Exception {
+        // 준비
+        Long id = 1L;
+        User user = newMockUser(1L, "cos", 14);
+        Leave leave = newMockLeave(1L, user, LeaveType.valueOf("ANNUAL"), LocalDate.parse("2023-07-20"),
+                LocalDate.parse("2023-07-21"), 2);
+        LeaveResponse.InfoOutDTO infoOutDTO = new LeaveResponse.InfoOutDTO(leave, user);
+
+        List<LeaveResponse.InfoOutDTO> infoOutDTOList = new ArrayList<>();
+        infoOutDTOList.add(infoOutDTO);
+
+        // 가정
+        Mockito.when(leaveService.특정유저연차당직정보가져오기(id)).thenReturn(infoOutDTOList);
+
+        // 테스트 진행
+        ResultActions resultActions = mvc.perform(get("/auth/leave/id/" + id)
+                .contentType(MediaType.APPLICATION_JSON));
+
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // 검증
+        resultActions.andExpect(jsonPath("$.data[0].userId").value(1L));
+        resultActions.andExpect(jsonPath("$.data[0].username").value("cos"));
+        resultActions.andExpect(jsonPath("$.data[0].type").value("ANNUAL"));
+        resultActions.andExpect(jsonPath("$.data[0].status").value("WAITING"));
+        resultActions.andExpect(jsonPath("$.data[0].startDate").value("2023-07-20"));
+        resultActions.andExpect(jsonPath("$.data[0].endDate").value("2023-07-21"));
         resultActions.andExpect(status().isOk());
     }
 }

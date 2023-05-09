@@ -40,13 +40,16 @@ public class LeaveController {
         return ResponseEntity.ok(responseDTO);
     }
 
-    @GetMapping("/auth/leave")
-    public ResponseEntity<?> get(
-            @RequestParam(required = false) Long id,
-            @RequestParam(required = false) String month,
-            @RequestParam(required = false) String week,
-            @RequestParam(required = false) String day) {
-        List<LeaveResponse.InfoOutDTO> leaveDataList = leaveService.getLeaves(id, month, week, day);
+    @GetMapping("/auth/leave/month/{month}")
+    public ResponseEntity<?> getByMonth(@PathVariable(required = true) String month) {
+        List<LeaveResponse.InfoOutDTO> leaveDataList = leaveService.연차당직정보가져오기세달치(month);
+        ResponseDTO<List<LeaveResponse.InfoOutDTO>> responseDTO = new ResponseDTO<>(leaveDataList);
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @GetMapping("/auth/leave/id/{id}")
+    public ResponseEntity<?> getById(@PathVariable(required = true) Long id) {
+        List<LeaveResponse.InfoOutDTO> leaveDataList = leaveService.특정유저연차당직정보가져오기(id);
         ResponseDTO<List<LeaveResponse.InfoOutDTO>> responseDTO = new ResponseDTO<>(leaveDataList);
         return ResponseEntity.ok(responseDTO);
     }

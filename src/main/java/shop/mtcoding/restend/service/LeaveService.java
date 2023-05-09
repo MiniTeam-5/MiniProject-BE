@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shop.mtcoding.restend.core.exception.Exception400;
 import shop.mtcoding.restend.core.exception.Exception500;
-import shop.mtcoding.restend.core.util.MyDateUtil;
 import shop.mtcoding.restend.dto.alarm.AlarmResponse;
 import shop.mtcoding.restend.dto.leave.LeaveRequest;
 import shop.mtcoding.restend.dto.leave.LeaveResponse;
@@ -17,12 +16,14 @@ import shop.mtcoding.restend.model.leave.enums.LeaveStatus;
 import shop.mtcoding.restend.model.leave.enums.LeaveType;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRepository;
+import shop.mtcoding.restend.model.user.UserRole;
 
 import java.net.URISyntaxException;
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.temporal.TemporalAccessor;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -32,10 +33,12 @@ public class LeaveService {
     private final LeaveRepository leaveRepository;
     private final AlarmRepository alarmRepository;
 
+    private final DateService dateService;
     private final SseService sseService;
 
     @Transactional
     public LeaveResponse.ApplyOutDTO 연차당직신청하기(LeaveRequest.ApplyInDTO applyInDTO, Long userId) {
+
         // 1. 유저 존재 확인
         User userPS = userRepository.findById(userId).orElseThrow(
                 () -> new Exception500("로그인 된 유저가 DB에 존재하지 않음")
@@ -63,7 +66,7 @@ public class LeaveService {
         // 1) 사용할 연차 일수 계산하기: 평일만 계산 + 공휴일 계산 by 공공 API
         Integer usingDays = -1;
         try{
-            usingDays = MyDateUtil.getWeekDayCount(applyInDTO.getStartDate(), applyInDTO.getEndDate());
+            usingDays = dateService.getWeekDayCount(applyInDTO.getStartDate(), applyInDTO.getEndDate());
         }catch (URISyntaxException e){
             throw new Exception500(e.getMessage());
         }
@@ -86,9 +89,16 @@ public class LeaveService {
         // 4) 알림 등록
         String content = userPS.getUsername()+"님의 "+applyInDTO.getStartDate().toString()+"부터 "
                 +applyInDTO.getEndDate()+"까지, 총 "+usingDays+"일의 연차 신청이 완료되었습니다.";
-        alarmRepository.save(Alarm.builder().user(userPS).content(content).build());
+        Alarm alarmPS = alarmRepository.save(Alarm.builder().user(userPS).content(content).build());
 
-        // 5) 연차 등록
+        // 5) 모든 관리자에게 실시간 알람 전송
+        Set<UserRole> adminAndMasterRoles = new HashSet<>(Arrays.asList(UserRole.ROLE_ADMIN, UserRole.ROLE_MASTER));
+        List<User> managerList = userRepository.findByRoles(adminAndMasterRoles);
+        for (User manager : managerList) {
+            sseService.sendToUser(manager.getId(), "alarm", new AlarmResponse.AlarmOutDTO(alarmPS));
+        }
+
+        // 6) 연차 등록
         Leave leavePS = leaveRepository.save(applyInDTO.toEntity(userPS, usingDays));
         return new LeaveResponse.ApplyOutDTO(leavePS, userPS);
     }
@@ -164,78 +174,11 @@ public class LeaveService {
         return new LeaveResponse.DecideOutDTO(userPS);
     }
 
-    //처리해야할 경우의 수
-    //모든 유저의 서버 기준 월 정보
-    //모든 유저의 특정 월 정보
-    //모든 유저의 특정 주 정보
-    //모든 유저의 특정 일 정보
 
-    //특정 유저의 서버 기준 월 정보
-    //특정 유저의 특정 월 정보
-    //특정 유저의 특정 주 정보
-    //특정 유저의 특정 일 정보
-
-    //month, week, day 은 모두 특정한 날짜이다. 같은 형식이다. 다만 월에 속한 연차정보, 한주에 속한 연차 정보, 하루에 속한 연차 정보를
-    //구분하기 위해 만들었음
-    public List<LeaveResponse.InfoOutDTO> getLeaves(Long id, String month, String week, String day) {
-
-        int nonNullCount = 0;
-        if (month != null) nonNullCount++;
-        if (week != null) nonNullCount++;
-        if (day != null) nonNullCount++;
-
-        if (nonNullCount > 1) {
-            throw new Exception400("month, week, day", "month, week, day 중 하나만 값이 있어야 합니다.");
-        }
-
-        List<Leave> leaves;
-        // 특정 유저의 전체 일정 정보
-        if (id != null) {
-            leaves = leaveRepository.findAllByUserId(id);
-        }
-        // 모든 유저의 일정 정보
-        else {
-            leaves = leaveRepository.findAll();
-        }
-
-        LocalDate today = LocalDate.now();
-
-        if (nonNullCount == 0)//지정한 month, week, day 없는 경우 서버시간 기준으로 월 정보를 보낸다
-        {
-            LocalDate copyToday = today;
-            leaves = leaves.stream()
-                    .filter(leave -> (leave.getStartDate().getMonth() == copyToday.getMonth() && leave.getStartDate().getYear() == copyToday.getYear())
-                            || (leave.getEndDate().getMonth() == copyToday.getMonth() && leave.getEndDate().getYear() == copyToday.getYear()))
-                    .collect(Collectors.toList());
-        } else if (nonNullCount == 1) {
-            if (month != null)//지정한 날짜를 포함하는 월을 구하고 그 월에 걸친 모든 연차를 찾아서 반환
-            {
-                LocalDate copyToday = LocalDate.parse(month);
-                leaves = leaves.stream()
-                        .filter(leave -> (leave.getStartDate().getMonth() == copyToday.getMonth() && leave.getStartDate().getYear() == copyToday.getYear())
-                                || (leave.getEndDate().getMonth() == copyToday.getMonth() && leave.getEndDate().getYear() == copyToday.getYear()))
-                        .collect(Collectors.toList());
-            } else if (week != null)//지정한 날짜를 포함하는 주를 구하고 그 주에 걸친 모든 연차를 찾아서 반환
-            {
-                LocalDate copyToday = LocalDate.parse(week);
-                LocalDate weekStartDate = copyToday.with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
-                LocalDate weekEndDate = copyToday.with(TemporalAdjusters.nextOrSame(DayOfWeek.SATURDAY));
-
-                leaves = leaves.stream()
-                        .filter(leave -> ((leave.getStartDate().isBefore(weekEndDate)) || (leave.getStartDate().isEqual(weekEndDate)))
-                                && ((leave.getEndDate().isAfter(weekStartDate)) || (leave.getEndDate().isEqual(weekStartDate))))
-                        .collect(Collectors.toList());
-
-            } else if (day != null)//지정한 날짜를 포함하는 모든 연차를 찾아서 반환
-            {
-                LocalDate copyToday = LocalDate.parse(day);
-                leaves = leaves.stream()
-                        .filter(leave -> (leave.getStartDate().isEqual(copyToday) || (leave.getStartDate().isBefore(copyToday)))
-                                && ((leave.getEndDate().isEqual(copyToday)) || (leave.getEndDate().isAfter(copyToday))))
-                        .collect(Collectors.toList());
-            }
-
-        }
+    public List<LeaveResponse.InfoOutDTO> 상태선택연차당직정보가져오기(LeaveStatus status)
+    {
+        // 대기 상태의 모든 연차/당직 정보 가져오기
+        List<Leave> leaves = leaveRepository.findByStatus(status);
 
         // 반환할 DTO 리스트 생성
         List<LeaveResponse.InfoOutDTO> infoOutDTOList = leaves.stream()
@@ -244,4 +187,51 @@ public class LeaveService {
 
         return infoOutDTOList;
     }
+
+    //모든 유저의 특정 월 정보
+    public List<LeaveResponse.InfoOutDTO> 연차당직정보가져오기세달치(String month) {
+
+        // '연도-월' 형식 검증
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+        try {
+            TemporalAccessor parsedMonth = formatter.parse(month);
+        } catch (DateTimeParseException e) {
+            throw new Exception400("InvalidFormat", "날짜 형식은 yyyy-MM 이어야 함");
+        }
+
+        month += "-01"; // '연도-월' 에 '-일' 붙이기
+
+        LocalDate currentDate = LocalDate.parse(month);
+        LocalDate startDate = currentDate.minusMonths(1).withDayOfMonth(1); // 이전 달의 첫날
+        LocalDate endDate = currentDate.plusMonths(1).withDayOfMonth(currentDate.getMonth().plus(1).length(currentDate.isLeapYear())); // 다음 달의 마지막 날
+
+        // startDate와 endDate 사이에 있는 모든 연차/당직 정보 가져오기
+        List<Leave> leaves = leaveRepository.findAll()
+                .stream()
+                .filter(leave -> (leave.getStartDate().compareTo(startDate) >= 0 && leave.getStartDate().compareTo(endDate) <= 0)
+                        || (leave.getEndDate().compareTo(startDate) >= 0 && leave.getEndDate().compareTo(endDate) <= 0)
+                        || (leave.getStartDate().compareTo(startDate) <= 0 && leave.getEndDate().compareTo(endDate) >= 0))
+                .collect(Collectors.toList());
+
+        // 반환할 DTO 리스트 생성
+        List<LeaveResponse.InfoOutDTO> infoOutDTOList = leaves.stream()
+                .map(leave -> new LeaveResponse.InfoOutDTO(leave, leave.getUser()))
+                .collect(Collectors.toList());
+
+        return infoOutDTOList;
+    }
+
+    public List<LeaveResponse.InfoOutDTO> 특정유저연차당직정보가져오기(Long userId) {
+
+        // 특정 유저의 모든 연차/당직 정보 가져오기
+        List<Leave> leaves = leaveRepository.findAllByUserId(userId);
+
+        // 반환할 DTO 리스트 생성
+        List<LeaveResponse.InfoOutDTO> infoOutDTOList = leaves.stream()
+                .map(leave -> new LeaveResponse.InfoOutDTO(leave, leave.getUser()))
+                .collect(Collectors.toList());
+
+        return infoOutDTOList;
+    }
+
 }
