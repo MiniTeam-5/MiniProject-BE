@@ -30,3 +30,4 @@ public interface LeaveRepository extends JpaRepository<Leave, Long> {
 
     List<Leave> findAllByUserId(Long userId);
 }
+

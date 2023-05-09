@@ -18,9 +18,8 @@ import java.util.UUID;
 public class MyJwtProvider {
 
     private static final String SUBJECT = "jwtstudy";
-
-    private static final int EXP_ACCESS = 1000 * 60 * 1; // 10분
-    private static final int EXP_REFRESH = 1000 * 60 * 60* 24; // 24시간
+    private static final int EXP_ACCESS = 1000 * 60 * 60* 24; // 24시간
+    private static final int EXP_REFRESH = 1000 * 60 * 60* 24 * 7; // 7일
     public static final String TOKEN_PREFIX = "Bearer "; // 스페이스 필요함
     public static final String HEADER = "Authorization";
 

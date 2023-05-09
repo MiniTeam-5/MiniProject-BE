@@ -6,24 +6,24 @@ import shop.mtcoding.restend.model.user.UserRole;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Getter @Setter
-public class Manage {
+public class ManageUserDTO {
 
+    @NotNull
     private Long userId;
-    private Integer remain_days;
+    private Integer remainDays;
 
     @Builder
-    public Manage(Long userId, Integer remain_days) {
+    public ManageUserDTO(Long userId, Integer remainDays) {
         this.userId = userId;
-        this.remain_days = remain_days;
+        this.remainDays = remainDays;
     }
-    public Manage toEntityOut(User user){
-        return Manage.builder()
+    public ManageUserDTO toEntityOut(User user){
+        return ManageUserDTO.builder()
                 .userId(user.getId())
-                .remain_days(user.getRemainDays())
+                .remainDays(user.getRemainDays())
                 .build();
     }
 
@@ -35,14 +35,14 @@ public class Manage {
         @NotNull
         @Min(0)
         @Max(100)
-        private Integer remain_days;
+        private Integer remainDays;
 
-        public AnnualRequestDTO(Integer remain_days) {
-            this.remain_days = remain_days;
+        public AnnualRequestDTO(Integer remainDays) {
+            this.remainDays = remainDays;
         }
         public User toEntityIn() {
             return User.builder()
-                    .remainDays(remain_days)
+                    .remainDays(remainDays)
                     .build();
         }
     }
@@ -50,7 +50,7 @@ public class Manage {
 
     @NoArgsConstructor
     @Getter @Setter
-    public static class UserManageDTO {
+    public static class ManageUserListDTO {
 
         @NotEmpty
         private Long userId;
@@ -59,21 +59,24 @@ public class Manage {
         @NotEmpty
         private UserRole role;
 
+
         @NotEmpty
         private LocalDate hireDate;
+
         @NotNull
         @Min(0)
         @Max(100)
-        private Integer remain_days;
+        private Integer remainDays;
+
 
         private String profile;
         @Builder
-        public UserManageDTO(Long userId, UserRole role, String username, LocalDate hireDate, Integer remain_days, String profile) {
+        public ManageUserListDTO(Long userId, UserRole role, String username, LocalDate hireDate, Integer remainDays, String profile) {
                 this.userId = userId;
                 this.role = role;
                 this.username = username;
                 this.hireDate = hireDate;
-                this.remain_days = remain_days;
+                this.remainDays = remainDays;
                 this.profile = profile;
             }
 
@@ -83,22 +86,24 @@ public class Manage {
                     .role(role)
                     .username(username)
                     .hireDate(hireDate)
-                    .remainDays(remain_days)
+                    .remainDays(remainDays)
                     .profile(profile)
                     .build();
         }
         // User -> 회원 관리 객체
-        public Manage.UserManageDTO toEntityOut(User user){
-            return UserManageDTO.builder()
+        public ManageUserListDTO toEntityOut(User user){
+            return ManageUserListDTO.builder()
                     .userId(user.getId())
                     .role(user.getRole())
                     .username(user.getUsername())
                     .hireDate(user.getHireDate())
-                    .remain_days(user.getRemainDays())
+                    .remainDays(user.getRemainDays())
                     .profile(user.getProfile())
                     .build();
         }
     }
+
+
     @NoArgsConstructor
     @Getter @Setter
     public static class MasterInDTO {
@@ -133,7 +138,7 @@ public class Manage {
             this.role = role;
         }
 
-        public Manage.MasterOutDTO toEntityOut(User user) {
+        public ManageUserDTO.MasterOutDTO toEntityOut(User user) {
             return MasterOutDTO.builder()
                     .userId (user.getId())
                     .role(user.getRole())
