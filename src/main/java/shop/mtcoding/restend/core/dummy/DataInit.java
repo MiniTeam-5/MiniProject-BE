@@ -81,47 +81,47 @@ public class DataInit extends DummyEntity{
 
             if (jin != null) {
                 leaveRepository.save(newLeave(jin, LeaveType.ANNUAL, LocalDate.parse("2023-03-28"),
-                        LocalDate.parse("2023-04-02"), 1, LeaveStatus.REJECTION));
+                        LocalDate.parse("2023-04-02"), 1, LeaveStatus.WAITING));
             }
 
             if (jin != null) {
                 leaveRepository.save(newLeave(jin, LeaveType.ANNUAL, LocalDate.parse("2023-04-28"),
-                        LocalDate.parse("2023-05-02"), 1, LeaveStatus.REJECTION));
+                        LocalDate.parse("2023-05-02"), 1, LeaveStatus.WAITING));
             }
 
             if (jin != null) {
                 leaveRepository.save(newLeave(jin, LeaveType.ANNUAL, LocalDate.parse("2023-05-28"),
-                        LocalDate.parse("2023-06-02"), 1, LeaveStatus.REJECTION));
+                        LocalDate.parse("2023-06-02"), 1, LeaveStatus.WAITING));
             }
 
             if (jin != null) {
                 leaveRepository.save(newLeave(jin, LeaveType.ANNUAL, LocalDate.parse("2023-06-28"),
-                        LocalDate.parse("2023-07-02"), 1, LeaveStatus.REJECTION));
+                        LocalDate.parse("2023-07-02"), 1, LeaveStatus.WAITING));
             }
 
             if (jin != null) {
                 leaveRepository.save(newLeave(jin, LeaveType.ANNUAL, LocalDate.parse("2023-07-28"),
-                        LocalDate.parse("2023-08-02"), 1, LeaveStatus.REJECTION));
+                        LocalDate.parse("2023-08-02"), 1, LeaveStatus.WAITING));
             }
 
             if (jin != null) {
                 leaveRepository.save(newLeave(jin, LeaveType.ANNUAL, LocalDate.parse("2023-08-28"),
-                        LocalDate.parse("2023-09-02"), 1, LeaveStatus.REJECTION));
+                        LocalDate.parse("2023-09-02"), 1, LeaveStatus.WAITING));
             }
 
             if (jin != null) {
                 leaveRepository.save(newLeave(jin, LeaveType.ANNUAL, LocalDate.parse("2023-09-28"),
-                        LocalDate.parse("2023-10-02"), 1, LeaveStatus.REJECTION));
+                        LocalDate.parse("2023-10-02"), 1, LeaveStatus.WAITING));
             }
 
             if (jin != null) {
                 leaveRepository.save(newLeave(jin, LeaveType.ANNUAL, LocalDate.parse("2023-10-28"),
-                        LocalDate.parse("2023-11-02"), 1, LeaveStatus.REJECTION));
+                        LocalDate.parse("2023-11-02"), 1, LeaveStatus.WAITING));
             }
 
             if (jin != null) {
                 leaveRepository.save(newLeave(jin, LeaveType.ANNUAL, LocalDate.parse("2023-12-28"),
-                        LocalDate.parse("2024-01-02"), 1, LeaveStatus.REJECTION));
+                        LocalDate.parse("2024-01-02"), 1, LeaveStatus.WAITING));
             }
 
         };

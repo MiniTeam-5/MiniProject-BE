@@ -201,13 +201,13 @@ public class AdminControllerUnitTest extends DummyEntity{
     @Test
     public void getLeave_test() throws Exception {
         // given
-        LeaveResponse.InfoOutDTO leaveInfo1 = new LeaveResponse.InfoOutDTO(1L,
+        LeaveResponse.InfoOutDTO leaveInfo1 = new LeaveResponse.InfoOutDTO(1L, 1L,
                 "user1",
                 LeaveType.DUTY,
                 LeaveStatus.WAITING,
                 LocalDateTime.now().toString(),
                 LocalDateTime.now().plusDays(3).toString());
-        LeaveResponse.InfoOutDTO leaveInfo2 = new LeaveResponse.InfoOutDTO(2L,
+        LeaveResponse.InfoOutDTO leaveInfo2 = new LeaveResponse.InfoOutDTO(2L, 2L,
                 "user2",
                 LeaveType.ANNUAL,
                 LeaveStatus.WAITING,
@@ -226,10 +226,12 @@ public class AdminControllerUnitTest extends DummyEntity{
         System.out.println("테스트 : " + responseBody);
 
         resultActions.andExpect(jsonPath("$.data", Matchers.hasSize(2)))
+                .andExpect(jsonPath("$.data[0].id").value(1L))
                 .andExpect(jsonPath("$.data[0].userId").value(1L))
                 .andExpect(jsonPath("$.data[0].username").value("user1"))
                 .andExpect(jsonPath("$.data[0].type").value("DUTY"))
                 .andExpect(jsonPath("$.data[0].status").value("WAITING"))
+                .andExpect(jsonPath("$.data[1].id").value(2L))
                 .andExpect(jsonPath("$.data[1].userId").value(2L))
                 .andExpect(jsonPath("$.data[1].username").value("user2"))
                 .andExpect(jsonPath("$.data[1].type").value("ANNUAL"))
