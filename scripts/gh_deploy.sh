@@ -1,6 +1,9 @@
 # gh_deploy.sh
 #!/bin/bash
 
+# /home/custom_env/env.sh 파일 실행해서 환경변수 등록
+source /home/custom_env/env.sh
+
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 source "${SCRIPT_DIR}/common.sh"
 
