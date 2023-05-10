@@ -1,4 +1,4 @@
-package shop.mtcoding.restend.core.util;
+package shop.mtcoding.restend.service;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -21,7 +21,7 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
-public class S3Util {
+public class S3Service {
     private AmazonS3 s3Client;
 
     @Value("${cloud.aws.credentials.accessKey}")
@@ -49,24 +49,16 @@ public class S3Util {
         UUID uuid = UUID.randomUUID();
         String originalFilename = file.getOriginalFilename();
         String uuidFilename = uuid + "_" + originalFilename;
-        System.out.println(file.getInputStream());
 
         InputStream inputStream = file.getInputStream();
         ObjectMetadata objectMetadata = new ObjectMetadata();
         objectMetadata.setContentType(file.getContentType());
         objectMetadata.setContentLength(file.getSize());
+
         s3Client.putObject(new PutObjectRequest(bucket,uuidFilename,inputStream,objectMetadata)
                 .withCannedAcl(CannedAccessControlList.PublicRead)
                 .withMetadata(objectMetadata));
 
-//        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-//                .bucket(bucket)
-//                .key(uuidFilename)
-//                .contentType(file.getContentType())
-//                .build();
-//        s3Client.putObject(putObjectRequest, file.getInputStream());
-//        s3Client.putObject(new PutObjectRequest(bucket, uuidFilename, file.getInputStream(), null)
-//                .withCannedAcl(CannedAccessControlList.PublicRead));
         return s3Client.getUrl(bucket, uuidFilename).toString();
     }
 

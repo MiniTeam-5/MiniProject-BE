@@ -64,7 +64,7 @@ public class UserRequest {
         @Pattern(regexp = "^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,6}$", message = "이메일 형식으로 작성해주세요")
         @NotEmpty
         private String email;
-        @Pattern(regexp = "^[가-힣]{2,10}$", message = "이름은 2~20자 이내로 작성해주세요")
+
         @NotEmpty
         private String username;
 

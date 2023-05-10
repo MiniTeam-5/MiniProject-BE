@@ -54,13 +54,15 @@ public class UserResponse {
         private String email;
         private String username;
         private Boolean passwordReset;
-        private Boolean profileReset;
+        private Boolean profileReset; // 프로필 변경 여부 - 필요한지 모르겠다..
+        private String profile;
 
-        public ModifiedOutDTO(User user) {
+        public ModifiedOutDTO(User user, boolean isPasswordReset, boolean isProfileReset) {
             this.email = user.getEmail();
             this.username = user.getUsername();
-            this.passwordReset = false;
-            this.profileReset = false;
+            this.passwordReset = isPasswordReset;
+            this.profileReset = isProfileReset;
+            this.profile = user.getProfile();
         }
     }
 }
