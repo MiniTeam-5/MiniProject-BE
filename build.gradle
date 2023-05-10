@@ -5,7 +5,7 @@ plugins {
     id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
 
-group = 'shop.mtcoding'
+group = 'kr.co'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
@@ -60,9 +60,8 @@ tasks.named('asciidoctor') {
 bootJar {
     dependsOn asciidoctor
     copy {
-        // src/docs/asciidoc == from 경로
-        from "${asciidoctor.outputDir}"
-        into 'src/main/resources/static/docs'    // /static/docs로 복사!
+        from "${asciidoctor.outputDir}"          // src/docs/asciidoc
+        into 'src/main/resources/static/docs'    // /static/docs
     }
 }
 
