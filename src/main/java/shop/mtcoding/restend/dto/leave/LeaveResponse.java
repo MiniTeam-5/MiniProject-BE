@@ -40,6 +40,7 @@ public class LeaveResponse {
     @Getter
     public static class InfoOutDTO {
 
+        private Long id;
         private Long userId;
         private String username;
         private LeaveType type;
@@ -47,7 +48,8 @@ public class LeaveResponse {
         private String startDate;
         private String endDate;
 
-        public InfoOutDTO(Long userId, String username, LeaveType type, LeaveStatus status, String startDate, String endDate) {
+        public InfoOutDTO(Long id, Long userId, String username, LeaveType type, LeaveStatus status, String startDate, String endDate) {
+            this.id = id;
             this.userId = userId;
             this.username = username;
             this.type = type;
@@ -58,6 +60,7 @@ public class LeaveResponse {
 
         // Leave 엔티티와 User 엔티티를 사용하여 DTO를 생성하는 생성자
         public InfoOutDTO(Leave leave, User user) {
+            this.id = leave.getId();
             this.userId = user.getId();
             this.username = user.getUsername();
             this.type = leave.getType();
