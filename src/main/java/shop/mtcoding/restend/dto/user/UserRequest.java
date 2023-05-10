@@ -69,7 +69,7 @@ public class UserRequest {
         private String username;
 
         private String newPassword;
-        private Boolean deletedProfile;
+        private String profileToDelete;
 
     }
 }

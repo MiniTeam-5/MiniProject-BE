@@ -276,12 +276,13 @@ public class UserControllerTest extends MyRestDoc {
 
         //when
         MockMultipartFile profile = new MockMultipartFile(
-                "profile", "person.png", "image/png", new FileInputStream("./upload/person.png"));
+                "profile", "person.png", "image/png"
+                , new FileInputStream("./src/main/resources/dummy/person.png"));
 
         // modifiedInDTO 객체를 JSON 문자열로 변환
         String modifiedInJson = om.writeValueAsString(modifiedInDTO);
         MockMultipartFile json = new MockMultipartFile("modifiedInDTO", "modifiedInDTO", "application/json", modifiedInJson.getBytes(StandardCharsets.UTF_8));
-
+        System.out.println("요기"+"${cloud.aws.credentials.secretKey}");
         //then
         mvc.perform(
                         multipart("/auth/user")
