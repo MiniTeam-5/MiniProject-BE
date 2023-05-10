@@ -175,6 +175,7 @@ public class LeaveService {
     }
 
 
+    @Transactional(readOnly = true)
     public List<LeaveResponse.InfoOutDTO> 상태선택연차당직정보가져오기(LeaveStatus status)
     {
         // 대기 상태의 모든 연차/당직 정보 가져오기
@@ -188,6 +189,7 @@ public class LeaveService {
         return infoOutDTOList;
     }
 
+    @Transactional(readOnly = true)
     //모든 유저의 특정 월 정보
     public List<LeaveResponse.InfoOutDTO> 연차당직정보가져오기세달치(String month) {
 
@@ -221,6 +223,7 @@ public class LeaveService {
         return infoOutDTOList;
     }
 
+    @Transactional(readOnly = true)
     public List<LeaveResponse.InfoOutDTO> 특정유저연차당직정보가져오기(Long userId) {
 
         // 특정 유저의 모든 연차/당직 정보 가져오기
