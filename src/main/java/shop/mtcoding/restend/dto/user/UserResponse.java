@@ -5,6 +5,8 @@ import lombok.Setter;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRole;
 
+import java.time.LocalDate;
+
 public class UserResponse {
 
     @Getter @Setter
@@ -14,6 +16,9 @@ public class UserResponse {
         private String username;
         private String profile;
         private UserRole role;
+        private Integer remainDays;
+        private LocalDate hireDate;
+
 
         public DetailOutDTO(User user) {
             this.id = user.getId();
@@ -21,6 +26,8 @@ public class UserResponse {
             this.username = user.getUsername();
             this.profile = user.getProfile();
             this.role = user.getRole();
+            this.remainDays = user.getRemainDays();
+            this.hireDate = user.getHireDate();
         }
     }
 

@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.context.support.WithUserDetails;
@@ -22,6 +23,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import shop.mtcoding.restend.core.MyRestDoc;
 import shop.mtcoding.restend.core.auth.jwt.MyJwtProvider;
 import shop.mtcoding.restend.core.dummy.DummyEntity;
+import shop.mtcoding.restend.model.user.User;
+import shop.mtcoding.restend.model.user.UserRole;
 import shop.mtcoding.restend.service.S3Service;
 import shop.mtcoding.restend.dto.user.UserRequest;
 import shop.mtcoding.restend.model.user.UserRepository;
@@ -68,6 +71,17 @@ public class UserControllerTest extends MyRestDoc {
         userRepository.save(dummy.newUser("ssar", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
         userRepository.save(dummy.newUser("cos", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
         userRepository.save(dummy.newUser("resign", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        userRepository.save(
+                User.builder()
+                        .username("update")
+                        .password(passwordEncoder.encode("1234"))
+                        .email("update@nate.com")
+                        .role(UserRole.ROLE_USER)
+                        .profile("https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png")
+                        .hireDate(LocalDate.parse("2021-09-04"))
+                        .remainDays(13)
+                        .build());
         em.clear();
     }
 
@@ -204,12 +218,11 @@ public class UserControllerTest extends MyRestDoc {
     // @WithUserDetails(value = "ssar", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     // authenticationManager.authenticate() 실행해서 MyUserDetailsService를 호출하고
     // usrename=ssar을 찾아서 세션에 담아주는 어노테이션
-    @DisplayName("회원상세보기 성공")
-    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @DisplayName("개인정보 가져오기 성공")
+    @WithUserDetails(value = "update@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
     public void detail_test() throws Exception {
         // given
-        Long id = 1L;
 
         // when
         ResultActions resultActions = mvc
@@ -218,18 +231,21 @@ public class UserControllerTest extends MyRestDoc {
         System.out.println("테스트 : " + responseBody);
 
         // then
-//        resultActions.andExpect(jsonPath("$.data.id").value(1L));
-        resultActions.andExpect(jsonPath("$.data.username").value("ssar"));
-        resultActions.andExpect(jsonPath("$.data.email").value("ssar@nate.com"));
+        resultActions.andExpect(jsonPath("$.data.id").value(4L));
+        resultActions.andExpect(jsonPath("$.data.username").value("update"));
+        resultActions.andExpect(jsonPath("$.data.email").value("update@nate.com"));
+        resultActions.andExpect(jsonPath("$.data.role").value("ROLE_USER"));
+        resultActions.andExpect(jsonPath("$.data.profile").value("https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png"));
+        resultActions.andExpect(jsonPath("$.data.remainDays").value(13));
+        resultActions.andExpect(jsonPath("$.data.hireDate").value("2021-09-04"));
         resultActions.andExpect(status().isOk());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
-    @DisplayName("회원상세보기 인증 실패")
+    @DisplayName("개인정보 가져오기  인증 실패")
     @Test
     public void detail_fail_un_authorized__test() throws Exception {
         // given
-        Long id = 1L;
 
         // when
         ResultActions resultActions = mvc
@@ -314,7 +330,7 @@ public class UserControllerTest extends MyRestDoc {
     }
 
     @DisplayName("프로필 삭제, 사원명, 이메일, 비밀번호 변경")
-    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @WithUserDetails(value = "update@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
     public void modify_all_delete_profile_test() throws Exception {
 
@@ -350,12 +366,12 @@ public class UserControllerTest extends MyRestDoc {
         resultActions.andExpect(jsonPath("$.data.username").value("김이박"));
         resultActions.andExpect(jsonPath("$.data.passwordReset").value(true));
         resultActions.andExpect(jsonPath("$.data.profileReset").value(true));
-        resultActions.andExpect(jsonPath("$.data.profile").exists());
+        resultActions.andExpect(jsonPath("$.data.profile").value("https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png"));
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
     @DisplayName("사원명, 이메일, 비밀번호 변경")
-    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @WithUserDetails(value = "update@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
     public void modify_name_email_password_test() throws Exception {
 
@@ -384,12 +400,13 @@ public class UserControllerTest extends MyRestDoc {
         resultActions.andExpect(jsonPath("$.data.username").value("테스터"));
         resultActions.andExpect(jsonPath("$.data.passwordReset").value(true));
         resultActions.andExpect(jsonPath("$.data.profileReset").value(false));
+        resultActions.andExpect(jsonPath("$.data.profile").value("https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png"));
         resultActions.andDo(MockMvcResultHandlers.print());
         resultActions.andDo(document);
     }
 
     @DisplayName("사원명, 이메일만 변경")
-    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @WithUserDetails(value = "update@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
     public void modify_username_email() throws Exception {
 
@@ -421,6 +438,7 @@ public class UserControllerTest extends MyRestDoc {
         resultActions.andExpect(jsonPath("$.data.username").value("키키"));
         resultActions.andExpect(jsonPath("$.data.passwordReset").value(false));
         resultActions.andExpect(jsonPath("$.data.profileReset").value(false));
+        resultActions.andExpect(jsonPath("$.data.profile").value("https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png"));
         resultActions.andExpect(status().isOk());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
