@@ -81,25 +81,15 @@ include::{snippets}/{user}/detail_fail_un_authorized__test/http-response.adoc[]
 ===== Curl
 include::{snippets}/{user}/detail_fail_un_authorized__test/curl-request.adoc[]
 
-=== 회원상세보기 (권한 없음 실패)
-===== Request Example
-include::{snippets}/{user}/detail_fail_forbidden_test/http-request.adoc[]
-
-===== Response Example
-include::{snippets}/{user}/detail_fail_forbidden_test/http-response.adoc[]
-
-===== Curl
-include::{snippets}/{user}/detail_fail_forbidden_test/curl-request.adoc[]
-
 === 프로필, 사원명, 이메일, 비밀번호 변경
 ===== Request Example
-include::{snippets}/{user}/modify_all_test/http-request.adoc[]
+include::{snippets}/{user}/modify_every_test/http-request.adoc[]
 
 ===== Response Example
-include::{snippets}/{user}/modify_all_test/http-response.adoc[]
+include::{snippets}/{user}/modify_every_test/http-response.adoc[]
 
 ===== Curl
-include::{snippets}/{user}/modify_all_test/curl-request.adoc[]
+include::{snippets}/{user}/modify_every_test/curl-request.adoc[]
 
 === 프로필 삭제, 사원명, 이메일, 비밀번호 변경
 ===== Request Example

@@ -287,7 +287,7 @@ public class UserControllerTest extends MyRestDoc {
     @DisplayName("프로필, 사원명, 이메일, 비밀번호 변경")
     @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
-    public void modify_all_test() throws Exception {
+    public void modify_every_test() throws Exception {
 
         //Given
         UserRequest.ModifiedInDTO modifiedInDTO = new UserRequest.ModifiedInDTO();
@@ -318,10 +318,11 @@ public class UserControllerTest extends MyRestDoc {
         resultActions.andExpect(jsonPath("$.data.passwordReset").value(true));
         resultActions.andExpect(jsonPath("$.data.profileReset").value(true));
         resultActions.andExpect(jsonPath("$.data.profile").exists());
-        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document("auth/user", requestParts(
-                partWithName("profile").description("The file to upload"),
-                partWithName("modifiedInDTO").description("modifiedInDTO"))
-        ));
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+//        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document("auth/user", requestParts(
+//                partWithName("profile").description("The file to upload"),
+//                partWithName("modifiedInDTO").description("modifiedInDTO"))
+//        ));
 
         // S3에 저장안되게 다시 삭제시켜주기
         int start = responseBody.indexOf("\"profile\":\"") + "\"profile\":\"".length();
