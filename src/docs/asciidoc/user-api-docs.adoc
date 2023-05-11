@@ -101,6 +101,16 @@ include::{snippets}/{user}/modify_all_test/http-response.adoc[]
 ===== Curl
 include::{snippets}/{user}/modify_all_test/curl-request.adoc[]
 
+=== 프로필 삭제, 사원명, 이메일, 비밀번호 변경
+===== Request Example
+include::{snippets}/{user}/modify_all_delete_profile_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{user}/modify_all_delete_profile_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{user}/modify_all_delete_profile_test/curl-request.adoc[]
+
 === 사원명, 이메일, 비밀번호 변경
 ===== Request Example
 include::{snippets}/{user}/modify_name_email_password_test/http-request.adoc[]
@@ -120,3 +130,63 @@ include::{snippets}/{user}/modify_username_email/http-response.adoc[]
 
 ===== Curl
 include::{snippets}/{user}/modify_username_email/curl-request.adoc[]
+
+=== 개인 정보 수정 유효성 검사 실패 (사원명이 없는 경우)
+===== Request Example
+include::{snippets}/{user}/modify_valid_test_fail_no_username/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{user}/modify_valid_test_fail_no_username/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{user}/modify_valid_test_fail_no_username/curl-request.adoc[]
+
+=== 개인 정보 수정 유효성 검사 실패 (이메일이 없는 경우)
+===== Request Example
+include::{snippets}/{user}/modify_valid_test_fail_no_email/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{user}/modify_valid_test_fail_no_email/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{user}/modify_valid_test_fail_no_email/curl-request.adoc[]
+
+=== 개인 정보 수정 유효성 검사 실패 (이메일 형식 오류)
+===== Request Example
+include::{snippets}/{user}/modify_valid_test_fail_email_format/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{user}/modify_valid_test_fail_email_format/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{user}/modify_valid_test_fail_email_format/curl-request.adoc[]
+
+=== 개인 정보 수정 실패 (수정 사항이 없는 경우)
+===== Request Example
+include::{snippets}/{user}/modify_fail_nothing_to_modify_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{user}/modify_fail_nothing_to_modify_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{user}/modify_fail_nothing_to_modify_test/curl-request.adoc[]
+
+=== 유저 삭제(비활성) 성공
+===== Request Example
+include::{snippets}/{user}/resign_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{user}/resign_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{user}/resign_test/curl-request.adoc[]
+
+=== 유저 삭제(비활성) 실패 (없는 유저)
+===== Request Example
+include::{snippets}/{user}/resign_fail_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{user}/resign_fail_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{user}/resign_fail_test/curl-request.adoc[]

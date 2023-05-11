@@ -34,5 +34,18 @@ logging:
 file:
   path: ./upload/
 
+
+cloud:
+  aws:
+    credentials:
+      accessKey: ${S3_ACCESS_KEY}
+      secretKey: ${S3_SECRET_KEY}
+    s3:
+      bucket: lupinbucket
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+
 key:
   holiday: ${HOLIDAY_KEY}
