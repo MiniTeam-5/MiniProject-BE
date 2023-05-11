@@ -1,7 +1,6 @@
 package shop.mtcoding.restend.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Pair;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,7 +15,6 @@ import shop.mtcoding.restend.core.auth.session.MyUserDetails;
 import shop.mtcoding.restend.core.exception.Exception400;
 import shop.mtcoding.restend.core.exception.Exception401;
 import shop.mtcoding.restend.core.exception.Exception500;
-import shop.mtcoding.restend.core.util.MyFileUtil;
 import shop.mtcoding.restend.dto.user.UserRequest;
 import shop.mtcoding.restend.dto.user.UserResponse;
 import shop.mtcoding.restend.model.token.RefreshTokenEntity;
@@ -24,8 +22,6 @@ import shop.mtcoding.restend.model.token.TokenRepository;
 import shop.mtcoding.restend.model.user.User;
 import shop.mtcoding.restend.model.user.UserRepository;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 @Transactional(readOnly = true)
@@ -37,8 +33,8 @@ public class UserService {
 
     private final TokenRepository tokenRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    @Value("${file.path}")
-    private String uploadFolder;
+
+    private final S3Service s3Service;
 
 
     @MyLog
@@ -109,55 +105,58 @@ public class UserService {
 
     @Transactional
     public UserResponse.ModifiedOutDTO 개인정보수정(UserRequest.ModifiedInDTO modifiedInDTO, MultipartFile profile, Long id) {
-
-        //1. 아이디로 회원 조회
+        // 1. 아이디로 회원 조회
         User user = userRepository.findById(id).orElseThrow(() -> new Exception400("id", "해당 유저가 존재하지 않습니다"));
-        //2. ModifiedOutDTO 생성
-        UserResponse.ModifiedOutDTO modifiedOutDTO = new UserResponse.ModifiedOutDTO(user);
 
-        //3. 수정사항 없는 경우
-        if (profile.isEmpty() && modifiedInDTO.getDeletedProfile() == null &&
-                modifiedInDTO.getNewPassword() == null &&
-                user.getEmail().equals(modifiedInDTO.getEmail()) &&
-                user.getUsername().equals(modifiedInDTO.getUsername())) {
-            throw new Exception400("id", "수정사항이 없습니다.");
+        // 2. 수정사항 없는 경우
+        if ((profile == null || profile.isEmpty()) &&
+                (modifiedInDTO.getProfileToDelete() == null || modifiedInDTO.getProfileToDelete().isEmpty()) &&
+                (user.getEmail().equals(modifiedInDTO.getEmail())) &&
+                (user.getUsername().equals(modifiedInDTO.getUsername())) &&
+                (modifiedInDTO.getNewPassword() == null || modifiedInDTO.getNewPassword().isEmpty())){
+            throw new Exception400("profile, profileToDelete, email, username, newPassword", "수정사항이 없습니다.");
         }
 
-        //4. 프로필 사진 등록 시
+        boolean isProfileReset = false;
+        // 3. 프로필 사진 등록 시
         if (profile != null && !profile.isEmpty()) {
-            //서버에 사진 저장
-            String uuidImageName = MyFileUtil.write(uploadFolder, profile);
+            // 서버에 사진 저장
             try {
-                user.changeProfile(uploadFolder + uuidImageName);
-                modifiedOutDTO.setProfileReset(true);
+                String path = s3Service.upload(profile);
+                user.changeProfile(path);
+                isProfileReset = true;
             } catch (Exception e) {
                 throw new Exception500("프로필사진 변경 실패 : " + e.getMessage());
             }
         }
-        //5. 프로필 사진 삭제 시
-        if (modifiedInDTO.getDeletedProfile() != null && modifiedInDTO.getDeletedProfile().equals(true)) {
-            user.changeProfile(uploadFolder + "person.png");
-            modifiedOutDTO.setProfileReset(true);
+        // 4. 프로필 사진 삭제 시
+        if (modifiedInDTO.getProfileToDelete() != null) {
+           try{
+               s3Service.delete(modifiedInDTO.getProfileToDelete());
+               user.changeProfile("https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png");
+               isProfileReset = true;
+           }catch (Exception e){
+               throw new Exception500("프로필사진 삭제 실패 : " + e.getMessage());
+           }
         }
-        //6. 이메일 주소 변경 시
+        // 5. 이메일 주소 변경 시
         if (user.getEmail() != modifiedInDTO.getEmail()) {
             user.changeEmail(modifiedInDTO.getEmail());
-            modifiedOutDTO.setEmail(modifiedInDTO.getEmail());
         }
-        //7. 사원명 변경 시
+        // 6. 사원명 변경 시
         if (user.getUsername() != modifiedInDTO.getUsername()) {
             user.changeUsername(modifiedInDTO.getUsername());
-            modifiedOutDTO.setUsername(modifiedInDTO.getUsername());
         }
-        //8. 비밀번호 변경 시
+        // 7. 비밀번호 변경 시
+        boolean isPasswordReset = false;
         if (modifiedInDTO.getNewPassword() != null && !modifiedInDTO.getNewPassword().isEmpty()) {
                 String encodePassword = passwordEncoder.encode(modifiedInDTO.getNewPassword());
                 user.changePassword(encodePassword);
-                modifiedOutDTO.setPasswordReset(true);
+                isPasswordReset = true;
         }
-        return modifiedOutDTO;
+        // 8. ModifiedOutDTO 생성
+        return new UserResponse.ModifiedOutDTO(user, isPasswordReset, isProfileReset);
     }
-
 
     @Transactional
     public void 퇴사(Long id) {

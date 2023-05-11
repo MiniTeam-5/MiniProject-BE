@@ -206,13 +206,15 @@ public class AdminControllerUnitTest extends DummyEntity{
                 LeaveType.DUTY,
                 LeaveStatus.WAITING,
                 LocalDateTime.now().toString(),
-                LocalDateTime.now().plusDays(3).toString());
+                LocalDateTime.now().plusDays(3).toString(),
+                "https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png");
         LeaveResponse.InfoOutDTO leaveInfo2 = new LeaveResponse.InfoOutDTO(2L, 2L,
                 "user2",
                 LeaveType.ANNUAL,
                 LeaveStatus.WAITING,
                 LocalDateTime.now().toString(),
-                LocalDateTime.now().plusDays(2).toString());
+                LocalDateTime.now().plusDays(2).toString(),
+                "https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png");
         List<LeaveResponse.InfoOutDTO> waitingLeaves = Arrays.asList(leaveInfo1, leaveInfo2);
 
         Mockito.when(leaveService.상태선택연차당직정보가져오기(LeaveStatus.WAITING)).thenReturn(waitingLeaves);
