@@ -1,0 +1,52 @@
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
+:admin: admin-controller-test
+
+= REST API
+:toc: left
+:toclevels: 2
+:source-highlighter: highlightjs
+
+
+== 관리자
+=== 회원 목록 조회 (디폴트: 전체 사원 조회, 0번 페이지, 한 페이지에 10개)
+===== Request Example
+include::{snippets}/{admin}/search_default_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/search_default_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/search_default_test/curl-request.adoc[]
+
+=== 회원 목록 조회 (1번 페이지, 한 페이지에 2개)
+===== Request Example
+include::{snippets}/{admin}/search_page_size_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/search_page_size_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/search_page_size_test/curl-request.adoc[]
+
+=== 회원 목록 검색 (전체 이름)
+===== Request Example
+include::{snippets}/{admin}/search_full_name_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/search_full_name_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/search_full_name_test/curl-request.adoc[]
+
+=== 회원 목록 검색 (부분 이름)
+===== Request Example
+include::{snippets}/{admin}/search_partial_name_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/search_partial_name_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/search_partial_name_test/curl-request.adoc[]
