@@ -458,6 +458,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_프로필_사원명_이메일_비밀번호_변경">프로필, 사원명, 이메일, 비밀번호 변경</a></li>
 <li><a href="#_사원명_이메일_비밀번호_변경">사원명, 이메일, 비밀번호 변경</a></li>
 <li><a href="#_사원명_이메일만_변경">사원명, 이메일만 변경</a></li>
+<li><a href="#_비밀번호_변경_실패">비밀번호 변경 실패</a></li>
 </ul>
 </li>
 </ul>
@@ -475,14 +476,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /join HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 113
+Content-Length: 165
 Host: localhost:8080
 
 {
-  "username" : "러브",
+  "username" : "love",
   "password" : "1234",
+  "checkPassword" : "1234",
   "email" : "love@nate.com",
-  "hireDate" : "2022-12-12"
+  "hireDate" : "2022-12-12",
+  "annualLimit" : null
 }</code></pre>
 </div>
 </div>
@@ -501,14 +504,15 @@ X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-Content-Length: 105
+Content-Length: 128
 
 {
   "status" : 200,
   "msg" : "성공",
   "data" : {
     "id" : 3,
-    "username" : "러브"
+    "username" : "love",
+    "annualLimit" : 15
   }
 }</code></pre>
 </div>
@@ -521,10 +525,12 @@ Content-Length: 105
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/join' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
     -d '{
-  "username" : "러브",
+  "username" : "love",
   "password" : "1234",
+  "checkPassword" : "1234",
   "email" : "love@nate.com",
-  "hireDate" : "2022-12-12"
+  "hireDate" : "2022-12-12",
+  "annualLimit" : null
 }'</code></pre>
 </div>
 </div>
@@ -538,14 +544,16 @@ Content-Length: 105
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /join HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 111
+Content-Length: 165
 Host: localhost:8080
 
 {
   "username" : "ssar",
   "password" : "1234",
+  "checkPassword" : "1234",
   "email" : "ssar@nate.com",
-  "hireDate" : "2022-12-12"
+  "hireDate" : "2022-12-12",
+  "annualLimit" : null
 }</code></pre>
 </div>
 </div>
@@ -564,14 +572,14 @@ X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-Content-Length: 156
+Content-Length: 141
 
 {
   "status" : 400,
   "msg" : "badRequest",
   "data" : {
     "key" : "username",
-    "value" : "이름은 2~20자 이내로 작성해주세요"
+    "value" : "유저네임이 존재합니다"
   }
 }</code></pre>
 </div>
@@ -586,8 +594,10 @@ Content-Length: 156
     -d '{
   "username" : "ssar",
   "password" : "1234",
+  "checkPassword" : "1234",
   "email" : "ssar@nate.com",
-  "hireDate" : "2022-12-12"
+  "hireDate" : "2022-12-12",
+  "annualLimit" : null
 }'</code></pre>
 </div>
 </div>
@@ -601,14 +611,16 @@ Content-Length: 156
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /join HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 108
+Content-Length: 162
 Host: localhost:8080
 
 {
   "username" : "s",
   "password" : "1234",
+  "checkPassword" : "1234",
   "email" : "ssar@nate.com",
-  "hireDate" : "2023-05-05"
+  "hireDate" : "2023-05-05",
+  "annualLimit" : null
 }</code></pre>
 </div>
 </div>
@@ -627,14 +639,14 @@ X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-Content-Length: 156
+Content-Length: 160
 
 {
   "status" : 400,
   "msg" : "badRequest",
   "data" : {
     "key" : "username",
-    "value" : "이름은 2~20자 이내로 작성해주세요"
+    "value" : "영문/숫자 2~20자 이내로 작성해주세요"
   }
 }</code></pre>
 </div>
@@ -649,8 +661,10 @@ Content-Length: 156
     -d '{
   "username" : "s",
   "password" : "1234",
+  "checkPassword" : "1234",
   "email" : "ssar@nate.com",
-  "hireDate" : "2023-05-05"
+  "hireDate" : "2023-05-05",
+  "annualLimit" : null
 }'</code></pre>
 </div>
 </div>
@@ -682,27 +696,21 @@ Host: localhost:8080
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-<<<<<<< HEAD
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJST0xFX1VTRVIiLCJpZCI6MSwiZXhwIjoxNjgzNjM3MDY4fQ.EfCJwlfwBlT3DBJym5rQxGAVJJo93UzdMHeHa1ImadSosS3z4FfyEDOv4CUuBCBl7RLhq3XVXOtYI8B8yV0Eyw
-=======
-
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJST0xFX1VTRVIiLCJpZCI6MSwiZXhwIjoxNjgzNjM2ODA5fQ.9tXOfwufREETAshh3qF9lb_zC03XZJw7ruUCE-V_JEGf-xIpylgx-xk-e37YZIELwaJZPtNxWS6Z0iLU2DqZXw
-
->>>>>>> 076ed9438b4d2c9d1f394573fe7052d539c97614
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJVU0VSIiwiaWQiOjEsImV4cCI6MTY4MzU1MjA5OX0.rUV62yXuqcJhB1pS7bo0MZ4pJK_2FYu3uQlaDcIMHKjOloUwujPsL_jgCbVY_iGW0SDfpKRZSn73qpEJuFkS0w
 Content-Type: application/json;charset=UTF-8
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-Content-Length: 104
+Content-Length: 99
 
 {
   "status" : 200,
   "msg" : "성공",
   "data" : {
     "id" : 1,
-    "role" : "ROLE_USER"
+    "role" : "USER"
   }
 }</code></pre>
 </div>
@@ -784,7 +792,7 @@ Content-Length: 93
 <h5 id="_request_example_6">Request Example</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /auth/user HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /auth/user/1 HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -803,28 +811,15 @@ X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-<<<<<<< HEAD
-Content-Length: 185
+Content-Length: 143
 
-=======
-
-Content-Length: 185
-
-
->>>>>>> 076ed9438b4d2c9d1f394573fe7052d539c97614
 {
   "status" : 200,
   "msg" : "성공",
   "data" : {
-    "id" : 1,
     "email" : "ssar@nate.com",
     "username" : "ssar",
-    "profile" : null,
-    "role" : "ROLE_USER"
-<<<<<<< HEAD
-=======
-
->>>>>>> 076ed9438b4d2c9d1f394573fe7052d539c97614
+    "profile" : null
   }
 }</code></pre>
 </div>
@@ -834,7 +829,7 @@ Content-Length: 185
 <h5 id="_curl_6">Curl</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user' -i -X GET</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user/1' -i -X GET</code></pre>
 </div>
 </div>
 </div>
@@ -845,7 +840,7 @@ Content-Length: 185
 <h5 id="_request_example_7">Request Example</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /auth/user HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /auth/user/1 HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -878,7 +873,7 @@ Content-Length: 93
 <h5 id="_curl_7">Curl</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user' -i -X GET</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user/1' -i -X GET</code></pre>
 </div>
 </div>
 </div>
@@ -933,7 +928,7 @@ Content-Length: 84
 <h5 id="_request_example_9">Request Example</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/user HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/user/1 HTTP/1.1
 Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
 Host: localhost:8080
 
@@ -949,19 +944,6 @@ Content-Type: image/png
 
 
 
-<<<<<<< HEAD
-(((((((((((((((((((((((((((((((((((((((((((((((((((��  � �" ��             ��              ��    ���                            �ƀ       �c?W����j��1@     �չ��, 9��)=      4��, ���sH(     4��,  �{��    G� �  둫5�/     ���f  E�^
-
-�hϢ�P =��y&lt;(      �r�.��JOV8��      {�
-g��iͦY�     Bm	g��F`P�4ǚ�-&gt;�&lt;�s� g����h     uȿy}��Yt��YH(       Ve�QSL@       �K0��� %         @!0 "123#p��  � &amp;�u��_��j#X��ZTV�d?*t�����R�'�;�E˵�c�qf�N��f��}����8��ߗ
-�K��\���6�|�G������Cf�Y��lXOܜ \�{���ԛ�XܳiŌ�c��;�V�^�]FC��I�Y��L���%��!�������1���EH�ƾ��
-Ԃ��,O�5}���5�M}f�#�R��-c�	$5ez"Ǧ5�vՏ�/K��:�F� )�!��;���������                p�� ?p�� !           01 !2AQP�� ?�l��r�C���S�P�_6�26����z;R̪~i�[#����eSn�W*��$]v�CR}�k�i�ߊ�r�?�� $          @!01 "Qabpq��  ?�Mu��e����7#»���p�э�j��bQ}[��.�ьCn1b˱�QМܕ�O0��EH�� �Zp��A�49�&lt;G����]J�+����`���^��q��K�[�e{��*����?��6EU|���2O��� &amp;          1!@ 0AQaq���p����  ?!�L"h	��6��&amp;�9�Oȸ�n�}t�7h�d55�ߔ�Z��a�4���a"-
-0M"rM��&amp;��$1�LBw�������bL��+���J�&amp;�f�0��P1�X����NG{b�y�]&amp;�7W���N�fz$l�d j�m�����QB!��HZ"$&amp;M�,\J�#85O�|;��
-��T�XB��x5al�@n�L���
-H�&gt;�����z[��K@)b����ح�
-}��(��/�YHA@i��*�	�
-�,\J�Hb�$��4! ��&lt;\R��X?Խ����      � � � � � � � � � � � � � � � � � � � � � � � � � � � � �~� � � � � � � � ��V� � � � � � ��� �� � � � � � � � � �� � � � � �� � � ��� � � � � �_� � � �� � � � � � �� � � �� � � � � � �� � � �� � � � � � � �� �_� � � � � � � �u��� � � � � � �_� ����� � ��� � � � � ���� � � � � � � � � ���� � � � � � � � �~��             0 1@P�� ?��P�ԋ�*4Ŏ�DZ\^]��            !1 0APQq�� ?�d}Y[�Rg72�^KE�Yi 5ȸ/�*�uf�S��5���}R��5��Z�8��3}ɣ͜6J�6��X(q�&gt;(7+�.�&gt;C��ՙsd$#����q��a�E�V��p�4zjx�� )        !1@AQ 0aq�������p��  ?� �]Z1G�/I6skB�t�J0ASv�{�_��pTW ����u�jk���D�N��(�\W�0p�nQo��m�8��.�Sb�7���)��.�h$~9/��V��&amp;�6�zo�&lt;�Dh�1�ɋ�7c[y~���84Y�����cR���.�u�K�ʽQ"��  R�"$X�}i�Ɍ��SzpAb�9�&lt;�,�I��20�����V&amp;$�r7&gt;	��D��(�׷���;�}w�6$_j E듟 ��$��9��U��v�̒�\�o���Ga���*Ɛ= ��8�B"յr�/�r��FS�咘��0�%	�#�w��D���bE�^�0гӇz9dPК�#��D(	i�u&lt;}b��7	�����`��F����q�V�iW����� G�M�r�:1X�=J���EN7���!8�(�Ѥ|�ɜmZF�w���q�S|o� ޔ��Z�A�%���N!M͝iz7�@D�@��"(��pv�O
-=======
 (((((((((((((((((((((((((((((((((((((((((((((((((((��  � �" ��             ��              ��    ���                            �ƀ       �c?W����j��1@     �չ��, 
 9��)=      4��, ���sH(     4��,  �{��    G� �  둫5�/     ���f  E�^
 
@@ -984,13 +966,12 @@ H�&gt;�����z[��K@)b����ح�
 �,\J�Hb�$��4! ��&lt;\R��X?Խ����      � � � � � � � � � � � � � � � � � � � � � � � � � � � � �~� � � � � � � � ��V� � � � � � ��� �� � � � � � � � � �� � � � � �� � � ��� � � � � �_� � � �� � � � � � �� � � �� � � � � � �� � � �� � � � � � � �� �_� � � � � � � �u��� � � � � � �_� ����� � ��� � � � � ���� � � � � � � � � ���� � � � � � � � �~��             0 1@P�� ?��P�ԋ�*4Ŏ�DZ\^]��            !1 0APQq�� ?�d}Y[�Rg72�^KE�Yi 5ȸ/�*�uf�S��5���}R��5��Z�8��3}ɣ͜6J�6��X(q�&gt;(7+�.�&gt;C��ՙsd$#����q��a�E�V��p�4zjx�� )        !1@AQ 0aq�������p��  ?� �]Z1G�/I6skB�t�J0ASv�{�_��pTW ����u�jk���D�N��(�\W�0p�nQo��m�8��.�Sb�7���)��.�h$~9/��V��&amp;�6�zo�&lt;�Dh�1�ɋ�7c[y~���84Y�����cR���.�u�K�ʽQ"��  R�"$X�}i�Ɍ��SzpAb�9�&lt;�,�I��20�����V&amp;$�r7&gt;	��D��(�׷���;�}w�6$_j E듟 ��$��
 9��U��v�̒�\�o���Ga���*Ɛ= ��8�B"յr�/
 �r��FS�咘��0�%	�#�w��D���bE�^�0гӇz9dPК�#��D(	i�u&lt;}b��7	�����`��F����q�V�iW����� G�M�r�:1X�=J���EN7���!8�(�Ѥ|�ɜmZF�w���q�S|o� ޔ��Z�A�%���N!M͝iz7�@D�@��"(��pv�O
->>>>>>> 076ed9438b4d2c9d1f394573fe7052d539c97614
 �ه;F����d�^z"���t�dCZ	�Na�W��}��?���
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
 Content-Disposition: form-data; name=modifiedInDTO; filename=modifiedInDTO
 Content-Type: application/json
 
-{"email":"asdf@nate.com","username":"김이박","newPassword":"1234","deletedProfile":null}
+{"email":"asdf@nate.com","username":"asdf","newPassword":"1234","checkPassword":"1234","deletedProfile":null}
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm--</code></pre>
 </div>
 </div>
@@ -1009,14 +990,14 @@ X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-Content-Length: 182
+Content-Length: 177
 
 {
   "status" : 200,
   "msg" : "성공",
   "data" : {
     "email" : "asdf@nate.com",
-    "username" : "김이박",
+    "username" : "asdf",
     "passwordReset" : true,
     "profileReset" : true
   }
@@ -1028,7 +1009,7 @@ Content-Length: 182
 <h5 id="_curl_9">Curl</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user' -i -X POST \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user/1' -i -X POST \
     -H 'Content-Type: multipart/form-data;charset=UTF-8' \
     -F 'profile=@person.png;type=image/png' \
     -F 'modifiedInDTO=@modifiedInDTO;type=application/json'</code></pre>
@@ -1042,7 +1023,7 @@ Content-Length: 182
 <h5 id="_request_example_10">Request Example</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/user HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/user/1 HTTP/1.1
 Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
 Host: localhost:8080
 
@@ -1054,7 +1035,7 @@ Content-Disposition: form-data; name=profile
 Content-Disposition: form-data; name=modifiedInDTO; filename=modifiedInDTO
 Content-Type: application/json
 
-{"email":"asdf@nate.com","username":"테스터","newPassword":"1234","deletedProfile":null}
+{"email":"asdf@nate.com","username":"asdf","newPassword":"1234","checkPassword":"1234","deletedProfile":null}
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm--</code></pre>
 </div>
 </div>
@@ -1073,14 +1054,14 @@ X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-Content-Length: 183
+Content-Length: 178
 
 {
   "status" : 200,
   "msg" : "성공",
   "data" : {
     "email" : "asdf@nate.com",
-    "username" : "테스터",
+    "username" : "asdf",
     "passwordReset" : true,
     "profileReset" : false
   }
@@ -1092,7 +1073,7 @@ Content-Length: 183
 <h5 id="_curl_10">Curl</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user' -i -X POST \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user/1' -i -X POST \
     -H 'Content-Type: multipart/form-data;charset=UTF-8' \
     -F 'profile=' \
     -F 'modifiedInDTO=@modifiedInDTO;type=application/json'</code></pre>
@@ -1106,7 +1087,7 @@ Content-Length: 183
 <h5 id="_request_example_11">Request Example</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/user HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/user/1 HTTP/1.1
 Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
 Host: localhost:8080
 
@@ -1118,7 +1099,7 @@ Content-Disposition: form-data; name=profile
 Content-Disposition: form-data; name=modifiedInDTO; filename=modifiedInDTO
 Content-Type: application/json
 
-{"email":"asdf@nate.com","username":"키키","newPassword":null,"deletedProfile":null}
+{"email":"asdf@nate.com","username":"asdf","newPassword":null,"checkPassword":null,"deletedProfile":null}
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm--</code></pre>
 </div>
 </div>
@@ -1137,14 +1118,14 @@ X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-Content-Length: 181
+Content-Length: 179
 
 {
   "status" : 200,
   "msg" : "성공",
   "data" : {
     "email" : "asdf@nate.com",
-    "username" : "키키",
+    "username" : "asdf",
     "passwordReset" : false,
     "profileReset" : false
   }
@@ -1156,7 +1137,69 @@ Content-Length: 181
 <h5 id="_curl_11">Curl</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user' -i -X POST \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user/1' -i -X POST \
+    -H 'Content-Type: multipart/form-data;charset=UTF-8' \
+    -F 'profile=' \
+    -F 'modifiedInDTO=@modifiedInDTO;type=application/json'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_비밀번호_변경_실패">비밀번호 변경 실패</h3>
+<div class="sect4">
+<h5 id="_request_example_12">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/user/1 HTTP/1.1
+Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Host: localhost:8080
+
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Content-Disposition: form-data; name=profile
+
+
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Content-Disposition: form-data; name=modifiedInDTO; filename=modifiedInDTO
+Content-Type: application/json
+
+{"email":"asdf@nate.com","username":"asdf","newPassword":"1234","checkPassword":"12345","deletedProfile":null}
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm--</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_12">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 139
+
+{
+  "status" : 400,
+  "msg" : "badRequest",
+  "data" : {
+    "key" : "password",
+    "value" : "비밀번호 재확인 필요"
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_12">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user/1' -i -X POST \
     -H 'Content-Type: multipart/form-data;charset=UTF-8' \
     -F 'profile=' \
     -F 'modifiedInDTO=@modifiedInDTO;type=application/json'</code></pre>
@@ -1170,13 +1213,7 @@ Content-Length: 181
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-<<<<<<< HEAD
-Last updated 2023-05-08 21:43:15 +0900
-=======
-
-Last updated 2023-05-08 21:43:15 +0900
-
->>>>>>> 076ed9438b4d2c9d1f394573fe7052d539c97614
+Last updated 2023-05-07 20:37:00 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
