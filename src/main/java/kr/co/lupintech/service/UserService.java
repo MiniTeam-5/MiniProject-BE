@@ -16,6 +16,7 @@ import kr.co.lupintech.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Pair;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,7 +25,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import java.util.Optional;
+import java.util.Random;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -37,6 +41,10 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
 
     private final S3Service s3Service;
+
+    private final JavaMailSender javaMailSender;
+
+    private String ePassword = 인증번호생성();
 
 
     @MyLog
@@ -115,7 +123,7 @@ public class UserService {
                 (modifiedInDTO.getProfileToDelete() == null || modifiedInDTO.getProfileToDelete().isEmpty()) &&
                 (user.getEmail().equals(modifiedInDTO.getEmail())) &&
                 (user.getUsername().equals(modifiedInDTO.getUsername())) &&
-                (modifiedInDTO.getNewPassword() == null || modifiedInDTO.getNewPassword().isEmpty())){
+                (modifiedInDTO.getNewPassword() == null || modifiedInDTO.getNewPassword().isEmpty())) {
             throw new Exception400("profile, profileToDelete, email, username, newPassword", "수정사항이 없습니다.");
         }
 
@@ -133,13 +141,13 @@ public class UserService {
         }
         // 4. 프로필 사진 삭제 시
         if (modifiedInDTO.getProfileToDelete() != null) {
-           try{
-               s3Service.delete(modifiedInDTO.getProfileToDelete());
-               user.changeProfile("https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png");
-               isProfileReset = true;
-           }catch (Exception e){
-               throw new Exception500("프로필사진 삭제 실패 : " + e.getMessage());
-           }
+            try {
+                s3Service.delete(modifiedInDTO.getProfileToDelete());
+                user.changeProfile("https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png");
+                isProfileReset = true;
+            } catch (Exception e) {
+                throw new Exception500("프로필사진 삭제 실패 : " + e.getMessage());
+            }
         }
         // 5. 이메일 주소 변경 시
         if (user.getEmail() != modifiedInDTO.getEmail()) {
@@ -152,9 +160,9 @@ public class UserService {
         // 7. 비밀번호 변경 시
         boolean isPasswordReset = false;
         if (modifiedInDTO.getNewPassword() != null && !modifiedInDTO.getNewPassword().isEmpty()) {
-                String encodePassword = passwordEncoder.encode(modifiedInDTO.getNewPassword());
-                user.changePassword(encodePassword);
-                isPasswordReset = true;
+            String encodePassword = passwordEncoder.encode(modifiedInDTO.getNewPassword());
+            user.changePassword(encodePassword);
+            isPasswordReset = true;
         }
         // 8. ModifiedOutDTO 생성
         return new UserResponse.ModifiedOutDTO(user, isPasswordReset, isProfileReset);
@@ -166,5 +174,67 @@ public class UserService {
                 () -> new Exception500("로그인 된 유저가 DB에 존재하지 않음")
         );
         userPS.resign();
+    }
+
+    @Transactional
+    public UserResponse.EmailOutDTO 인증메일보내기(String email) throws Exception {
+        MimeMessage message = 인증메시지생성(email);
+        try {
+            javaMailSender.send(message);
+        } catch (Exception e) {
+            throw new Exception400("email", "인증이메일 전송 실패");
+        }
+
+        UserResponse.EmailOutDTO emailOutDTO = new UserResponse.EmailOutDTO(ePassword);
+        return emailOutDTO;
+    }
+
+    private MimeMessage 인증메시지생성(String email) throws Exception {
+        System.out.println("보내는 대상 : " + email);
+        System.out.println("인증 번호 : " + ePassword);
+        MimeMessage message = javaMailSender.createMimeMessage();
+
+        message.addRecipients(MimeMessage.RecipientType.TO, email);//보내는 대상
+        message.setSubject("이메일 인증 테스트");//제목
+
+        String msg = "";
+        msg += "<div style='margin:20px;'>";
+        msg += "<h1> 안녕하세요. </h1>";
+        msg += "<br>";
+        msg += "<div align='center' style='border:1px solid black; font-family:verdana';>";
+        msg += "<h3 style='color:blue;'>회원가입 인증 코드입니다.</h3>";
+        msg += "<div style='font-size:130%'>";
+        msg += "CODE : <strong>";
+        msg += ePassword + "</strong><div><br/> ";
+        msg += "</div>";
+        message.setText(msg, "utf-8", "html");//내용
+        message.setFrom(new InternetAddress("teamminifive@naver.com", "Lupintech"));//보내는 사람
+
+        return message;
+    }
+
+    public static String 인증번호생성() {
+        StringBuffer key = new StringBuffer();
+        Random rnd = new Random();
+
+        for (int i = 0; i < 8; i++) { // 인증코드 8자리
+            int index = rnd.nextInt(3); // 0~2 까지 랜덤
+
+            switch (index) {
+                case 0:
+                    key.append((char) ((int) (rnd.nextInt(26)) + 97));
+                    //  a~z  (ex. 1+97=98 => (char)98 = 'b')
+                    break;
+                case 1:
+                    key.append((char) ((int) (rnd.nextInt(26)) + 65));
+                    //  A~Z
+                    break;
+                case 2:
+                    key.append((rnd.nextInt(10)));
+                    // 0~9
+                    break;
+            }
+        }
+        return key.toString();
     }
 }

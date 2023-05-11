@@ -83,5 +83,13 @@ public class UserController {
 
         return ResponseEntity.ok(responseDTO);
     }
+
+    @PostMapping("/email")
+    public ResponseEntity<?> email(@RequestBody UserRequest.EmailInDTO emailInDTO) throws Exception {
+        UserResponse.EmailOutDTO emailOutDTO = userService.인증메일보내기(emailInDTO.getEmail());
+        ResponseDTO<?> responseDTO = new ResponseDTO<>(emailOutDTO);
+
+        return ResponseEntity.ok(emailInDTO);
+    }
 }
 

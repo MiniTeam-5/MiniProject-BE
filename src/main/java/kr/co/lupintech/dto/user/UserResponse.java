@@ -72,4 +72,13 @@ public class UserResponse {
             this.profile = user.getProfile();
         }
     }
+
+    @Getter @Setter
+    public static class EmailOutDTO {
+        private String ePassword;
+
+        public EmailOutDTO(String ePassword) {
+            this.ePassword = ePassword;
+        }
+    }
 }
