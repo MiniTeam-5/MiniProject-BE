@@ -24,6 +24,7 @@ import kr.co.lupintech.core.dummy.DummyEntity;
 import javax.persistence.EntityManager;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -63,8 +64,8 @@ public class AlarmControllerTest {
     public void getUserAlarmsTest() throws Exception {
         // given
 
-        Alarm alarm1 = Alarm.builder().id(1L).user(user).content("알람1").build();
-        Alarm alarm2 = Alarm.builder().id(2L).user(user).content("알람2").build();
+        Alarm alarm1 = Alarm.builder().user(user).content("알람1").createdAt(LocalDateTime.now()).build();
+        Alarm alarm2 = Alarm.builder().user(user).content("알람2").createdAt(LocalDateTime.now()).build();
         alarmRepository.save(alarm1);
         alarmRepository.save(alarm2);
 

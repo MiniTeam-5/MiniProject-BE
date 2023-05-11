@@ -3,7 +3,10 @@ package kr.co.lupintech.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.lupintech.core.MyRestDoc;
 import kr.co.lupintech.dto.user.UserRequest;
+import kr.co.lupintech.model.user.User;
 import kr.co.lupintech.model.user.UserRepository;
+import kr.co.lupintech.model.user.UserRole;
+import kr.co.lupintech.service.S3Service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,9 +28,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import kr.co.lupintech.core.auth.jwt.MyJwtProvider;
 import kr.co.lupintech.core.dummy.DummyEntity;
-import kr.co.lupintech.model.user.User;
-import kr.co.lupintech.model.user.UserRole;
-import kr.co.lupintech.service.S3Service;
 
 import javax.persistence.EntityManager;
 
@@ -223,6 +223,7 @@ public class UserControllerTest extends MyRestDoc {
     @Test
     public void detail_test() throws Exception {
         // given
+        Long id = 1L;
 
         // when
         ResultActions resultActions = mvc
@@ -246,6 +247,7 @@ public class UserControllerTest extends MyRestDoc {
     @Test
     public void detail_fail_un_authorized__test() throws Exception {
         // given
+        Long id = 1L;
 
         // when
         ResultActions resultActions = mvc
