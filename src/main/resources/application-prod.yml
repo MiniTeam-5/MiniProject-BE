@@ -21,7 +21,10 @@ spring:
         dialect: org.hibernate.dialect.MySQL5Dialect
 logging:
   level:
-    '[shop.mtcoding.restend]': INFO # DEBUG 레벨부터 에러 확인할 수 있게 설정하기
+    '[kr.co.lupintech]': INFO # DEBUG 레벨부터 에러 확인할 수 있게 설정하기
+
+key:
+  holiday: ${HOLIDAY_KEY}
 
 cloud:
   aws:
