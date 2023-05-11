@@ -81,7 +81,7 @@ public class AdminControllerUnitTest extends DummyEntity{
 
 
     //@WithMockUser(roles = {"ADMIN"}) 이것도 된다.
-    @MyWithMockUser(id = 1L, username = "cos", role = UserRole.ROLE_ADMIN)
+    @MyWithMockUser(id = 1L, username = "박코스", role = UserRole.ROLE_ADMIN)
     @Test
     public void annualUpdate_test() throws Exception{
         // given
@@ -90,12 +90,12 @@ public class AdminControllerUnitTest extends DummyEntity{
         String requestBody = om.writeValueAsString(annualRequestDTO);
 
 
-        User ssar = newMockUser(2L,"sockja",5);
+        User ssar = newMockUser(2L,"김쌀쌀", "ssar@nate.com", 5);
         ManageUserDTO manageUserDTO = new ManageUserDTO().toEntityOut(ssar);
         Mockito.when(manageService.연차수정(Mockito.any(Long.class), any(ManageUserDTO.AnnualRequestDTO.class)))
                 .thenReturn(manageUserDTO);
 
-        //.with(SecurityMockMvcRequestPostProcessors.user("cos").roles("ADMIN"))
+        //.with(SecurityMockMvcRequestPostProcessors.user("박코스").roles("ADMIN"))
 
         //when
         ResultActions resultActions = mvc
@@ -114,7 +114,7 @@ public class AdminControllerUnitTest extends DummyEntity{
     }
 
 
-    @MyWithMockUser(id = 10L, username = "zelda", role = UserRole.ROLE_ADMIN)
+    @MyWithMockUser(id = 10L, username = "김젤다", role = UserRole.ROLE_ADMIN)
     @Test
     public void userChart_test() throws Exception {
 
@@ -122,14 +122,14 @@ public class AdminControllerUnitTest extends DummyEntity{
         String img = "img";
         int expectedPageSize = 3;
         List<ManageUserDTO.ManageUserListDTO> userList = new ArrayList<>();
-        ManageUserDTO.ManageUserListDTO userPS1 = newMockChartUser(1L, UserRole.ROLE_USER,"gamja", LocalDate.of(2023, 5, 10),2,img);
-        ManageUserDTO.ManageUserListDTO userPS2 = newMockChartUser(2L,UserRole.ROLE_USER,"suckja", LocalDate.of(2023, 5, 10),2,img);
-        ManageUserDTO.ManageUserListDTO userPS3 = newMockChartUser(3L,UserRole.ROLE_USER,"nana", LocalDate.of(2023, 5, 10),2,img);
-        ManageUserDTO.ManageUserListDTO userPS4 = newMockChartUser(4L,UserRole.ROLE_USER,"po", LocalDate.of(2023, 5, 10),2,img);
-        ManageUserDTO.ManageUserListDTO userPS5 = newMockChartUser(5L,UserRole.ROLE_USER,"bora", LocalDate.of(2023, 5, 10),2,img);
-        ManageUserDTO.ManageUserListDTO userPS6 = newMockChartUser(6L,UserRole.ROLE_USER,"zelda", LocalDate.of(2023, 5, 10),2,img);
-        ManageUserDTO.ManageUserListDTO userPS7 = newMockChartUser(7L,UserRole.ROLE_USER,"link", LocalDate.of(2023, 5, 10),2,img);
-        ManageUserDTO.ManageUserListDTO userPS8 = newMockChartUser(8L,UserRole.ROLE_USER,"ribal", LocalDate.of(2023, 5, 10),2,img);
+        ManageUserDTO.ManageUserListDTO userPS1 = newMockChartUser(1L, UserRole.ROLE_USER,"김감자", LocalDate.of(2023, 5, 10),2,img);
+        ManageUserDTO.ManageUserListDTO userPS2 = newMockChartUser(2L,UserRole.ROLE_USER,"이숙자", LocalDate.of(2023, 5, 10),2,img);
+        ManageUserDTO.ManageUserListDTO userPS3 = newMockChartUser(3L,UserRole.ROLE_USER,"이나나", LocalDate.of(2023, 5, 10),2,img);
+        ManageUserDTO.ManageUserListDTO userPS4 = newMockChartUser(4L,UserRole.ROLE_USER,"남궁포", LocalDate.of(2023, 5, 10),2,img);
+        ManageUserDTO.ManageUserListDTO userPS5 = newMockChartUser(5L,UserRole.ROLE_USER,"김보라", LocalDate.of(2023, 5, 10),2,img);
+        ManageUserDTO.ManageUserListDTO userPS6 = newMockChartUser(6L,UserRole.ROLE_USER,"김젤다", LocalDate.of(2023, 5, 10),2,img);
+        ManageUserDTO.ManageUserListDTO userPS7 = newMockChartUser(7L,UserRole.ROLE_USER,"이링크", LocalDate.of(2023, 5, 10),2,img);
+        ManageUserDTO.ManageUserListDTO userPS8 = newMockChartUser(8L,UserRole.ROLE_USER,"이리발", LocalDate.of(2023, 5, 10),2,img);
 
 
         Page<ManageUserDTO.ManageUserListDTO> userListPG = new PageImpl<>(Arrays.asList(userPS1, userPS2, userPS3, userPS4, userPS5, userPS6, userPS7, userPS8));
@@ -160,18 +160,18 @@ public class AdminControllerUnitTest extends DummyEntity{
         assertEquals(expectedPageSize,responseObject.getInt("size"));
         assertEquals(1L, contentArray.getJSONObject(0).getLong("userId"));
         assertEquals("ROLE_USER", contentArray.getJSONObject(0).getString("role"));
-        assertEquals("gamja", contentArray.getJSONObject(0).getString("username"));
+        assertEquals("김감자", contentArray.getJSONObject(0).getString("username"));
         assertEquals("2023-05-10", contentArray.getJSONObject(0).getString("hireDate"));
         assertEquals(2L, contentArray.getJSONObject(1).getLong("userId"));
         assertEquals("ROLE_USER", contentArray.getJSONObject(1).getString("role"));
-        assertEquals("suckja", contentArray.getJSONObject(1).getString("username"));
+        assertEquals("이숙자", contentArray.getJSONObject(1).getString("username"));
         assertEquals("2023-05-10", contentArray.getJSONObject(1).getString("hireDate"));
 
 
     }
 
 
-    @MyWithMockUser(id = 2L, username = "ssar", role = UserRole.ROLE_MASTER)
+    @MyWithMockUser(id = 2L, username = "김쌀쌀", role = UserRole.ROLE_MASTER)
     @Test
     public void roleUpdate_test() throws Exception{
         // given
@@ -181,7 +181,7 @@ public class AdminControllerUnitTest extends DummyEntity{
         String requestBody = om.writeValueAsString(masterIn);
 
         // stub
-        User ssar = newMockUserRole(1L,"sockja",5,UserRole.ROLE_ADMIN);
+        User ssar = newMockUserRole(1L,"김속자","sockja@nate.com", 5, UserRole.ROLE_ADMIN);
         ManageUserDTO.MasterOutDTO masterOutDTO = new ManageUserDTO.MasterOutDTO().toEntityOut(ssar);
         Mockito.when(manageService.권한수정(any(Long.class), any(ManageUserDTO.MasterInDTO.class))).thenReturn(masterOutDTO);
 
@@ -198,19 +198,19 @@ public class AdminControllerUnitTest extends DummyEntity{
         resultActions.andExpect(status().isOk());
     }
 
-    @MyWithMockUser(id = 1L, username = "cos", role = UserRole.ROLE_ADMIN)
+    @MyWithMockUser(id = 1L, username = "박코스", role = UserRole.ROLE_ADMIN)
     @Test
     public void getLeave_test() throws Exception {
         // given
         LeaveResponse.InfoOutDTO leaveInfo1 = new LeaveResponse.InfoOutDTO(1L, 1L,
-                "user1",
+                "일유저",
                 LeaveType.DUTY,
                 LeaveStatus.WAITING,
                 LocalDateTime.now().toString(),
                 LocalDateTime.now().plusDays(3).toString(),
                 "https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png");
         LeaveResponse.InfoOutDTO leaveInfo2 = new LeaveResponse.InfoOutDTO(2L, 2L,
-                "user2",
+                "이유저",
                 LeaveType.ANNUAL,
                 LeaveStatus.WAITING,
                 LocalDateTime.now().toString(),
@@ -231,12 +231,12 @@ public class AdminControllerUnitTest extends DummyEntity{
         resultActions.andExpect(jsonPath("$.data", Matchers.hasSize(2)))
                 .andExpect(jsonPath("$.data[0].id").value(1L))
                 .andExpect(jsonPath("$.data[0].userId").value(1L))
-                .andExpect(jsonPath("$.data[0].username").value("user1"))
+                .andExpect(jsonPath("$.data[0].username").value("일유저"))
                 .andExpect(jsonPath("$.data[0].type").value("DUTY"))
                 .andExpect(jsonPath("$.data[0].status").value("WAITING"))
                 .andExpect(jsonPath("$.data[1].id").value(2L))
                 .andExpect(jsonPath("$.data[1].userId").value(2L))
-                .andExpect(jsonPath("$.data[1].username").value("user2"))
+                .andExpect(jsonPath("$.data[1].username").value("이유저"))
                 .andExpect(jsonPath("$.data[1].type").value("ANNUAL"))
                 .andExpect(jsonPath("$.data[1].status").value("WAITING"));
     }

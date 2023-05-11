@@ -52,7 +52,7 @@ class RefreshControllerTest extends MyRestDoc {
     void refreshToken() throws Exception {
         // 테스트에 사용할 사용자 저장
         User testUser = userRepository.save(User.builder()
-                .username("testUser")
+                .username("테스트")
                 .email("testUser@nate.com")
                 .password("1234")
                 .hireDate(LocalDate.now())

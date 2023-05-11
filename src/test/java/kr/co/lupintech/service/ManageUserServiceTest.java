@@ -48,7 +48,7 @@ public class ManageUserServiceTest extends DummyEntity {
         ManageUserDTO.AnnualRequestDTO annualRequestDTO = new ManageUserDTO.AnnualRequestDTO(5);
 
         //stub
-        User cos = newMockUser(1L, "cos",2); //Annual_limit = 2
+        User cos = newMockUser(1L, "박코스","cos@nate.com",2); //Annual_limit = 2
         Mockito.when(userRepository.findByStatusAndId(true,id)).thenReturn(Optional.of(cos));
 
         //when
@@ -66,7 +66,7 @@ public class ManageUserServiceTest extends DummyEntity {
         Long id = 1L;
         ManageUserDTO.MasterInDTO masterIn = new ManageUserDTO.MasterInDTO(UserRole.ROLE_ADMIN);
         //stub
-        User expectedUser = newMockStateUser(1L, "cos",2,true); // role = USER
+        User expectedUser = newMockStateUser(1L, "박코스","cos@nate.com", 2,true); // role = USER
 
 
         Mockito.when(userRepository.findByStatusAndId(true, id)).thenReturn(Optional.of(expectedUser));
@@ -88,11 +88,11 @@ public class ManageUserServiceTest extends DummyEntity {
         PageRequest pageRequest = PageRequest.of(page, 3, Sort.by("id").descending());
 
         // stub
-        User userPS1 = newMockUser(1L,"gamja",2);
-        User userPS2 = newMockUser(2L,"suckja",2);
-        User userPS3 = newMockUser(3L,"goguma",2);
-        User userPS4 = newMockUser(4L,"hama",2);
-        User userPS5 = newMockUser(5L,"saja",2);
+        User userPS1 = newMockUser(1L,"김감자", "gamja@nate.com", 2);
+        User userPS2 = newMockUser(2L,"이숙자", "suckja@nate.com", 2);
+        User userPS3 = newMockUser(3L,"고구마", "goguma@nate.com", 2);
+        User userPS4 = newMockUser(4L,"이하마", "hama@nate.com", 2);
+        User userPS5 = newMockUser(5L,"김사자","saja@nate.com",2);
 
 
         List<User> userList = new ArrayList<>();
@@ -110,7 +110,7 @@ public class ManageUserServiceTest extends DummyEntity {
         assertEquals(3, usersPG.getSize());
 
         Assertions.assertThat(usersPG.getContent().get(0).getUserId()).isEqualTo(1L);
-        Assertions.assertThat(usersPG.getContent().get(0).getUsername()).isEqualTo("gamja");
+        Assertions.assertThat(usersPG.getContent().get(0).getUsername()).isEqualTo("김감자");
         Assertions.assertThat(usersPG.getContent().get(0).getRole()).isEqualTo(UserRole.ROLE_USER);
         Assertions.assertThat(usersPG.getContent().get(0).getRemainDays()).isEqualTo(2);
 

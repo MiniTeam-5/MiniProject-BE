@@ -13,12 +13,12 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class DummyEntity {
-    public User newUser(String username, Boolean status, LocalDate hireDate, Integer remainDays){
+    public User newUser(String username, String email, Boolean status, LocalDate hireDate, Integer remainDays){
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return User.builder()
                 .username(username)
                 .password(passwordEncoder.encode("1234"))
-                .email(username+"@nate.com")
+                .email(email)
                 .role(UserRole.ROLE_USER)
                 .status(status)
                 .hireDate(hireDate) // 입사 1년차라 가정
@@ -44,13 +44,13 @@ public class DummyEntity {
                 .build();
     }
 
-    public User newMockUser(Long id, String username, Integer remainDays){
+    public User newMockUser(Long id, String username, String email, Integer remainDays){
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return User.builder()
                 .id(id)
                 .username(username)
                 .password(passwordEncoder.encode("1234"))
-                .email(username+"@nate.com")
+                .email(email)
                 .role(UserRole.ROLE_USER)
                 .status(true)
                 .hireDate(LocalDate.now().minusYears(1).minusWeeks(1)) // 입사 1년차라 가정
@@ -59,13 +59,13 @@ public class DummyEntity {
                 .build();
     }
 
-    public User newMockStateUser(Long id, String username, Integer remainDays,boolean status){
+    public User newMockStateUser(Long id, String username, String email, Integer remainDays,boolean status){
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return User.builder()
                 .id(id)
                 .username(username)
                 .password(passwordEncoder.encode("1234"))
-                .email(username+"@nate.com")
+                .email(email)
                 .role(UserRole.ROLE_USER)
                 .status(status)
                 .hireDate(LocalDate.now().minusYears(1).minusWeeks(1)) // 입사 1년차라 가정
@@ -75,13 +75,13 @@ public class DummyEntity {
     }
 
 
-    public User newMockUserRole(Long id, String username, Integer remainDays,UserRole userRole){
+    public User newMockUserRole(Long id, String username, String email, Integer remainDays,UserRole userRole){
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return User.builder()
                 .id(id)
                 .username(username)
                 .password(passwordEncoder.encode("1234"))
-                .email(username+"@nate.com")
+                .email(email)
                 .role(userRole)
                 .status(true)
                 .hireDate(LocalDate.now().minusYears(1).minusWeeks(1)) // 입사 1년차라 가정
