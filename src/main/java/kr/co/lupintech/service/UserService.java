@@ -1,4 +1,4 @@
-package shop.mtcoding.restend.service;
+package kr.co.lupintech.service;
 
 import kr.co.lupintech.core.annotation.MyLog;
 import kr.co.lupintech.core.auth.jwt.MyJwtProvider;
@@ -13,6 +13,7 @@ import kr.co.lupintech.model.token.RefreshTokenEntity;
 import kr.co.lupintech.model.token.TokenRepository;
 import kr.co.lupintech.model.user.User;
 import kr.co.lupintech.model.user.UserRepository;
+import kr.co.lupintech.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Pair;
