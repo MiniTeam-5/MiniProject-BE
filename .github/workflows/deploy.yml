@@ -13,6 +13,7 @@ env:
   CODE_DEPLOY_DEPLOYMENT_GROUP_NAME: miniBE
   S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
   S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
+  HOLIDAY_KEY: ${{ secrets.HOLIDAY_KEY }}
 
 jobs:
   build:
