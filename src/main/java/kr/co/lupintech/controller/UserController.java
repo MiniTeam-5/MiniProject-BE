@@ -89,7 +89,7 @@ public class UserController {
         UserResponse.EmailOutDTO emailOutDTO = userService.인증메일보내기(emailInDTO.getEmail());
         ResponseDTO<?> responseDTO = new ResponseDTO<>(emailOutDTO);
 
-        return ResponseEntity.ok(emailInDTO);
+        return ResponseEntity.ok().body(responseDTO);
     }
 }
 
