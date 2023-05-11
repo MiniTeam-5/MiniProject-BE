@@ -53,6 +53,7 @@ public class UserRequest {
                     .role(ROLE_USER)
                     .status(true)
                     .remainDays(15)
+                    .profile("https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png")
                     .build();
         }
     }
