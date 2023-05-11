@@ -454,10 +454,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_로그인_인증_실패">로그인 (인증 실패)</a></li>
 <li><a href="#_회원상세보기_성공">회원상세보기 (성공)</a></li>
 <li><a href="#_회원상세보기_인증_안됨_실패">회원상세보기 (인증 안됨 실패)</a></li>
-<li><a href="#_회원상세보기_권한_없음_실패">회원상세보기 (권한 없음 실패)</a></li>
 <li><a href="#_프로필_사원명_이메일_비밀번호_변경">프로필, 사원명, 이메일, 비밀번호 변경</a></li>
+<li><a href="#_프로필_삭제_사원명_이메일_비밀번호_변경">프로필 삭제, 사원명, 이메일, 비밀번호 변경</a></li>
 <li><a href="#_사원명_이메일_비밀번호_변경">사원명, 이메일, 비밀번호 변경</a></li>
 <li><a href="#_사원명_이메일만_변경">사원명, 이메일만 변경</a></li>
+<li><a href="#_개인_정보_수정_유효성_검사_실패_사원명이_없는_경우">개인 정보 수정 유효성 검사 실패 (사원명이 없는 경우)</a></li>
+<li><a href="#_개인_정보_수정_유효성_검사_실패_이메일이_없는_경우">개인 정보 수정 유효성 검사 실패 (이메일이 없는 경우)</a></li>
+<li><a href="#_개인_정보_수정_유효성_검사_실패_이메일_형식_오류">개인 정보 수정 유효성 검사 실패 (이메일 형식 오류)</a></li>
+<li><a href="#_개인_정보_수정_실패_수정_사항이_없는_경우">개인 정보 수정 실패 (수정 사항이 없는 경우)</a></li>
+<li><a href="#_유저_삭제비활성_성공">유저 삭제(비활성) 성공</a></li>
+<li><a href="#_유저_삭제비활성_실패_없는_유저">유저 삭제(비활성) 실패 (없는 유저)</a></li>
 </ul>
 </li>
 </ul>
@@ -507,7 +513,7 @@ Content-Length: 105
   "status" : 200,
   "msg" : "성공",
   "data" : {
-    "id" : 3,
+    "id" : 5,
     "username" : "러브"
   }
 }</code></pre>
@@ -682,9 +688,8 @@ Host: localhost:8080
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJST0xFX1VTRVIiLCJpZCI6MSwiZXhwIjoxNjgzNjM2ODA5fQ.9tXOfwufREETAshh3qF9lb_zC03XZJw7ruUCE-V_JEGf-xIpylgx-xk-e37YZIELwaJZPtNxWS6Z0iLU2DqZXw
-
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJST0xFX1VTRVIiLCJpZCI6MSwiZXhwIjoxNjgzODY1ODYwfQ.X010PWHKIbK_erLBxEo7G-AD82fFW3iCHj_X5dVQtVRkvvcmsp9QiAft2rXeSUucBFbk2_uIWWITlNlh0U2QFQ
+RefreshToken: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsImV4cCI6MTY4NDM4NDI2MCwidXVpZCI6Ijk4ZTgzYTQ2LTNmZWQtNDhlOC04MmNmLTc5MmNjOTc4NDM1YyJ9.3RgSKI_v8TwyMoZ92u5aZxjYOMFGBWMKDqTkp1cO25C7PzvStJ-AjUiMOClWirzNI9jYsuuKjLC1IfhwWsVcTA
 Content-Type: application/json;charset=UTF-8
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -799,20 +804,19 @@ X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-
-Content-Length: 185
-
+Content-Length: 305
 
 {
   "status" : 200,
   "msg" : "성공",
   "data" : {
-    "id" : 1,
-    "email" : "ssar@nate.com",
-    "username" : "ssar",
-    "profile" : null,
-    "role" : "ROLE_USER"
-
+    "id" : 4,
+    "email" : "update@nate.com",
+    "username" : "update",
+    "profile" : "https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png",
+    "role" : "ROLE_USER",
+    "remainDays" : 13,
+    "hireDate" : "2021-09-04"
   }
 }</code></pre>
 </div>
@@ -872,53 +876,9 @@ Content-Length: 93
 </div>
 </div>
 <div class="sect2">
-<h3 id="_회원상세보기_권한_없음_실패">회원상세보기 (권한 없음 실패)</h3>
-<div class="sect4">
-<h5 id="_request_example_8">Request Example</h5>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /auth/user/1 HTTP/1.1
-Host: localhost:8080</code></pre>
-</div>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_response_example_8">Response Example</h5>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 403 Forbidden
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json;charset=UTF-8
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-Content-Length: 84
-
-{
-  "status" : 403,
-  "msg" : "forbidden",
-  "data" : "권한이 없습니다"
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_curl_8">Curl</h5>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user/1' -i -X GET</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect2">
 <h3 id="_프로필_사원명_이메일_비밀번호_변경">프로필, 사원명, 이메일, 비밀번호 변경</h3>
 <div class="sect4">
-<h5 id="_request_example_9">Request Example</h5>
+<h5 id="_request_example_8">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/user HTTP/1.1
@@ -937,34 +897,88 @@ Content-Type: image/png
 
 
 
-(((((((((((((((((((((((((((((((((((((((((((((((((((��  � �" ��             ��              ��    ���                            �ƀ       �c?W����j��1@     �չ��, 
-9��)=      4��, ���sH(     4��,  �{��    G� �  둫5�/     ���f  E�^
+(((((((((((((((((((((((((((((((((((((((((((((((((((��  � �" ��             ��              ��    ���                            �ƀ       �c?W����j��1@     �չ��, 9��)=      4��, ���sH(     4��,  �{��    G� �  둫5�/     ���f  E�^
 
 �hϢ�P =��y&lt;(      �r�.��JOV8��      {�
-g��iͦY�     Bm	g��F`P�4ǚ�-&gt;�&lt;�s� g����h     uȿy}��Yt��YH(       Ve�QSL@       �K0��� %         @!0 "123#p��  � &amp;�u��_��j#X��ZTV�d?*t�����R�'�;�
-E˵�c�qf�N��f��}����8��ߗ
-�K��\��
-�6�|�G������Cf�Y��lXOܜ \�{���ԛ�XܳiŌ�c��;�V�^�]FC��I�Y��L���%��!�������1���EH�ƾ��
-Ԃ��,O�5}���5�M}f�#�R��-c�	$5ez"Ǧ5�vՏ�/K��:�F� )�!��;���������                p�� ?p�� !           01 !2AQP�� ?�l��r�C���S�P�_6�26����z;R̪~i�[#����eSn�W*��$]v�CR}�k�i�ߊ�r�?�� $          @!01 "Qabpq��  ?�Mu��e����7#»���p�э�j��bQ}[��.�ьCn1b˱�QМܕ�O0��EH��
- �Zp��A�49�&lt;G����]J�
-+����`���^��q��K�[�e{��*����?��6EU|���2O��� &amp;          1!@ 0AQaq���p����  ?!�L"h	��6��&amp;�9�Oȸ�n�}t�7h�d55�ߔ�Z��a�4���a"-
-0M"rM��&amp;��$1�LBw�������bL��+���J�&amp;�f�0��P1
-�X����NG{b�y�]&amp;�7W���N�fz$l�d j�m�����QB!��HZ"$&amp;M�,\J
-�#85O�|;�
-�
+g��iͦY�     Bm	g��F`P�4ǚ�-&gt;�&lt;�s� g����h     uȿy}��Yt��YH(       Ve�QSL@       �K0��� %         @!0 "123#p��  � &amp;�u��_��j#X��ZTV�d?*t�����R�'�;�E˵�c�qf�N��f��}����8��ߗ
+�K��\���6�|�G������Cf�Y��lXOܜ \�{���ԛ�XܳiŌ�c��;�V�^�]FC��I�Y��L���%��!�������1���EH�ƾ��
+Ԃ��,O�5}���5�M}f�#�R��-c�	$5ez"Ǧ5�vՏ�/K��:�F� )�!��;���������                p�� ?p�� !           01 !2AQP�� ?�l��r�C���S�P�_6�26����z;R̪~i�[#����eSn�W*��$]v�CR}�k�i�ߊ�r�?�� $          @!01 "Qabpq��  ?�Mu��e����7#»���p�э�j��bQ}[��.�ьCn1b˱�QМܕ�O0��EH�� �Zp��A�49�&lt;G����]J�+����`���^��q��K�[�e{��*����?��6EU|���2O��� &amp;          1!@ 0AQaq���p����  ?!�L"h	��6��&amp;�9�Oȸ�n�}t�7h�d55�ߔ�Z��a�4���a"-
+0M"rM��&amp;��$1�LBw�������bL��+���J�&amp;�f�0��P1�X����NG{b�y�]&amp;�7W���N�fz$l�d j�m�����QB!��HZ"$&amp;M�,\J�#85O�|;��
 ��T�XB��x5al�@n�L���
 H�&gt;�����z[��K@)b����ح�
 }��(��/�YHA@i��*�	�
-
-�,\J�Hb�$��4! ��&lt;\R��X?Խ����      � � � � � � � � � � � � � � � � � � � � � � � � � � � � �~� � � � � � � � ��V� � � � � � ��� �� � � � � � � � � �� � � � � �� � � ��� � � � � �_� � � �� � � � � � �� � � �� � � � � � �� � � �� � � � � � � �� �_� � � � � � � �u��� � � � � � �_� ����� � ��� � � � � ���� � � � � � � � � ���� � � � � � � � �~��             0 1@P�� ?��P�ԋ�*4Ŏ�DZ\^]��            !1 0APQq�� ?�d}Y[�Rg72�^KE�Yi 5ȸ/�*�uf�S��5���}R��5��Z�8��3}ɣ͜6J�6��X(q�&gt;(7+�.�&gt;C��ՙsd$#����q��a�E�V��p�4zjx�� )        !1@AQ 0aq�������p��  ?� �]Z1G�/I6skB�t�J0ASv�{�_��pTW ����u�jk���D�N��(�\W�0p�nQo��m�8��.�Sb�7���)��.�h$~9/��V��&amp;�6�zo�&lt;�Dh�1�ɋ�7c[y~���84Y�����cR���.�u�K�ʽQ"��  R�"$X�}i�Ɍ��SzpAb�9�&lt;�,�I��20�����V&amp;$�r7&gt;	��D��(�׷���;�}w�6$_j E듟 ��$��
-9��U��v�̒�\�o���Ga���*Ɛ= ��8�B"յr�/
-�r��FS�咘��0�%	�#�w��D���bE�^�0гӇz9dPК�#��D(	i�u&lt;}b��7	�����`��F����q�V�iW����� G�M�r�:1X�=J���EN7���!8�(�Ѥ|�ɜmZF�w���q�S|o� ޔ��Z�A�%���N!M͝iz7�@D�@��"(��pv�O
+�,\J�Hb�$��4! ��&lt;\R��X?Խ����      � � � � � � � � � � � � � � � � � � � � � � � � � � � � �~� � � � � � � � ��V� � � � � � ��� �� � � � � � � � � �� � � � � �� � � ��� � � � � �_� � � �� � � � � � �� � � �� � � � � � �� � � �� � � � � � � �� �_� � � � � � � �u��� � � � � � �_� ����� � ��� � � � � ���� � � � � � � � � ���� � � � � � � � �~��             0 1@P�� ?��P�ԋ�*4Ŏ�DZ\^]��            !1 0APQq�� ?�d}Y[�Rg72�^KE�Yi 5ȸ/�*�uf�S��5���}R��5��Z�8��3}ɣ͜6J�6��X(q�&gt;(7+�.�&gt;C��ՙsd$#����q��a�E�V��p�4zjx�� )        !1@AQ 0aq�������p��  ?� �]Z1G�/I6skB�t�J0ASv�{�_��pTW ����u�jk���D�N��(�\W�0p�nQo��m�8��.�Sb�7���)��.�h$~9/��V��&amp;�6�zo�&lt;�Dh�1�ɋ�7c[y~���84Y�����cR���.�u�K�ʽQ"��  R�"$X�}i�Ɍ��SzpAb�9�&lt;�,�I��20�����V&amp;$�r7&gt;	��D��(�׷���;�}w�6$_j E듟 ��$��9��U��v�̒�\�o���Ga���*Ɛ= ��8�B"յr�/�r��FS�咘��0�%	�#�w��D���bE�^�0гӇz9dPК�#��D(	i�u&lt;}b��7	�����`��F����q�V�iW����� G�M�r�:1X�=J���EN7���!8�(�Ѥ|�ɜmZF�w���q�S|o� ޔ��Z�A�%���N!M͝iz7�@D�@��"(��pv�O
 �ه;F����d�^z"���t�dCZ	�Na�W��}��?���
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
 Content-Disposition: form-data; name=modifiedInDTO; filename=modifiedInDTO
 Content-Type: application/json
 
-{"email":"asdf@nate.com","username":"김이박","newPassword":"1234","deletedProfile":null}
+{"email":"asdf@nate.com","username":"김이박","newPassword":"1234","profileToDelete":null}
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm--</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_8">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 302
+
+{
+  "status" : 200,
+  "msg" : "성공",
+  "data" : {
+    "email" : "asdf@nate.com",
+    "username" : "김이박",
+    "passwordReset" : true,
+    "profileReset" : true,
+    "profile" : "https://lupinbucket.s3.ap-northeast-2.amazonaws.com/da6053be-d31f-4b22-93cb-4acdb92d7bac_person.png"
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_8">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user' -i -X POST \
+    -H 'Content-Type: multipart/form-data;charset=UTF-8' \
+    -F 'profile=@person.png;type=image/png' \
+    -F 'modifiedInDTO=@modifiedInDTO;type=application/json'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_프로필_삭제_사원명_이메일_비밀번호_변경">프로필 삭제, 사원명, 이메일, 비밀번호 변경</h3>
+<div class="sect4">
+<h5 id="_request_example_9">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/user HTTP/1.1
+Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Host: localhost:8080
+
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Content-Disposition: form-data; name=profile
+
+
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Content-Disposition: form-data; name=modifiedInDTO; filename=modifiedInDTO
+Content-Type: application/json
+
+{"email":"asdf@nate.com","username":"김이박","newPassword":"1234","profileToDelete":"https://lupinbucket.s3.ap-northeast-2.amazonaws.com/70cc2a40-3dee-4e4a-a560-117dcf5a33b5_person.png"}
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm--</code></pre>
 </div>
 </div>
@@ -983,7 +997,7 @@ X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-Content-Length: 182
+Content-Length: 265
 
 {
   "status" : 200,
@@ -992,7 +1006,8 @@ Content-Length: 182
     "email" : "asdf@nate.com",
     "username" : "김이박",
     "passwordReset" : true,
-    "profileReset" : true
+    "profileReset" : true,
+    "profile" : "https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png"
   }
 }</code></pre>
 </div>
@@ -1004,7 +1019,7 @@ Content-Length: 182
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user' -i -X POST \
     -H 'Content-Type: multipart/form-data;charset=UTF-8' \
-    -F 'profile=@person.png;type=image/png' \
+    -F 'profile=' \
     -F 'modifiedInDTO=@modifiedInDTO;type=application/json'</code></pre>
 </div>
 </div>
@@ -1028,7 +1043,7 @@ Content-Disposition: form-data; name=profile
 Content-Disposition: form-data; name=modifiedInDTO; filename=modifiedInDTO
 Content-Type: application/json
 
-{"email":"asdf@nate.com","username":"테스터","newPassword":"1234","deletedProfile":null}
+{"email":"asdf@nate.com","username":"테스터","newPassword":"1234","profileToDelete":null}
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm--</code></pre>
 </div>
 </div>
@@ -1047,7 +1062,7 @@ X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-Content-Length: 183
+Content-Length: 266
 
 {
   "status" : 200,
@@ -1056,7 +1071,8 @@ Content-Length: 183
     "email" : "asdf@nate.com",
     "username" : "테스터",
     "passwordReset" : true,
-    "profileReset" : false
+    "profileReset" : false,
+    "profile" : "https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png"
   }
 }</code></pre>
 </div>
@@ -1092,7 +1108,7 @@ Content-Disposition: form-data; name=profile
 Content-Disposition: form-data; name=modifiedInDTO; filename=modifiedInDTO
 Content-Type: application/json
 
-{"email":"asdf@nate.com","username":"키키","newPassword":null,"deletedProfile":null}
+{"email":"asdf@nate.com","username":"키키","newPassword":null,"profileToDelete":null}
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm--</code></pre>
 </div>
 </div>
@@ -1111,7 +1127,7 @@ X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-Content-Length: 181
+Content-Length: 264
 
 {
   "status" : 200,
@@ -1120,7 +1136,8 @@ Content-Length: 181
     "email" : "asdf@nate.com",
     "username" : "키키",
     "passwordReset" : false,
-    "profileReset" : false
+    "profileReset" : false,
+    "profile" : "https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png"
   }
 }</code></pre>
 </div>
@@ -1138,15 +1155,349 @@ Content-Length: 181
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_개인_정보_수정_유효성_검사_실패_사원명이_없는_경우">개인 정보 수정 유효성 검사 실패 (사원명이 없는 경우)</h3>
+<div class="sect4">
+<h5 id="_request_example_12">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/user HTTP/1.1
+Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Host: localhost:8080
+
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Content-Disposition: form-data; name=profile
+
+
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Content-Disposition: form-data; name=modifiedInDTO; filename=modifiedInDTO
+Content-Type: application/json
+
+{"email":"asdf@nate.com","username":null,"newPassword":"1234","profileToDelete":null}
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm--</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_12">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 127
+
+{
+  "status" : 400,
+  "msg" : "badRequest",
+  "data" : {
+    "key" : "username",
+    "value" : "must not be empty"
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_12">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user' -i -X POST \
+    -H 'Content-Type: multipart/form-data;charset=UTF-8' \
+    -F 'profile=' \
+    -F 'modifiedInDTO=@modifiedInDTO;type=application/json'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_개인_정보_수정_유효성_검사_실패_이메일이_없는_경우">개인 정보 수정 유효성 검사 실패 (이메일이 없는 경우)</h3>
+<div class="sect4">
+<h5 id="_request_example_13">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/user HTTP/1.1
+Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Host: localhost:8080
+
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Content-Disposition: form-data; name=profile
+
+
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Content-Disposition: form-data; name=modifiedInDTO; filename=modifiedInDTO
+Content-Type: application/json
+
+{"email":null,"username":"테스터","newPassword":"1234","profileToDelete":null}
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm--</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_13">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 124
+
+{
+  "status" : 400,
+  "msg" : "badRequest",
+  "data" : {
+    "key" : "email",
+    "value" : "must not be empty"
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_13">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user' -i -X POST \
+    -H 'Content-Type: multipart/form-data;charset=UTF-8' \
+    -F 'profile=' \
+    -F 'modifiedInDTO=@modifiedInDTO;type=application/json'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_개인_정보_수정_유효성_검사_실패_이메일_형식_오류">개인 정보 수정 유효성 검사 실패 (이메일 형식 오류)</h3>
+<div class="sect4">
+<h5 id="_request_example_14">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/user HTTP/1.1
+Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Host: localhost:8080
+
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Content-Disposition: form-data; name=profile
+
+
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Content-Disposition: form-data; name=modifiedInDTO; filename=modifiedInDTO
+Content-Type: application/json
+
+{"email":"asdfnate.com","username":"테스터","newPassword":"1234","profileToDelete":null}
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm--</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_14">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 148
+
+{
+  "status" : 400,
+  "msg" : "badRequest",
+  "data" : {
+    "key" : "email",
+    "value" : "이메일 형식으로 작성해주세요"
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_14">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user' -i -X POST \
+    -H 'Content-Type: multipart/form-data;charset=UTF-8' \
+    -F 'profile=' \
+    -F 'modifiedInDTO=@modifiedInDTO;type=application/json'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_개인_정보_수정_실패_수정_사항이_없는_경우">개인 정보 수정 실패 (수정 사항이 없는 경우)</h3>
+<div class="sect4">
+<h5 id="_request_example_15">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/user HTTP/1.1
+Content-Type: multipart/form-data;charset=UTF-8; boundary=6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Host: localhost:8080
+
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Content-Disposition: form-data; name=profile
+
+
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm
+Content-Disposition: form-data; name=modifiedInDTO; filename=modifiedInDTO
+Content-Type: application/json
+
+{"email":"ssar@nate.com","username":"ssar","newPassword":null,"profileToDelete":null}
+--6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm--</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_15">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 185
+
+{
+  "status" : 400,
+  "msg" : "badRequest",
+  "data" : {
+    "key" : "profile, profileToDelete, email, username, newPassword",
+    "value" : "수정사항이 없습니다."
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_15">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user' -i -X POST \
+    -H 'Content-Type: multipart/form-data;charset=UTF-8' \
+    -F 'profile=' \
+    -F 'modifiedInDTO=@modifiedInDTO;type=application/json'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_유저_삭제비활성_성공">유저 삭제(비활성) 성공</h3>
+<div class="sect4">
+<h5 id="_request_example_16">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /admin/resign/3 HTTP/1.1
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_16">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 61
+
+{
+  "status" : 200,
+  "msg" : "성공",
+  "data" : null
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_16">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/admin/resign/3' -i -X POST</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_유저_삭제비활성_실패_없는_유저">유저 삭제(비활성) 실패 (없는 유저)</h3>
+<div class="sect4">
+<h5 id="_request_example_17">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /admin/resign/5 HTTP/1.1
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_17">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 500 Internal Server Error
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+Content-Length: 113
+
+{
+  "status" : 500,
+  "msg" : "serverError",
+  "data" : "로그인 된 유저가 DB에 존재하지 않음"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_17">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/admin/resign/5' -i -X POST</code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-
-Last updated 2023-05-08 21:43:15 +0900
-
+Last updated 2023-05-11 13:26:29 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
