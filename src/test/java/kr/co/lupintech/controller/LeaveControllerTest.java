@@ -58,9 +58,9 @@ public class LeaveControllerTest extends MyRestDoc {
 
     @BeforeEach
     public void setUp() {
-        User ssar = userRepository.save(dummy.newUser("ssar", true,LocalDate.now().minusYears(1).minusWeeks(1), 13));
-        User cos = userRepository.save(dummy.newUser("cos", true, LocalDate.now().minusYears(1).minusWeeks(1), 11));
-        User abort = userRepository.save(dummy.newUser("abort", false,  LocalDate.now().minusYears(1).minusWeeks(1), 14));
+        User ssar = userRepository.save(dummy.newUser("김쌀쌀", "ssar@nate.com", true,LocalDate.now().minusYears(1).minusWeeks(1), 13));
+        User cos = userRepository.save(dummy.newUser("박코스", "cos@nate.com", true, LocalDate.now().minusYears(1).minusWeeks(1), 11));
+        User abort = userRepository.save(dummy.newUser("이삭제", "abort@nate.com", false,  LocalDate.now().minusYears(1).minusWeeks(1), 14));
         leaveRepository.save(dummy.newLeave(ssar, LeaveType.ANNUAL, LocalDate.parse("2023-08-19"),
                 LocalDate.parse("2023-08-19"), 1, LeaveStatus.REJECTION));
         leaveRepository.save(dummy.newLeave(cos, LeaveType.ANNUAL, LocalDate.parse("2023-08-10"),
@@ -476,7 +476,7 @@ public class LeaveControllerTest extends MyRestDoc {
     }
 
     @DisplayName("연차/당직 신청 승인/거절 성공")
-    @WithMockUser(username="admin", roles={"ADMIN"})
+    @WithMockUser(username="관리자", roles={"ADMIN"})
     @Test
     public void decide_test() throws Exception {
         // given
@@ -500,7 +500,7 @@ public class LeaveControllerTest extends MyRestDoc {
     }
 
     @DisplayName("연차/당직 신청 승인/거절 실패 (연차/당직 신청 정보가 없을 때)")
-    @WithMockUser(username="admin", roles={"ADMIN"})
+    @WithMockUser(username="관리자", roles={"ADMIN"})
     @Test
     public void decide_fail_no_leave_test() throws Exception {
         // given
@@ -524,7 +524,7 @@ public class LeaveControllerTest extends MyRestDoc {
     }
 
     @DisplayName("연차/당직 신청 승인/거절 실패 (이미 탈퇴한 회원의 신청)")
-    @WithMockUser(username="admin", roles={"ADMIN"})
+    @WithMockUser(username="관리자", roles={"ADMIN"})
     @Test
     public void decide_fail_status_false_test() throws Exception {
         // given
@@ -548,7 +548,7 @@ public class LeaveControllerTest extends MyRestDoc {
     }
 
     @DisplayName("연차/당직 신청 승인/거절 실패 (이미 승인됨)")
-    @WithMockUser(username="admin", roles={"ADMIN"})
+    @WithMockUser(username="관리자", roles={"ADMIN"})
     @Test
     public void decide_fail_already_approved_test() throws Exception {
         // given
@@ -573,7 +573,7 @@ public class LeaveControllerTest extends MyRestDoc {
     }
 
     @DisplayName("연차/당직 신청 승인/거절 실패 (이미 거절됨)")
-    @WithMockUser(username="admin", roles={"ADMIN"})
+    @WithMockUser(username="관리자", roles={"ADMIN"})
     @Test
     public void decide_fail_already_rejected_test() throws Exception {
         // given

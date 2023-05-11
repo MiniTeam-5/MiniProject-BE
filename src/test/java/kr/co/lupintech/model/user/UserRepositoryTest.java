@@ -32,10 +32,10 @@ public class UserRepositoryTest extends DummyEntity {
     public void setUp() {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         em.createNativeQuery("ALTER TABLE user_tb ALTER COLUMN `id` RESTART WITH 1").executeUpdate();
-        userRepository.save(newUser("ssar", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
-        userRepository.save(newUser("cos", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
-        userRepository.save(newUser("oneyear", true, LocalDate.now().minusYears(1), 0));
-        userRepository.save(newUser("newcomer", true, LocalDate.now().minusMonths(2), 1));
+        userRepository.save(newUser("김쌀쌀", "ssar@nate.com", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
+        userRepository.save(newUser("박코스", "cos@nate.com", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
+        userRepository.save(newUser("일년차", "oneyear@nate.com", true, LocalDate.now().minusYears(1), 0));
+        userRepository.save(newUser("김신입", "newcomer@nate.com", true, LocalDate.now().minusMonths(2), 1));
 
         em.clear();
     }
@@ -54,7 +54,7 @@ public class UserRepositoryTest extends DummyEntity {
 
         // then
         Assertions.assertThat(userPS.getId()).isEqualTo(1L);
-        Assertions.assertThat(userPS.getUsername()).isEqualTo("ssar");
+        Assertions.assertThat(userPS.getUsername()).isEqualTo("김쌀쌀");
         Assertions.assertThat(
                 passwordEncoder.matches("1234", userPS.getPassword())
         ).isEqualTo(true);
@@ -70,7 +70,7 @@ public class UserRepositoryTest extends DummyEntity {
     @Test
     public void findByUsername() {
         // given
-        String username = "ssar";
+        String username = "김쌀쌀";
 
         // when
         Optional<User> userOP = userRepository.findByUsername(username);
@@ -81,7 +81,7 @@ public class UserRepositoryTest extends DummyEntity {
 
         // then
         Assertions.assertThat(userPS.getId()).isEqualTo(1L);
-        Assertions.assertThat(userPS.getUsername()).isEqualTo("ssar");
+        Assertions.assertThat(userPS.getUsername()).isEqualTo("김쌀쌀");
         Assertions.assertThat(
                 passwordEncoder.matches("1234", userPS.getPassword())
         ).isEqualTo(true);
@@ -98,14 +98,14 @@ public class UserRepositoryTest extends DummyEntity {
     @Test
     public void save() {
         // given
-        User love = newUser("love", true, LocalDate.now().minusYears(1).minusWeeks(1), 15);
+        User love = newUser("김러브", "love@nate.com", true, LocalDate.now().minusYears(1).minusWeeks(1), 15);
 
         // when
         User userPS = userRepository.save(love);
 
         // then (beforeEach에서 2건이 insert 되어 있음)
         Assertions.assertThat(userPS.getId()).isEqualTo(5L);
-        Assertions.assertThat(userPS.getUsername()).isEqualTo("love");
+        Assertions.assertThat(userPS.getUsername()).isEqualTo("김러브");
         Assertions.assertThat(
                 passwordEncoder.matches("1234", userPS.getPassword())
         ).isEqualTo(true);
@@ -132,7 +132,7 @@ public class UserRepositoryTest extends DummyEntity {
         for(int i = 0; i < userPSs.size(); i++){
             User userPS = userPSs.get(i);
             Assertions.assertThat(userPS.getId()).isEqualTo(3L);
-            Assertions.assertThat(userPS.getUsername()).isEqualTo("oneyear");
+            Assertions.assertThat(userPS.getUsername()).isEqualTo("일년차");
             Assertions.assertThat(
                     passwordEncoder.matches("1234", userPS.getPassword())
             ).isEqualTo(true);
@@ -159,7 +159,7 @@ public class UserRepositoryTest extends DummyEntity {
         for(int i = 0; i < userPSs.size(); i++){
             User userPS = userPSs.get(i);
             Assertions.assertThat(userPS.getId()).isEqualTo(4L);
-            Assertions.assertThat(userPS.getUsername()).isEqualTo("newcomer");
+            Assertions.assertThat(userPS.getUsername()).isEqualTo("김신입");
             Assertions.assertThat(
                     passwordEncoder.matches("1234", userPS.getPassword())
             ).isEqualTo(true);

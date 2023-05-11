@@ -22,10 +22,10 @@ public class DataInit extends DummyEntity{
     CommandLineRunner init(UserRepository userRepository){
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return args -> {
-            userRepository.save(newUser("ssar", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
-            userRepository.save(newUser("cos", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
+            userRepository.save(newUser("김쌀쌀", "ssar@nate.com", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
+            userRepository.save(newUser("박코스", "cos@nate.com", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
             userRepository.save(User.builder()
-                    .username("admin")
+                    .username("관리자")
                     .password(passwordEncoder.encode("1234"))
                     .email("admin"+"@nate.com")
                     .role(UserRole.ROLE_ADMIN)
@@ -34,7 +34,7 @@ public class DataInit extends DummyEntity{
                     .remainDays(15)
                     .build());
             userRepository.save(User.builder()
-                    .username("master")
+                    .username("마스터")
                     .password(passwordEncoder.encode("1234"))
                     .email("master"+"@nate.com")
                     .role(UserRole.ROLE_MASTER)
@@ -43,7 +43,7 @@ public class DataInit extends DummyEntity{
                     .remainDays(15)
                     .build());
             userRepository.save(User.builder()
-                    .username("oneyear")
+                    .username("일년차")
                     .password(passwordEncoder.encode("1234"))
                     .email("oneyear"+"@nate.com")
                     .role(UserRole.ROLE_USER)
@@ -52,7 +52,7 @@ public class DataInit extends DummyEntity{
                     .remainDays(0)
                     .build());
             userRepository.save(User.builder()
-                    .username("newcomer")
+                    .username("김신입")
                     .password(passwordEncoder.encode("1234"))
                     .email("newcomer"+"@nate.com")
                     .role(UserRole.ROLE_USER)
@@ -61,7 +61,7 @@ public class DataInit extends DummyEntity{
                     .remainDays(1)
                     .build());
             userRepository.save(User.builder()
-                    .username("jin")
+                    .username("김진진")
                     .password(passwordEncoder.encode("1234"))
                     .email("jin"+"@nate.com")
                     .role(UserRole.ROLE_MASTER)

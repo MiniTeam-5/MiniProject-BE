@@ -13,7 +13,8 @@ import java.lang.annotation.Target;
 @WithSecurityContext(factory = MyWithMockUserFactory.class)
 public @interface MyWithMockUser {
     long id() default 1L;
-    String username() default "cos";
+    String username() default "박코스";
+    String email() default "cos@nate.com";
     UserRole role() default UserRole.ROLE_USER;
     int remainDays() default 15;
 }
