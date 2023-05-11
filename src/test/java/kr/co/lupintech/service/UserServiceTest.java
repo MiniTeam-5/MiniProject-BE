@@ -70,7 +70,7 @@ public class UserServiceTest extends DummyEntity {
 
         // given
         UserRequest.JoinInDTO joinInDTO = new UserRequest.JoinInDTO();
-        joinInDTO.setUsername("cos");
+        joinInDTO.setUsername("박코스");
         joinInDTO.setPassword("1234");
         joinInDTO.setEmail("cos@nate.com");
         joinInDTO.setHireDate("2022-12-12");
@@ -79,7 +79,7 @@ public class UserServiceTest extends DummyEntity {
         Mockito.when(userRepository.findByUsername(any())).thenReturn(Optional.empty());
 
         // stub 2
-        User cos = newMockUser(1L, "cos", 15);
+        User cos = newMockUser(1L, "박코스", "cos@nate.com",15);
         Mockito.when(userRepository.save(any())).thenReturn(cos);
 
         // when
@@ -87,7 +87,7 @@ public class UserServiceTest extends DummyEntity {
 
         // then
         Assertions.assertThat(joinOutDTO.getId()).isEqualTo(1L);
-        Assertions.assertThat(joinOutDTO.getUsername()).isEqualTo("cos");
+        Assertions.assertThat(joinOutDTO.getUsername()).isEqualTo("박코스");
     }
 
     @Test
@@ -100,7 +100,7 @@ public class UserServiceTest extends DummyEntity {
         // stub
 
 
-        User cos = newMockUser(1L, "cos", 15);
+        User cos = newMockUser(1L, "박코스", "cos@nate.com", 15);
         MyUserDetails myUserDetails = new MyUserDetails(cos);
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 myUserDetails, myUserDetails.getPassword(), myUserDetails.getAuthorities()
@@ -125,7 +125,7 @@ public class UserServiceTest extends DummyEntity {
         // stub
 
 
-        User cos = newMockUser(1L, "cos", 15);
+        User cos = newMockUser(1L, "박코스", "cos@nate.com",15);
         Mockito.when(userRepository.findById(any())).thenReturn(Optional.of(cos));
 
         // when
@@ -133,7 +133,7 @@ public class UserServiceTest extends DummyEntity {
 
         // then
         Assertions.assertThat(detailOutDTO.getId()).isEqualTo(1L);
-        Assertions.assertThat(detailOutDTO.getUsername()).isEqualTo("cos");
+        Assertions.assertThat(detailOutDTO.getUsername()).isEqualTo("박코스");
         Assertions.assertThat(detailOutDTO.getEmail()).isEqualTo("cos@nate.com");
         Assertions.assertThat(detailOutDTO.getRole()).isEqualTo(UserRole.ROLE_USER);
     }

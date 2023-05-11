@@ -66,7 +66,7 @@ public class LeaveControllerUnitTest extends DummyEntity {
     @MockBean
     private MyUserDetails myUserDetails;
 
-    @MyWithMockUser(id = 1L, username = "cos", role = UserRole.ROLE_USER, remainDays = 15)
+    @MyWithMockUser(id = 1L, username = "박코스", role = UserRole.ROLE_USER, remainDays = 15)
     @Test
     public void apply_test() throws Exception {
         // 준비
@@ -77,7 +77,7 @@ public class LeaveControllerUnitTest extends DummyEntity {
         String requestBody = om.writeValueAsString(applyInDTO);
 
         // 가정해볼께
-        User user = newMockUser(1L,"cos", 14);
+        User user = newMockUser(1L,"박코스", "cos@nate.com", 14);
         Leave leave = newMockLeave(1L, user, LeaveType.valueOf("ANNUAL"), LocalDate.parse("2023-07-20"),
                 LocalDate.parse("2023-07-20"), 1);
         LeaveResponse.ApplyOutDTO applyOutDTO = new LeaveResponse.ApplyOutDTO(leave, user);
@@ -98,14 +98,14 @@ public class LeaveControllerUnitTest extends DummyEntity {
         resultActions.andExpect(status().isOk());
     }
 
-    @MyWithMockUser(id = 1L, username = "cos", role = UserRole.ROLE_USER, remainDays = 15)
+    @MyWithMockUser(id = 1L, username = "박코스", role = UserRole.ROLE_USER, remainDays = 15)
     @Test
     public void cancel_test() throws Exception {
         // given
         Long id = 1L;
 
         // stub
-        User user = newMockUser(1L,"cos", 9);
+        User user = newMockUser(1L,"박코스", "cos@nate.com", 9);
         LeaveResponse.CancelOutDTO cancelOutDTO = new LeaveResponse.CancelOutDTO(user);
         Mockito.when(leaveService.연차당직신청취소하기(any(), any())).thenReturn(cancelOutDTO);
 
@@ -130,7 +130,7 @@ public class LeaveControllerUnitTest extends DummyEntity {
         String requestBody = om.writeValueAsString(decideInDTO);
 
         // stub
-        User user = newMockUser(1L, "cos", 14);
+        User user = newMockUser(1L, "박코스", "cos@nate.com",14);
         LeaveResponse.DecideOutDTO decideOutDTO = new LeaveResponse.DecideOutDTO(user);
         Mockito.when(leaveService.연차당직결정하기(any())).thenReturn(decideOutDTO);
 
@@ -144,11 +144,11 @@ public class LeaveControllerUnitTest extends DummyEntity {
         resultActions.andExpect(jsonPath("$.data.remainDays").value(14));
     }
 
-    @MyWithMockUser(id = 1L, username = "cos", role = UserRole.ROLE_USER, remainDays = 15)
+    @MyWithMockUser(id = 1L, username = "박코스", role = UserRole.ROLE_USER, remainDays = 15)
     @Test
     public void getLeaveData_test() throws Exception {
         // 준비
-        User user = newMockUser(1L, "cos", 14);
+        User user = newMockUser(1L, "박코스", "cos@nate.com",14);
         Leave leave = newMockLeave(1L, user, LeaveType.valueOf("ANNUAL"), LocalDate.parse("2023-07-27"),
                 LocalDate.parse("2023-08-02"), 5);
         LeaveResponse.InfoOutDTO infoOutDTO = new LeaveResponse.InfoOutDTO(leave, user);
@@ -179,7 +179,7 @@ public class LeaveControllerUnitTest extends DummyEntity {
 
         // 검증
         resultActions.andExpect(jsonPath("$.data[0].userId").value(1L));
-        resultActions.andExpect(jsonPath("$.data[0].username").value("cos"));
+        resultActions.andExpect(jsonPath("$.data[0].username").value("박코스"));
         resultActions.andExpect(jsonPath("$.data[0].type").value("ANNUAL"));
         resultActions.andExpect(jsonPath("$.data[0].status").value("WAITING"));
         resultActions.andExpect(jsonPath("$.data[0].startDate").value("2023-07-27"));
@@ -191,12 +191,12 @@ public class LeaveControllerUnitTest extends DummyEntity {
         resultActions.andExpect(status().isOk());
     }
 
-    @MyWithMockUser(id = 1L, username = "cos", role = UserRole.ROLE_USER, remainDays = 15)
+    @MyWithMockUser(id = 1L, username = "박코스", role = UserRole.ROLE_USER, remainDays = 15)
     @Test
     public void getById_test() throws Exception {
         // 준비
         Long id = 1L;
-        User user = newMockUser(1L, "cos", 14);
+        User user = newMockUser(1L, "박코스", "cos@nate.com", 14);
         Leave leave = newMockLeave(1L, user, LeaveType.valueOf("ANNUAL"), LocalDate.parse("2023-07-20"),
                 LocalDate.parse("2023-07-21"), 2);
         LeaveResponse.InfoOutDTO infoOutDTO = new LeaveResponse.InfoOutDTO(leave, user);
@@ -216,7 +216,7 @@ public class LeaveControllerUnitTest extends DummyEntity {
 
         // 검증
         resultActions.andExpect(jsonPath("$.data[0].userId").value(1L));
-        resultActions.andExpect(jsonPath("$.data[0].username").value("cos"));
+        resultActions.andExpect(jsonPath("$.data[0].username").value("박코스"));
         resultActions.andExpect(jsonPath("$.data[0].type").value("ANNUAL"));
         resultActions.andExpect(jsonPath("$.data[0].status").value("WAITING"));
         resultActions.andExpect(jsonPath("$.data[0].startDate").value("2023-07-20"));

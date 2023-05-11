@@ -52,9 +52,9 @@ public class AlarmControllerTest {
 
     @BeforeEach
     public void setUp() {
-        userRepository.save(dummy.newUser("ssar", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
-        userRepository.save(dummy.newUser("cos", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
-        user = userRepository.save(dummy.newUser("dotori", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
+        userRepository.save(dummy.newUser("김쌀쌀", "ssar@nate.com",true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
+        userRepository.save(dummy.newUser("박코스", "cos@nate.com",true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
+        user = userRepository.save(dummy.newUser("도토리", "dotori@nate.com",true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
         em.clear();
     }
 

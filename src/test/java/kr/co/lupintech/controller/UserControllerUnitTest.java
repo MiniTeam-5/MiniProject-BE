@@ -66,7 +66,7 @@ public class UserControllerUnitTest extends DummyEntity {
     public void join_test() throws Exception {
         // 준비
         UserRequest.JoinInDTO joinInDTO = new UserRequest.JoinInDTO();
-        joinInDTO.setUsername("코스");
+        joinInDTO.setUsername("박코스");
         joinInDTO.setPassword("1234");
         joinInDTO.setEmail("cos@nate.com");
         joinInDTO.setHireDate("2022-12-12");
@@ -75,7 +75,7 @@ public class UserControllerUnitTest extends DummyEntity {
         // 가정해볼께
 
 
-        User cos = newMockUser(1L,"cos", 15);
+        User cos = newMockUser(1L,"박코스", "cos@nate.com",15);
         UserResponse.JoinOutDTO joinOutDTO = new UserResponse.JoinOutDTO(cos);
         Mockito.when(userService.회원가입(any())).thenReturn(joinOutDTO);
 
@@ -87,7 +87,7 @@ public class UserControllerUnitTest extends DummyEntity {
 
         // 검증해볼께
         resultActions.andExpect(jsonPath("$.data.id").value(1L));
-        resultActions.andExpect(jsonPath("$.data.username").value("cos"));
+        resultActions.andExpect(jsonPath("$.data.username").value("박코스"));
         resultActions.andExpect(status().isOk());
     }
 
@@ -124,7 +124,7 @@ public class UserControllerUnitTest extends DummyEntity {
     }
 
 
-    @MyWithMockUser(id = 1L, username = "cos", role = UserRole.ROLE_USER, remainDays = 15)
+    @MyWithMockUser(id = 1L, username = "박코스", email = "cos@nate.com",role = UserRole.ROLE_USER, remainDays = 15)
     @Test
     public void detail_test() throws Exception {
         // given
@@ -132,7 +132,7 @@ public class UserControllerUnitTest extends DummyEntity {
 
         // stub
 
-        User cos = newMockUser(1L,"cos", 15);
+        User cos = newMockUser(1L, "박코스", "cos@nate.com",15);
 
         UserResponse.DetailOutDTO detailOutDTO = new UserResponse.DetailOutDTO(cos);
         Mockito.when(userService.회원상세보기(any())).thenReturn(detailOutDTO);
@@ -144,7 +144,7 @@ public class UserControllerUnitTest extends DummyEntity {
         System.out.println("테스트 : " + responseBody);
 
         // then
-        resultActions.andExpect(jsonPath("$.data.username").value("cos"));
+        resultActions.andExpect(jsonPath("$.data.username").value("박코스"));
         resultActions.andExpect(jsonPath("$.data.email").value("cos@nate.com"));
         resultActions.andExpect(status().isOk());
     }
