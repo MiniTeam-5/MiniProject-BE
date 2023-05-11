@@ -53,7 +53,7 @@ include::{snippets}/{leave}/apply_duty_fail_not_one_day_test/http-request.adoc[]
 ===== Response Example
 include::{snippets}/{leave}/apply_duty_fail_not_one_day_test/http-response.adoc[]
 
-=== 연차/당직 신청 유효성 검사 실패
+=== 연차/당직 신청 유효성 검사 실패 (startDate와 endDate는 과거 불가)
 ===== Request Example
 include::{snippets}/{leave}/apply_fail_valid_test/http-request.adoc[]
 

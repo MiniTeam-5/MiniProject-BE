@@ -132,7 +132,7 @@ public class UserService {
             }
         }
         // 4. 프로필 사진 삭제 시
-        if (modifiedInDTO.getProfileToDelete() != null) {
+        if (modifiedInDTO.getProfileToDelete() != null && !modifiedInDTO.getProfileToDelete().equals("https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png")) {
            try{
                s3Service.delete(modifiedInDTO.getProfileToDelete());
                user.changeProfile("https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png");
