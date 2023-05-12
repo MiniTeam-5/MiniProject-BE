@@ -1,4 +1,4 @@
-package kr.co.lupintech.dto.manage;
+package kr.co.lupintech.dto.manager;
 
 import org.springframework.http.HttpStatus;
 

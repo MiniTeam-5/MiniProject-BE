@@ -1,6 +1,6 @@
 package kr.co.lupintech.core.dummy;
 
-import kr.co.lupintech.dto.manage.ManageUserDTO;
+import kr.co.lupintech.dto.manager.ManagerRequest;
 import kr.co.lupintech.model.alarm.Alarm;
 import kr.co.lupintech.model.leave.Leave;
 import kr.co.lupintech.model.leave.enums.LeaveStatus;
@@ -112,8 +112,8 @@ public class DummyEntity {
                 .build();
     }
 
-    public ManageUserDTO.ManageUserListDTO newMockChartUser(Long userId, UserRole role, String username, LocalDate hireDate, Integer remainDays, String profile){
-        return ManageUserDTO.ManageUserListDTO.builder()
+    public ManagerRequest.ManageUserListDTO newMockChartUser(Long userId, UserRole role, String username, LocalDate hireDate, Integer remainDays, String profile){
+        return ManagerRequest.ManageUserListDTO.builder()
                 .userId(userId)
                 .role(role)
                 .username(username)

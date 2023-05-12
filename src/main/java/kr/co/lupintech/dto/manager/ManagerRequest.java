@@ -1,4 +1,4 @@
-package kr.co.lupintech.dto.manage;
+package kr.co.lupintech.dto.manager;
 
 import lombok.*;
 import kr.co.lupintech.model.user.User;
@@ -7,25 +7,23 @@ import kr.co.lupintech.model.user.UserRole;
 import javax.validation.constraints.*;
 import java.time.LocalDate;
 
-@NoArgsConstructor
-@Getter @Setter
-public class ManageUserDTO {
+public class ManagerRequest {
 
-    @NotNull
-    private Long userId;
-    private Integer remainDays;
-
-    @Builder
-    public ManageUserDTO(Long userId, Integer remainDays) {
-        this.userId = userId;
-        this.remainDays = remainDays;
-    }
-    public ManageUserDTO toEntityOut(User user){
-        return ManageUserDTO.builder()
-                .userId(user.getId())
-                .remainDays(user.getRemainDays())
-                .build();
-    }
+//    @NotNull
+//    private Long userId;
+//    private Integer remainDays;
+//
+//    @Builder
+//    public ManagerRequest(Long userId, Integer remainDays) {
+//        this.userId = userId;
+//        this.remainDays = remainDays;
+//    }
+//    public ManagerRequest toEntityOut(User user){
+//        return ManagerRequest.builder()
+//                .userId(user.getId())
+//                .remainDays(user.getRemainDays())
+//                .build();
+//    }
 
 
     @Getter @Setter @NoArgsConstructor
@@ -104,23 +102,23 @@ public class ManageUserDTO {
     }
 
 
-    @NoArgsConstructor
+//    @NoArgsConstructor
     @Getter @Setter
     public static class MasterInDTO {
 
         @NotEmpty
         private UserRole role;
 
-        public MasterInDTO(UserRole role) {
-            this.role = role;
-        }
-
-        public User toEntityIn(Long fk) {
-            return User.builder()
-                    .id(fk)
-                    .role(role)
-                    .build();
-        }
+//        public MasterInDTO(UserRole role) {
+//            this.role = role;
+//        }
+//
+//        public User toEntityIn(Long fk) {
+//            return User.builder()
+//                    .id(fk)
+//                    .role(role)
+//                    .build();
+//        }
 
     }
     @NoArgsConstructor
@@ -138,7 +136,7 @@ public class ManageUserDTO {
             this.role = role;
         }
 
-        public ManageUserDTO.MasterOutDTO toEntityOut(User user) {
+        public ManagerRequest.MasterOutDTO toEntityOut(User user) {
             return MasterOutDTO.builder()
                     .userId (user.getId())
                     .role(user.getRole())
