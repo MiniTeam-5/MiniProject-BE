@@ -9,40 +9,14 @@ import java.time.LocalDate;
 
 public class ManagerRequest {
 
-//    @NotNull
-//    private Long userId;
-//    private Integer remainDays;
-//
-//    @Builder
-//    public ManagerRequest(Long userId, Integer remainDays) {
-//        this.userId = userId;
-//        this.remainDays = remainDays;
-//    }
-//    public ManagerRequest toEntityOut(User user){
-//        return ManagerRequest.builder()
-//                .userId(user.getId())
-//                .remainDays(user.getRemainDays())
-//                .build();
-//    }
+    @Getter @Setter
+    public static class AnnualInDTO{
 
-
-    @Getter @Setter @NoArgsConstructor
-    public static class AnnualRequestDTO{
-
-        // 아무값도 없을경우, default = 0
         @NotNull
         @Min(0)
-        @Max(100)
+        @Max(25)
         private Integer remainDays;
 
-        public AnnualRequestDTO(Integer remainDays) {
-            this.remainDays = remainDays;
-        }
-        public User toEntityIn() {
-            return User.builder()
-                    .remainDays(remainDays)
-                    .build();
-        }
     }
 
 
@@ -101,26 +75,14 @@ public class ManagerRequest {
         }
     }
 
-
-//    @NoArgsConstructor
     @Getter @Setter
     public static class MasterInDTO {
 
         @NotEmpty
         private UserRole role;
 
-//        public MasterInDTO(UserRole role) {
-//            this.role = role;
-//        }
-//
-//        public User toEntityIn(Long fk) {
-//            return User.builder()
-//                    .id(fk)
-//                    .role(role)
-//                    .build();
-//        }
-
     }
+
     @NoArgsConstructor
     @Getter @Setter
     public static class MasterOutDTO{

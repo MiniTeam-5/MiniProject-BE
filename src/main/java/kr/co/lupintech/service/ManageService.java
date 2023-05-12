@@ -22,41 +22,25 @@ public class ManageService {
 
     private final UserRepository userRepository;
 
-    private Integer pageSize;
 
-    // 회원 관리 페이지, 회원 정보 수정 ( 5/2 김형준 추가)
-//    @MyLog
-//    @Transactional
-//    public ManagerRequest 연차수정(Long id, ManagerRequest.AnnualRequestDTO annualRequestDTO) {
-//        ManagerRequest managerRequest = new ManagerRequest();
-//        User userPS = userRepository.findByStatusAndId(true,id)
-//                .orElseThrow(()->new Exception400("id", "해당 유저가 존재하지 않습니다"));
-//        // 정보 수정
-//        ManagerRequest.AnnualRequestDTO managePS = new ManagerRequest.AnnualRequestDTO(annualRequestDTO.getRemainDays());
-//        userPS.update(managePS.toEntityIn());
-//        return managerRequest.toEntityOut(userPS);
-//    } // 더티체킹
+    @MyLog
+    @Transactional
+    public void 연차수정(Long id, ManagerRequest.AnnualInDTO annualInDTO) {
+        User userPS = userRepository.findByStatusAndId(true,id)
+                .orElseThrow(()->new Exception400("id", "해당 유저가 존재하지 않습니다"));
+        // 정보 수정
+        userPS.setRemainDays(annualInDTO.getRemainDays());
+    }
 
     // role까지 변경가능
     @MyLog
     @Transactional
     public void 권한수정(Long id, ManagerRequest.MasterInDTO masterInDTO) {
-//        ManagerRequest.MasterOutDTO managePS = new ManagerRequest.MasterOutDTO();
-        System.out.println("2");
         User userPS = userRepository.findByStatusAndId(true, id)
                 .orElseThrow(()->new Exception400("id", "해당 유저가 존재하지 않습니다"));
         // 정보 수정
-        System.out.println("3");
-        System.out.println(userPS.getRole());
-        System.out.println("6");
         userPS.setRole(masterInDTO.getRole());
-        System.out.println("4");
-        System.out.println(masterInDTO.getRole());
-        System.out.println("5");
-        System.out.println(userPS.getRole());
-//        userPS.update(masterInDTO.toEntityIn(id));
-//        return managePS.toEntityOut(userPS);
-    } // 더티체킹
+    }
 
     // checkpoint : 유저 목록을 Page객체로 전달할것인가, List객체로 전달할 것인가.
     @MyLog

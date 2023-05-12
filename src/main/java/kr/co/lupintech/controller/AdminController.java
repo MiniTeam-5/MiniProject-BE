@@ -30,16 +30,22 @@ public class AdminController {
     private final LeaveService leaveService;
 
     // 회원 정보 변경 로직
-//    @PostMapping("/admin/annual/{id}")
-//    public ResponseEntity<?> annualUpdate(@PathVariable Long id, @RequestBody @Valid ManagerRequest.AnnualRequestDTO annualRequestDTO) throws JsonProcessingException {
-//
-//        // 1. 바꾸려는 회원정보가 있는지 확인 후 회원 정보 업데이트
-//            ManagerRequest manageUserDTOPS = manageService.연차수정(id, annualRequestDTO);
-//            ResponseDTO<?>responseDTO = new ResponseDTO<>(manageUserDTOPS);
-//
-//            return ResponseEntity.ok().body(responseDTO);
-//
-//    }
+    @PostMapping("/admin/annual/{id}")
+    public ResponseEntity<?> annualUpdate(@PathVariable Long id, @RequestBody @Valid ManagerRequest.AnnualInDTO annualInDTO) {
+        manageService.연차수정(id, annualInDTO);
+        ResponseDTO<?>responseDTO = new ResponseDTO<>();
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    // role까지 변경가능, master로 접근해야, role변경이 가능하다.
+    @PostMapping("/master/{id}")
+    public ResponseEntity<?> roleUpdate(@PathVariable Long id,@RequestBody ManagerRequest.MasterInDTO masterInDTO){
+
+        System.out.println("1");
+        manageService.권한수정(id, masterInDTO);
+        ResponseDTO<?> responseDTO = new ResponseDTO<>();
+        return ResponseEntity.ok(responseDTO);
+    }
 
     @GetMapping("/admin") //  /admin?page=5&size=20
     public ResponseEntity<?> userChart(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size) {
@@ -62,30 +68,4 @@ public class AdminController {
         ResponseDTO<List<LeaveResponse.InfoOutDTO>> responseDTO = new ResponseDTO<>(waitingLeaves);
         return ResponseEntity.ok().body(responseDTO);
     }
-
-    // role까지 변경가능, master로 접근해야, role변경이 가능하다.
-    @PostMapping("/master/{id}")
-    public ResponseEntity<?> roleUpdate(@PathVariable Long id,@RequestBody ManagerRequest.MasterInDTO masterInDTO){
-
-        System.out.println("1");
-        manageService.권한수정(id, masterInDTO);
-        ResponseDTO<?> responseDTO = new ResponseDTO<>();
-        return ResponseEntity.ok(responseDTO);
-    }
-//
-//    @PostMapping("/auth/leave/{id}/delete")
-//    public ResponseEntity<?> cancel(@PathVariable Long id, @AuthenticationPrincipal MyUserDetails myUserDetails){
-//        LeaveResponse.CancelOutDTO cancelOutDTO = leaveService.연차당직신청취소하기(id, myUserDetails.getUser().getId());
-//        ResponseDTO<?> responseDTO = new ResponseDTO<>(cancelOutDTO);
-//
-//        return ResponseEntity.ok(responseDTO);
-//    }
-//
-//    @PostMapping("/auth/leave/apply")
-//    public ResponseEntity<?> apply(@RequestBody @Valid LeaveRequest.ApplyInDTO applyInDTO, Errors errors, @AuthenticationPrincipal MyUserDetails myUserDetails){
-//        LeaveResponse.ApplyOutDTO applyOutDTO = leaveService.연차당직신청하기(applyInDTO, myUserDetails.getUser().getId());
-//        ResponseDTO<?> responseDTO = new ResponseDTO<>(applyOutDTO);
-//        return ResponseEntity.ok(responseDTO);
-//    }
-    //
 }
