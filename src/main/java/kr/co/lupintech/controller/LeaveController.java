@@ -1,10 +1,13 @@
 package kr.co.lupintech.controller;
 
+import com.amazonaws.auth.policy.Resource;
 import kr.co.lupintech.core.auth.session.MyUserDetails;
 import kr.co.lupintech.dto.leave.LeaveRequest;
 import kr.co.lupintech.dto.leave.LeaveResponse;
 import kr.co.lupintech.service.LeaveService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -58,5 +61,15 @@ public class LeaveController {
         LeaveResponse.DecideOutDTO decideOutDTO = leaveService.연차당직결정하기(decideInDTO);
         ResponseDTO<?> responseDTO = new ResponseDTO<>(decideOutDTO);
         return ResponseEntity.ok(responseDTO);
+    }
+
+    @GetMapping("/auth/leave/download")
+    public ResponseEntity<?> download(){
+        Resource resource = leaveService.엑셀다운로드();
+        String filename = "annual_leave_duty.xlsx"; // 다운로드할 파일 이름
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"") // 다운로드, 이름지정
+                .contentType(MediaType.APPLICATION_OCTET_STREAM) // 일반적인 이진 데이터
+                .body(resource);
     }
 }
