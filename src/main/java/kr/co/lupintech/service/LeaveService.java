@@ -224,6 +224,17 @@ public class LeaveService {
     }
 
     @Transactional(readOnly = true)
+    public List<LeaveResponse.InfoOutDTO> 모두의모든연차당직가져오기() {
+        List<Leave> leaves = leaveRepository.findAll();
+
+        List<LeaveResponse.InfoOutDTO> infoOutDTOList = leaves.stream()
+                .map(leave -> new LeaveResponse.InfoOutDTO(leave, leave.getUser()))
+                .collect(Collectors.toList());
+
+        return infoOutDTOList;
+    }
+
+    @Transactional(readOnly = true)
     public List<LeaveResponse.InfoOutDTO> 특정유저연차당직정보가져오기(Long userId) {
 
         // 특정 유저의 모든 연차/당직 정보 가져오기

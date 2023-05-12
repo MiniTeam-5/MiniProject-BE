@@ -1,0 +1,32 @@
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
+:alarm: alarm-controller-test
+
+= REST API
+:toc: left
+:toclevels: 2
+:source-highlighter: highlightjs
+
+== 알람API
+
+=== 알람 불러오기 성공
+===== Request Example
+include::{snippets}/{alarm}/get-user-alarms-test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{alarm}/get-user-alarms-test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{alarm}/get-user-alarms-test/curl-request.adoc[]
+
+=== 알람 불러오기 실패
+===== Request Example
+include::{snippets}/{alarm}/get-user-alarms-fail-unauthenticated-test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{alarm}/get-user-alarms-fail-unauthenticated-test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{alarm}/get-user-alarms-fail-unauthenticated-test/curl-request.adoc[]

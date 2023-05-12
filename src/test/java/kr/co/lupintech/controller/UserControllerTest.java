@@ -2,7 +2,10 @@ package kr.co.lupintech.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.lupintech.core.MyRestDoc;
+import kr.co.lupintech.core.auth.jwt.MyJwtProviderTest;
 import kr.co.lupintech.dto.user.UserRequest;
+import kr.co.lupintech.model.token.RefreshTokenEntity;
+import kr.co.lupintech.model.token.TokenRepository;
 import kr.co.lupintech.model.user.User;
 import kr.co.lupintech.model.user.UserRepository;
 import kr.co.lupintech.model.user.UserRole;
@@ -14,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.util.Pair;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -36,9 +40,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -65,6 +67,8 @@ public class UserControllerTest extends MyRestDoc {
     private EntityManager em;
     @Autowired
     private S3Service s3Service;
+    @Autowired
+    private TokenRepository tokenRepository;
 
     @BeforeEach
     public void setUp() {
@@ -624,6 +628,26 @@ public class UserControllerTest extends MyRestDoc {
         resultActions.andExpect(jsonPath("$.msg").value("serverError"));
         resultActions.andExpect(jsonPath("$.data").value("로그인 된 유저가 DB에 존재하지 않음"));
         resultActions.andExpect(status().is5xxServerError());
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @DisplayName("로그아웃 성공")
+    @Test
+    public void logoutTest() throws Exception {
+        // given
+        User user = userRepository.findByUsername("ssar").orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
+        String atoken = MyJwtProviderTest.testcreateAccess(user);
+        Pair<String, RefreshTokenEntity> pair = MyJwtProviderTest.testCreateRefresh();
+
+        tokenRepository.save(pair.getSecond());
+
+        // when
+        ResultActions resultActions = mvc.perform(post("/auth/logout")
+                .header(HEADER, atoken)
+                .header(HEADER_REFRESH, pair.getFirst()));
+
+        // then
+        resultActions.andExpect(status().isOk());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 }
