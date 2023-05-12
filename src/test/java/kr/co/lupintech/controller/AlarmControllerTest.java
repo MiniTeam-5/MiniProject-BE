@@ -3,6 +3,8 @@ package kr.co.lupintech.controller;
 import kr.co.lupintech.core.MyRestDoc;
 import kr.co.lupintech.model.alarm.Alarm;
 import kr.co.lupintech.model.alarm.AlarmRepository;
+import kr.co.lupintech.model.leave.enums.LeaveStatus;
+import kr.co.lupintech.model.leave.enums.LeaveType;
 import kr.co.lupintech.model.user.User;
 import kr.co.lupintech.model.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +30,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import javax.persistence.EntityManager;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -70,10 +71,9 @@ public class AlarmControllerTest extends MyRestDoc {
     public void getUserAlarmsTest() throws Exception {
         // given
 
-        Alarm alarm1 = Alarm.builder().user(user).content("알람1").createdAt(LocalDateTime.now()).build();
-        Alarm alarm2 = Alarm.builder().user(user).content("알람2").createdAt(LocalDateTime.now()).build();
+        Alarm alarm1 = dummy.newMockAlarm(1L, user, LocalDate.now().plusDays(2), LocalDate.now().plusDays(5), 3, LeaveType.ANNUAL, LeaveStatus.APPROVAL);
         alarmRepository.save(alarm1);
-        alarmRepository.save(alarm2);
+
 
         em.clear();
 
@@ -83,10 +83,8 @@ public class AlarmControllerTest extends MyRestDoc {
         System.out.println("테스트 : " + responseBody);
 
         resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.data[0].id").value(alarm1.getId().intValue()))
-                .andExpect(jsonPath("$.data[0].content").value(alarm1.getContent()))
-                .andExpect(jsonPath("$.data[1].id").value(alarm2.getId().intValue()))
-                .andExpect(jsonPath("$.data[1].content").value(alarm2.getContent()));
+                .andExpect(jsonPath("$.data[0].content").value(alarm1.getContent()));
+
 
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }

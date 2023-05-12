@@ -1,6 +1,8 @@
 package kr.co.lupintech.service;
 
 import kr.co.lupintech.model.alarm.Alarm;
+import kr.co.lupintech.model.leave.enums.LeaveStatus;
+import kr.co.lupintech.model.leave.enums.LeaveType;
 import kr.co.lupintech.model.user.User;
 import kr.co.lupintech.model.user.UserRepository;
 import org.junit.jupiter.api.Assertions;
@@ -45,11 +47,16 @@ public class AlarmServiceTest {
     @DisplayName("알람 DB저장")
     @Test
     public void saveAlarmTest() {
+
         // given
-        Alarm alarm = Alarm.builder()
-                .user(user)
-                .content("등록되었습니다")
-                .build();
+        Alarm alarm = dummy.newMockAlarm(
+                1L,
+                user,
+                LocalDate.now().plusDays(2),
+                LocalDate.now().plusDays(5),
+                3,
+                LeaveType.ANNUAL,
+                LeaveStatus.APPROVAL);
 
         // when
         Alarm result = alarmService.save(alarm);
