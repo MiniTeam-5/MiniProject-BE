@@ -52,7 +52,7 @@ public class MyJwtAuthorizationFilter extends BasicAuthenticationFilter {
                             myUserDetails.getAuthorities()
                     );
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            System.out.println("디버그 : 인증 객체 만들어짐");
+            //System.out.println("디버그 : 인증 객체 만들어짐");
         } catch (SignatureVerificationException sve) {
             log.error("토큰 검증 실패");
         } catch (TokenExpiredException tee) {
