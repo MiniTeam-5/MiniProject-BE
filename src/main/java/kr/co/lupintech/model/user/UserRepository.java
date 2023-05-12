@@ -1,5 +1,7 @@
 package kr.co.lupintech.model.user;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,6 +30,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "and u.hireDate > :date and day(u.hireDate) = :day")
     List<User> findNewByHireDate(@Param("date") LocalDate date, @Param("day") int day);
 
-    @Query("select u from User u where u.role IN :roles")
+    @Query("select u from User u where u.role in :roles")
     List<User> findByRoles(@Param("roles") Set<UserRole> roles);
+
+    @Query("select u from User u where u.status = true and u.username like %:query%") // 활성 상태인 것만 조회
+    Page<User> findAllByQuery(@Param("query") String query, Pageable pageable);
+
+    @Query("select u from User u where u.status = true") // 활성 상태인 것만 조회
+    Page<User> findAll(Pageable pageable);
 }
