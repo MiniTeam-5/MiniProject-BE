@@ -631,7 +631,7 @@ public class LeaveControllerTest extends MyRestDoc {
         // then
         resultActions.andExpect(jsonPath("$.status").value(200));
         resultActions.andExpect(jsonPath("$.msg").value("성공"));
-        resultActions.andExpect(jsonPath("$.data[0].username").value("ssar"));
+        resultActions.andExpect(jsonPath("$.data[0].username").value("김쌀쌀"));
         resultActions.andExpect(jsonPath("$.data[0].type").value("ANNUAL"));
         resultActions.andExpect(jsonPath("$.data[0].status").value("REJECTION"));
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
@@ -662,7 +662,7 @@ public class LeaveControllerTest extends MyRestDoc {
         // then
         resultActions.andExpect(jsonPath("$.status").value(200));
         resultActions.andExpect(jsonPath("$.msg").value("성공"));
-        resultActions.andExpect(jsonPath("$.data[0].username").value("ssar"));
+        resultActions.andExpect(jsonPath("$.data[0].username").value("김쌀쌀"));
         resultActions.andExpect(jsonPath("$.data[0].type").value("ANNUAL"));
         resultActions.andExpect(jsonPath("$.data[0].status").value("REJECTION"));
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
@@ -697,7 +697,7 @@ public class LeaveControllerTest extends MyRestDoc {
         resultActions.andExpect(status().isOk());
         resultActions.andExpect(jsonPath("$.status").value(200));
         resultActions.andExpect(jsonPath("$.msg").value("성공"));
-        resultActions.andExpect(jsonPath("$.data[0].username").value("ssar"));
+        resultActions.andExpect(jsonPath("$.data[0].username").value("김쌀쌀"));
         resultActions.andExpect(jsonPath("$.data[0].type").value("ANNUAL"));
         resultActions.andExpect(jsonPath("$.data[0].status").value("REJECTION"));
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);

@@ -64,8 +64,8 @@ public class SseControllerTest extends MyRestDoc {
     @BeforeEach
     public void setup() {
 
-        userRepository.save(dummy.newUser("con", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
-        userRepository.save(dummy.newUser("discon", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
+        userRepository.save(dummy.newUser("콘", "con@nate.com", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
+        userRepository.save(dummy.newUser("디스콘", "discon@nate.com",true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
 
         em.clear();
     }
