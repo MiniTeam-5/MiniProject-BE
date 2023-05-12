@@ -26,13 +26,6 @@ public class DummyEntity {
                 .build();
     }
 
-    public Alarm newAlarm(User user, String content){
-        return Alarm.builder()
-                .user(user)
-                .content(content)
-                .build();
-    }
-
     public Leave newLeave(User user, LeaveType type, LocalDate startDate, LocalDate endDate, Integer usingDays, LeaveStatus status){
         return Leave.builder()
                 .user(user)
@@ -103,11 +96,11 @@ public class DummyEntity {
                 .build();
     }
 
-    public Alarm newMockAlarm(Long id, User user, String content){
+    public Alarm newMockAlarm(Long id, User user, LocalDate startDate, LocalDate endDate, int usingDays, LeaveType type, LeaveStatus status){
         return Alarm.builder()
                 .id(id)
                 .user(user)
-                .content(content)
+                .content(user.getUsername()+","+startDate.toString()+","+endDate.toString()+","+usingDays+","+type+","+status)
                 .createdAt(LocalDateTime.now())
                 .build();
     }

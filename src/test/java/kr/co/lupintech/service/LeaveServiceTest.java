@@ -60,7 +60,7 @@ public class LeaveServiceTest extends DummyEntity {
         Mockito.when(userRepository.findById(any())).thenReturn(Optional.of(cos));
 
         // stub 2
-        Alarm alarm = newMockAlarm(1L, cos, "당직이 등록되었습니다.");
+        Alarm alarm = newMockAlarm(1L, cos, applyInDTO.getStartDate(), applyInDTO.getEndDate(), 1,LeaveType.DUTY, WAITING);
         Mockito.when(alarmRepository.save(any())).thenReturn(alarm);
 
         // stub 3
@@ -88,7 +88,7 @@ public class LeaveServiceTest extends DummyEntity {
         Mockito.when(userRepository.findById(any())).thenReturn(Optional.of(cos));
 
         // stub 2
-        Alarm alarm = newMockAlarm(1L, cos, "박코스님의 2023-07-20부터 2023-07-20까지, 총 1일의 연차 신청이 취소되었습니다.");
+        Alarm alarm = newMockAlarm(1L, cos, LocalDate.parse("2023-07-20"), LocalDate.parse("2023-07-20"), 1, LeaveType.ANNUAL, LeaveStatus.REJECTION);
         Mockito.when(alarmRepository.save(any())).thenReturn(alarm);
 
         // stub 3
@@ -112,7 +112,7 @@ public class LeaveServiceTest extends DummyEntity {
         Mockito.when(userRepository.findById(any())).thenReturn(Optional.of(cos));
 
         // stub 2
-        Alarm alarm = newMockAlarm(1L, cos, "cos님의 2023-07-20일 당직 신청이 취소되었습니다.");
+        Alarm alarm = newMockAlarm(1L, cos, LocalDate.parse("2023-07-20"), LocalDate.parse("2023-07-20"), 1, LeaveType.DUTY, REJECTION);
         Mockito.when(alarmRepository.save(any())).thenReturn(alarm);
 
         // stub 3
@@ -140,8 +140,7 @@ public class LeaveServiceTest extends DummyEntity {
         Mockito.when(leaveRepository.findById(any())).thenReturn(Optional.ofNullable(leave));
 
         // stub 2
-        Alarm alarm = newMockAlarm(1L, cos, cos.getUsername() + "님의 " + leave.getStartDate() + "부터 "
-                + leave.getEndDate() + "까지, 총 " + leave.getUsingDays() + "일의 연차 신청이 승인되었습니다.");
+        Alarm alarm = newMockAlarm(1L, cos, leave.getStartDate(), leave.getEndDate(), leave.getUsingDays(), LeaveType.ANNUAL, APPROVAL);
         Mockito.when(alarmRepository.save(any())).thenReturn(alarm);
 
         // when
