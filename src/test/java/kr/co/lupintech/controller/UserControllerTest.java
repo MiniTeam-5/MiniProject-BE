@@ -671,7 +671,7 @@ public class UserControllerTest extends MyRestDoc {
     @Test
     public void logoutTest() throws Exception {
         // given
-        User user = userRepository.findByUsername("ssar").orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
+        User user = userRepository.findByUsername("김쌀쌀").orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
         String atoken = MyJwtProviderTest.testcreateAccess(user);
         Pair<String, RefreshTokenEntity> pair = MyJwtProviderTest.testCreateRefresh();
 
