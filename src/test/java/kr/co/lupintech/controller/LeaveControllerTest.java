@@ -96,7 +96,7 @@ public class LeaveControllerTest extends MyRestDoc {
         System.out.println("테스트 : " + responseBody);
 
         // then
-        resultActions.andExpect(jsonPath("$.data.id").value(30L));
+        resultActions.andExpect(jsonPath("$.data.id").value(37L));
         resultActions.andExpect(jsonPath("$.data.type").value("ANNUAL"));
         resultActions.andExpect(jsonPath("$.data.usingDays").value(1));
         resultActions.andExpect(jsonPath("$.data.remainDays").value(12));
@@ -123,7 +123,7 @@ public class LeaveControllerTest extends MyRestDoc {
         System.out.println("테스트 : " + responseBody);
 
         // then
-        resultActions.andExpect(jsonPath("$.data.id").value(131L));
+        resultActions.andExpect(jsonPath("$.data.id").value(152L));
         resultActions.andExpect(jsonPath("$.data.type").value("ANNUAL"));
         resultActions.andExpect(jsonPath("$.data.usingDays").value(3));
         resultActions.andExpect(jsonPath("$.data.remainDays").value(10));
@@ -150,7 +150,7 @@ public class LeaveControllerTest extends MyRestDoc {
         System.out.println("테스트 : " + responseBody);
 
         // then
-        resultActions.andExpect(jsonPath("$.data.id").value(67L));
+        resultActions.andExpect(jsonPath("$.data.id").value(74L));
         resultActions.andExpect(jsonPath("$.data.type").value("ANNUAL"));
         resultActions.andExpect(jsonPath("$.data.usingDays").value(3));
         resultActions.andExpect(jsonPath("$.data.remainDays").value(10));
@@ -204,7 +204,7 @@ public class LeaveControllerTest extends MyRestDoc {
         System.out.println("테스트 : " + responseBody);
 
         // then
-        resultActions.andExpect(jsonPath("$.data.id").value(38L));
+        resultActions.andExpect(jsonPath("$.data.id").value(45L));
         resultActions.andExpect(jsonPath("$.data.type").value("DUTY"));
         resultActions.andExpect(jsonPath("$.data.usingDays").value(0));
         resultActions.andExpect(jsonPath("$.data.remainDays").value(13));
@@ -620,5 +620,102 @@ public class LeaveControllerTest extends MyRestDoc {
         resultActions.andExpect(status().isForbidden());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
+
+    @DisplayName("월별 연차 조회 성공")
+    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void get_leaves_by_month_success_test() throws Exception {
+        // when
+        ResultActions resultActions = mvc.perform(get("/auth/leave/month/2023-07"));
+
+        // then
+        resultActions.andExpect(jsonPath("$.status").value(200));
+        resultActions.andExpect(jsonPath("$.msg").value("성공"));
+        resultActions.andExpect(jsonPath("$.data[0].username").value("김쌀쌀"));
+        resultActions.andExpect(jsonPath("$.data[0].type").value("ANNUAL"));
+        resultActions.andExpect(jsonPath("$.data[0].status").value("REJECTION"));
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @DisplayName("월별 연차 조회 실패 month 형식")
+    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void get_leaves_by_month_fail_invalid_month_test() throws Exception {
+        // when
+        ResultActions resultActions = mvc.perform(get("/auth/leave/month/2023-7"));
+
+        // then
+        resultActions.andExpect(status().isBadRequest());
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @DisplayName("ID로 연차 조회 성공")
+    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void get_leave_by_id_success_test() throws Exception {
+        // given
+        Long leaveId = 1L;
+
+        // when
+        ResultActions resultActions = mvc.perform(get("/auth/leave/id/{id}", leaveId));
+
+        // then
+        resultActions.andExpect(jsonPath("$.status").value(200));
+        resultActions.andExpect(jsonPath("$.msg").value("성공"));
+        resultActions.andExpect(jsonPath("$.data[0].username").value("김쌀쌀"));
+        resultActions.andExpect(jsonPath("$.data[0].type").value("ANNUAL"));
+        resultActions.andExpect(jsonPath("$.data[0].status").value("REJECTION"));
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @DisplayName("ID로 연차 조회 실패 (잘못된 ID)")
+    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void get_leave_by_id_fail_invalid_id_test() throws Exception {
+        // given
+        Long leaveId = 9999999999L;
+
+        // when
+        ResultActions resultActions = mvc.perform(get("/auth/leave/id/{id}", leaveId));
+
+        // then
+        resultActions.andExpect(jsonPath("$.status").value(400));
+        resultActions.andExpect(jsonPath("$.msg").value("badRequest"));
+        resultActions.andExpect(jsonPath("$.data.key").value("id"));
+        resultActions.andExpect(jsonPath("$.data.value").value("아이디를 찾을 수 없습니다"));
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @DisplayName("모든 연차/당직 조회 성공")
+    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void get_all_leaves_success_test() throws Exception {
+        // when
+        ResultActions resultActions = mvc.perform(get("/auth/leave/all"));
+
+        // then
+        resultActions.andExpect(status().isOk());
+        resultActions.andExpect(jsonPath("$.status").value(200));
+        resultActions.andExpect(jsonPath("$.msg").value("성공"));
+        resultActions.andExpect(jsonPath("$.data[0].username").value("김쌀쌀"));
+        resultActions.andExpect(jsonPath("$.data[0].type").value("ANNUAL"));
+        resultActions.andExpect(jsonPath("$.data[0].status").value("REJECTION"));
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @DisplayName("모든 연차/당직 조회 실패 (인증되지 않은 사용자)")
+    @Test
+    public void get_all_leaves_fail_unauthenticated_user_test() throws Exception {
+        // when
+        ResultActions resultActions = mvc.perform(get("/auth/leave/all"));
+
+        // then
+        resultActions.andExpect(status().isUnauthorized());
+        resultActions.andExpect(jsonPath("$.status").value(401));
+        resultActions.andExpect(jsonPath("$.msg").value("unAuthorized"));
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+
 }
 

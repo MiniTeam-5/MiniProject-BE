@@ -113,89 +113,60 @@ public class AdminControllerUnitTest extends DummyEntity{
 //        resultActions.andExpect(status().isOk());
 //    }
 
-
-    @MyWithMockUser(id = 10L, username = "김젤다", role = UserRole.ROLE_ADMIN)
-    @Test
-    public void userChart_test() throws Exception {
-
-        // Given
-        String img = "img";
-        int expectedPageSize = 3;
-        List<ManagerRequest.ManageUserListDTO> userList = new ArrayList<>();
-        ManagerRequest.ManageUserListDTO userPS1 = newMockChartUser(1L, UserRole.ROLE_USER,"김감자", LocalDate.of(2023, 5, 10),2,img);
-        ManagerRequest.ManageUserListDTO userPS2 = newMockChartUser(2L,UserRole.ROLE_USER,"이숙자", LocalDate.of(2023, 5, 10),2,img);
-        ManagerRequest.ManageUserListDTO userPS3 = newMockChartUser(3L,UserRole.ROLE_USER,"이나나", LocalDate.of(2023, 5, 10),2,img);
-        ManagerRequest.ManageUserListDTO userPS4 = newMockChartUser(4L,UserRole.ROLE_USER,"남궁포", LocalDate.of(2023, 5, 10),2,img);
-        ManagerRequest.ManageUserListDTO userPS5 = newMockChartUser(5L,UserRole.ROLE_USER,"김보라", LocalDate.of(2023, 5, 10),2,img);
-        ManagerRequest.ManageUserListDTO userPS6 = newMockChartUser(6L,UserRole.ROLE_USER,"김젤다", LocalDate.of(2023, 5, 10),2,img);
-        ManagerRequest.ManageUserListDTO userPS7 = newMockChartUser(7L,UserRole.ROLE_USER,"이링크", LocalDate.of(2023, 5, 10),2,img);
-        ManagerRequest.ManageUserListDTO userPS8 = newMockChartUser(8L,UserRole.ROLE_USER,"이리발", LocalDate.of(2023, 5, 10),2,img);
-
-
-        Page<ManagerRequest.ManageUserListDTO> userListPG = new PageImpl<>(Arrays.asList(userPS1, userPS2, userPS3, userPS4, userPS5, userPS6, userPS7, userPS8));
-
-        Mockito.when(manageService.회원목록보기(any())).thenReturn(userListPG);
-
-        // when
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/admin")
-                        .param("page", "0")
-                        .param("size", "3")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        int pageValue = Integer.parseInt(mvcResult.getRequest().getParameter("page"));
-        int sizeValue = Integer.parseInt(mvcResult.getRequest().getParameter("size"));
-
-        System.out.println(pageValue+ " " + sizeValue);
-
-
-        String responseJson = mvcResult.getResponse().getContentAsString();
-        JSONObject responseObject = new JSONObject(responseJson);
-        JSONArray contentArray = responseObject.getJSONObject("data").getJSONArray("content");
-
-
-
-        // Then
-        assertEquals(expectedPageSize,responseObject.getInt("size"));
-        assertEquals(1L, contentArray.getJSONObject(0).getLong("userId"));
-        assertEquals("ROLE_USER", contentArray.getJSONObject(0).getString("role"));
-        assertEquals("김감자", contentArray.getJSONObject(0).getString("username"));
-        assertEquals("2023-05-10", contentArray.getJSONObject(0).getString("hireDate"));
-        assertEquals(2L, contentArray.getJSONObject(1).getLong("userId"));
-        assertEquals("ROLE_USER", contentArray.getJSONObject(1).getString("role"));
-        assertEquals("이숙자", contentArray.getJSONObject(1).getString("username"));
-        assertEquals("2023-05-10", contentArray.getJSONObject(1).getString("hireDate"));
-
-
-    }
-
-
-//    @MyWithMockUser(id = 2L, username = "김쌀쌀", role = UserRole.ROLE_MASTER)
+//    @MyWithMockUser(id = 10L, username = "김젤다", role = UserRole.ROLE_ADMIN)
 //    @Test
-//    public void roleUpdate_test() throws Exception{
-//        // given
-//        Long id = 1L;
-//        ManagerRequest.MasterInDTO masterIn = new ManagerRequest.MasterInDTO();
-//        masterIn.setRole(UserRole.ROLE_ADMIN);
-//        String requestBody = om.writeValueAsString(masterIn);
+//    public void userChart_test() throws Exception {
 //
-//        // stub
-//        User ssar = newMockUserRole(1L,"김속자","sockja@nate.com", 5, UserRole.ROLE_ADMIN);
-//        ManagerRequest.MasterOutDTO masterOutDTO = new ManagerRequest.MasterOutDTO().toEntityOut(ssar);
-//        Mockito.when(manageService.권한수정(any(Long.class), any(ManagerRequest.MasterInDTO.class))).thenReturn(masterOutDTO);
+//        // Given
+//        String img = "img";
+//        int expectedPageSize = 3;
+//        List<ManagerRequest.ManageUserListDTO> userList = new ArrayList<>();
+//        ManagerRequest.ManageUserListDTO userPS1 = newMockChartUser(1L, UserRole.ROLE_USER,"김감자", LocalDate.of(2023, 5, 10),2,img);
+//        ManagerRequest.ManageUserListDTO userPS2 = newMockChartUser(2L,UserRole.ROLE_USER,"이숙자", LocalDate.of(2023, 5, 10),2,img);
+//        ManagerRequest.ManageUserListDTO userPS3 = newMockChartUser(3L,UserRole.ROLE_USER,"이나나", LocalDate.of(2023, 5, 10),2,img);
+//        ManagerRequest.ManageUserListDTO userPS4 = newMockChartUser(4L,UserRole.ROLE_USER,"남궁포", LocalDate.of(2023, 5, 10),2,img);
+//        ManagerRequest.ManageUserListDTO userPS5 = newMockChartUser(5L,UserRole.ROLE_USER,"김보라", LocalDate.of(2023, 5, 10),2,img);
+//        ManagerRequest.ManageUserListDTO userPS6 = newMockChartUser(6L,UserRole.ROLE_USER,"김젤다", LocalDate.of(2023, 5, 10),2,img);
+//        ManagerRequest.ManageUserListDTO userPS7 = newMockChartUser(7L,UserRole.ROLE_USER,"이링크", LocalDate.of(2023, 5, 10),2,img);
+//        ManagerRequest.ManageUserListDTO userPS8 = newMockChartUser(8L,UserRole.ROLE_USER,"이리발", LocalDate.of(2023, 5, 10),2,img);
+//
+//
+//        Page<ManagerRequest.ManageUserListDTO> userListPG = new PageImpl<>(Arrays.asList(userPS1, userPS2, userPS3, userPS4, userPS5, userPS6, userPS7, userPS8));
+//
+//        Mockito.when(manageService.회원목록보기(any())).thenReturn(userListPG);
 //
 //        // when
-//        ResultActions resultActions = mvc
-//                .perform(post("/master/"+id)
-//                                .content(requestBody).contentType(MediaType.APPLICATION_JSON));
-//        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-//        System.out.println("테스트 : "+responseBody);
+//        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/admin")
+//                        .param("page", "0")
+//                        .param("size", "3")
+//                        .accept(MediaType.APPLICATION_JSON))
+//                .andExpect(status().isOk())
+//                .andReturn();
 //
-//        // then
-//        resultActions.andExpect(jsonPath("$.data.userId").value(1L));
-//        resultActions.andExpect(jsonPath("$.data.role").value("ROLE_ADMIN"));
-//        resultActions.andExpect(status().isOk());
+//        int pageValue = Integer.parseInt(mvcResult.getRequest().getParameter("page"));
+//        int sizeValue = Integer.parseInt(mvcResult.getRequest().getParameter("size"));
+//
+//        System.out.println(pageValue+ " " + sizeValue);
+//
+//
+//        String responseJson = mvcResult.getResponse().getContentAsString();
+//        JSONObject responseObject = new JSONObject(responseJson);
+//        JSONArray contentArray = responseObject.getJSONObject("data").getJSONArray("content");
+//
+//
+//
+//        // Then
+//        assertEquals(expectedPageSize,responseObject.getInt("size"));
+//        assertEquals(1L, contentArray.getJSONObject(0).getLong("userId"));
+//        assertEquals("ROLE_USER", contentArray.getJSONObject(0).getString("role"));
+//        assertEquals("김감자", contentArray.getJSONObject(0).getString("username"));
+//        assertEquals("2023-05-10", contentArray.getJSONObject(0).getString("hireDate"));
+//        assertEquals(2L, contentArray.getJSONObject(1).getLong("userId"));
+//        assertEquals("ROLE_USER", contentArray.getJSONObject(1).getString("role"));
+//        assertEquals("이숙자", contentArray.getJSONObject(1).getString("username"));
+//        assertEquals("2023-05-10", contentArray.getJSONObject(1).getString("hireDate"));
+//
+//
 //    }
 
     @MyWithMockUser(id = 1L, username = "박코스", role = UserRole.ROLE_ADMIN)

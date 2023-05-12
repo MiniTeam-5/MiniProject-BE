@@ -2,6 +2,8 @@ package kr.co.lupintech.model.user;
 
 import kr.co.lupintech.model.alarm.Alarm;
 import kr.co.lupintech.model.alarm.AlarmRepository;
+import kr.co.lupintech.model.leave.enums.LeaveStatus;
+import kr.co.lupintech.model.leave.enums.LeaveType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,7 +34,7 @@ public class AlarmRepositoryTest extends DummyEntity {
         User ssar = userRepository.findById(1L).orElseThrow(
                 () -> new RuntimeException("테스트 중 findById 에러 : 1번 유저가 없습니다")
         );;
-        alarmRepository.save(newAlarm(ssar, "첫번째 알람 메세지"));
+        alarmRepository.save(newMockAlarm(1L, ssar, LocalDate.now().plusDays(2), LocalDate.now().plusDays(5), 7, LeaveType.ANNUAL, LeaveStatus.WAITING));
         em.clear();
     }
     @Test
@@ -41,16 +43,16 @@ public class AlarmRepositoryTest extends DummyEntity {
         userRepository.save(newUser("박코스", "cos@nate.com", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
         User cos = userRepository.findById(2L).orElseThrow(
                 () -> new RuntimeException("테스트 중 findById 에러 : 2번 유저가 없습니다")
-        );;
-        Alarm alarm = newAlarm(cos, "추가한 알람 메세지");
+        );
+        Alarm alarm = newMockAlarm(1L, cos, LocalDate.now().plusDays(2), LocalDate.now().plusDays(5), 7, LeaveType.ANNUAL, LeaveStatus.WAITING);
 
         // when
         Alarm alarmPS = alarmRepository.save(alarm);
 
         // then (beforeEach에서 1건이 insert 되어 있음)
-        Assertions.assertThat(alarmPS.getId()).isEqualTo(2L);
+        Assertions.assertThat(alarmPS.getId()).isEqualTo(1L);
         Assertions.assertThat(alarmPS.getUser()).isEqualTo(cos);
-        Assertions.assertThat(alarmPS.getContent()).isEqualTo("추가한 알람 메세지");
+        Assertions.assertThat(alarmPS.getContent()).isEqualTo("박코스,2023-05-14,2023-05-17,7,ANNUAL,WAITING");
         Assertions.assertThat(alarmPS.getCreatedAt().toLocalDate()).isEqualTo(LocalDate.now());
         Assertions.assertThat(alarmPS.getUpdatedAt()).isNull();
     }

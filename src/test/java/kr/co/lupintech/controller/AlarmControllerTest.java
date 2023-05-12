@@ -1,7 +1,10 @@
 package kr.co.lupintech.controller;
 
+import kr.co.lupintech.core.MyRestDoc;
 import kr.co.lupintech.model.alarm.Alarm;
 import kr.co.lupintech.model.alarm.AlarmRepository;
+import kr.co.lupintech.model.leave.enums.LeaveStatus;
+import kr.co.lupintech.model.leave.enums.LeaveType;
 import kr.co.lupintech.model.user.User;
 import kr.co.lupintech.model.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,31 +12,35 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import org.springframework.security.test.context.support.TestExecutionEvent;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import kr.co.lupintech.core.dummy.DummyEntity;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 
 import javax.persistence.EntityManager;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @DisplayName("알람 API")
+@AutoConfigureRestDocs(uriScheme = "http", uriHost = "localhost", uriPort = 8080)
 @ActiveProfiles("test")
+@Sql("classpath:db/teardown.sql")
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
-public class AlarmControllerTest {
+public class AlarmControllerTest extends MyRestDoc {
 
     private DummyEntity dummy = new DummyEntity();
     @Autowired
@@ -64,10 +71,9 @@ public class AlarmControllerTest {
     public void getUserAlarmsTest() throws Exception {
         // given
 
-        Alarm alarm1 = Alarm.builder().user(user).content("알람1").createdAt(LocalDateTime.now()).build();
-        Alarm alarm2 = Alarm.builder().user(user).content("알람2").createdAt(LocalDateTime.now()).build();
+        Alarm alarm1 = dummy.newMockAlarm(1L, user, LocalDate.now().plusDays(2), LocalDate.now().plusDays(5), 3, LeaveType.ANNUAL, LeaveStatus.APPROVAL);
         alarmRepository.save(alarm1);
-        alarmRepository.save(alarm2);
+
 
         em.clear();
 
@@ -77,9 +83,23 @@ public class AlarmControllerTest {
         System.out.println("테스트 : " + responseBody);
 
         resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.data[0].id").value(alarm1.getId().intValue()))
-                .andExpect(jsonPath("$.data[0].content").value(alarm1.getContent()))
-                .andExpect(jsonPath("$.data[1].id").value(alarm2.getId().intValue()))
-                .andExpect(jsonPath("$.data[1].content").value(alarm2.getContent()));
+                .andExpect(jsonPath("$.data[0].content").value(alarm1.getContent()));
+
+
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
+
+    @DisplayName("알람 불러오기 실패 (인증되지 않은 사용자)")
+    @Test
+    public void getUserAlarmsFailUnauthenticatedTest() throws Exception {
+        // when
+        ResultActions resultActions = mvc.perform(get("/auth/alarm"));
+
+        // then
+        resultActions.andExpect(status().isUnauthorized());
+        resultActions.andExpect(jsonPath("$.status").value(401));
+        resultActions.andExpect(jsonPath("$.msg").value("unAuthorized"));
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
 }

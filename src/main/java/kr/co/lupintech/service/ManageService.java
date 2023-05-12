@@ -1,10 +1,12 @@
 package kr.co.lupintech.service;
 
 import kr.co.lupintech.dto.manager.ManagerRequest;
+import kr.co.lupintech.core.annotation.MyErrorLog;
+import kr.co.lupintech.dto.PageDTO;
+import kr.co.lupintech.dto.manage.ManageResponse;
 import kr.co.lupintech.model.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,9 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class ManageService {
-
     private final UserRepository userRepository;
-
 
     @MyLog
     @Transactional
@@ -42,17 +42,15 @@ public class ManageService {
         userPS.setRole(masterInDTO.getRole());
     }
 
-    // checkpoint : 유저 목록을 Page객체로 전달할것인가, List객체로 전달할 것인가.
-    @MyLog
-    @Transactional(readOnly = true)
-    public Page<ManagerRequest.ManageUserListDTO> 회원목록보기(Pageable pageable){
+    @MyErrorLog
+    @Transactional
+    public PageDTO<ManageResponse.UserOutDTO, User> 사원검색(String query, Pageable pageable) {
+        Page<User> userPG = query.isBlank() ? // 검색할 query가 없으면 전체 목록 조회(퇴사한 회원은 조회x)
+                userRepository.findAll(pageable) : userRepository.findAllByQuery(query, pageable);
 
-        ManagerRequest.ManageUserListDTO manageUserListDTO = new ManagerRequest.ManageUserListDTO();
-        List<User> userList = userRepository.findAll();
-
-        Page<ManagerRequest.ManageUserListDTO> usersPG = new PageImpl<>(userList.stream()
-                .map(user -> manageUserListDTO.toEntityOut(user))
-                .collect(Collectors.toList()), pageable, userList.size());
-        return usersPG;
+        List<ManageResponse.UserOutDTO> content = userPG.getContent().stream()
+                .map(user -> new ManageResponse.UserOutDTO(user))
+                .collect(Collectors.toList());
+        return new PageDTO<>(content, userPG);
     }
 }
