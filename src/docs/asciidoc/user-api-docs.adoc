@@ -61,6 +61,16 @@ include::{snippets}/{user}/login_fail_un_authorized_test/http-response.adoc[]
 ===== Curl
 include::{snippets}/{user}/login_fail_un_authorized_test/curl-request.adoc[]
 
+=== 로그아웃 성공
+===== Request Example
+include::{snippets}/{user}/logout-test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{user}/logout-test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{user}/logout-test/curl-request.adoc[]
+
 === 회원상세보기 (성공)
 ===== Request Example
 include::{snippets}/{user}/detail_test/http-request.adoc[]

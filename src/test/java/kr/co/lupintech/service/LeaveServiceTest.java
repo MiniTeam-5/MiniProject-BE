@@ -56,7 +56,7 @@ public class LeaveServiceTest extends DummyEntity {
         applyInDTO.setEndDate(LocalDate.parse("2023-07-20"));
 
         // stub 1
-        User cos = newMockUser(1L, "cos", 15);
+        User cos = newMockUser(1L, "박코스", "cos@nate.com", 15);
         Mockito.when(userRepository.findById(any())).thenReturn(Optional.of(cos));
 
         // stub 2
@@ -84,11 +84,11 @@ public class LeaveServiceTest extends DummyEntity {
         Long id = 1L;
 
         // stub 1
-        User cos = newMockUser(1L, "cos", 8);
+        User cos = newMockUser(1L, "박코스", "cos@nate.com",8);
         Mockito.when(userRepository.findById(any())).thenReturn(Optional.of(cos));
 
         // stub 2
-        Alarm alarm = newMockAlarm(1L, cos, "cos님의 2023-07-20부터 2023-07-20까지, 총 1일의 연차 신청이 취소되었습니다.");
+        Alarm alarm = newMockAlarm(1L, cos, "박코스님의 2023-07-20부터 2023-07-20까지, 총 1일의 연차 신청이 취소되었습니다.");
         Mockito.when(alarmRepository.save(any())).thenReturn(alarm);
 
         // stub 3
@@ -108,7 +108,7 @@ public class LeaveServiceTest extends DummyEntity {
         Long id = 1L;
 
         // stub 1
-        User cos = newMockUser(1L, "cos", 8);
+        User cos = newMockUser(1L, "박코스", "cos@nate.com",8);
         Mockito.when(userRepository.findById(any())).thenReturn(Optional.of(cos));
 
         // stub 2
@@ -135,7 +135,7 @@ public class LeaveServiceTest extends DummyEntity {
         decideInDTO.setStatus(APPROVAL);
 
         // stub 1
-        User cos = newMockUser(1L, "cos", 14);
+        User cos = newMockUser(1L, "박코스", "cos@nate.com",14);
         Leave leave = newMockLeave(1L, cos, LeaveType.ANNUAL, LocalDate.parse("2023-07-20"), LocalDate.parse("2023-07-20"), 0);
         Mockito.when(leaveRepository.findById(any())).thenReturn(Optional.ofNullable(leave));
 
@@ -154,9 +154,9 @@ public class LeaveServiceTest extends DummyEntity {
     @Test
     public void 모든유저특정월기준정보_Test() {
 
-        User user1 = User.builder().id(1L).username("dotori").build();
-        User user2 = User.builder().id(2L).username("tomato").build();
-        User user3 = User.builder().id(3L).username("strawberry").build();
+        User user1 = User.builder().id(1L).username("도토리").build();
+        User user2 = User.builder().id(2L).username("토마토").build();
+        User user3 = User.builder().id(3L).username("김딸기").build();
 
         Leave leave1 = Leave.builder()
                 .user(user1)
@@ -210,8 +210,8 @@ public class LeaveServiceTest extends DummyEntity {
     public void 상태선택연차당직정보가져오기_Test() {
 
         // given
-        User user1 = User.builder().id(1L).username("dotori").build();
-        User user2 = User.builder().id(2L).username("tomato").build();
+        User user1 = User.builder().id(1L).username("도토리").build();
+        User user2 = User.builder().id(2L).username("토마토").build();
 
         Leave leave1 = Leave.builder()
                 .user(user1)

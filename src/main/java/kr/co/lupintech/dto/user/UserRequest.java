@@ -27,7 +27,7 @@ public class UserRequest {
     @Setter
     @Getter
     public static class JoinInDTO {
-        @Pattern(regexp = "^[가-힣]{2,10}$", message = "이름은 2~20자 이내로 작성해주세요")
+        @Pattern(regexp = "^[가-힣]{2,10}$", message = "이름은 한글로 2~20자 이내로 작성해주세요")
         @NotEmpty
         private String username;
 
@@ -53,6 +53,7 @@ public class UserRequest {
                     .role(ROLE_USER)
                     .status(true)
                     .remainDays(15)
+                    .profile("https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png")
                     .build();
         }
     }
@@ -65,6 +66,7 @@ public class UserRequest {
         @NotEmpty
         private String email;
 
+        @Pattern(regexp = "^[가-힣]{2,10}$", message = "이름은 한글로 2~20자 이내로 작성해주세요")
         @NotEmpty
         private String username;
 

@@ -38,7 +38,7 @@ public class AlarmServiceTest {
 
     @BeforeEach
     public void setUp() {
-        user = userRepository.save(dummy.newUser("nas", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
+        user = userRepository.save(dummy.newUser("김나스", "nas@nate.com", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
         em.clear();
     }
 

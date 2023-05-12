@@ -53,7 +53,7 @@ include::{snippets}/{leave}/apply_duty_fail_not_one_day_test/http-request.adoc[]
 ===== Response Example
 include::{snippets}/{leave}/apply_duty_fail_not_one_day_test/http-response.adoc[]
 
-=== 연차/당직 신청 유효성 검사 실패
+=== 연차/당직 신청 유효성 검사 실패 (startDate와 endDate는 과거 불가)
 ===== Request Example
 include::{snippets}/{leave}/apply_fail_valid_test/http-request.adoc[]
 
@@ -166,3 +166,45 @@ include::{snippets}/{leave}/decide_fail_not_admin_or_master_test/http-request.ad
 
 ===== Response Example
 include::{snippets}/{leave}/decide_fail_not_admin_or_master_test/http-response.adoc[]
+
+== 월별 연차/당직 조회 API
+
+=== 월별 연차 조회 성공
+===== Request Example
+include::{snippets}/{leave}/get_leaves_by_month_success_test/http-request.adoc[]
+===== Response Example
+include::{snippets}/{leave}/get_leaves_by_month_success_test/http-response.adoc[]
+
+=== 월별 연차 조회 실패
+===== Request Example
+include::{snippets}/{leave}/get_leaves_by_month_fail_invalid_month_test/http-request.adoc[]
+===== Response Example
+include::{snippets}/{leave}/get_leaves_by_month_fail_invalid_month_test/http-response.adoc[]
+
+== ID로 연차/당직 조회 API
+
+=== ID로 연차 조회 성공
+===== Request Example
+include::{snippets}/{leave}/get_leave_by_id_success_test/http-request.adoc[]
+===== Response Example
+include::{snippets}/{leave}/get_leave_by_id_success_test/http-response.adoc[]
+
+=== ID로 연차 조회 실패 (잘못된 ID)
+===== Request Example
+include::{snippets}/{leave}/get_leave_by_id_fail_invalid_id_test/http-request.adoc[]
+===== Response Example
+include::{snippets}/{leave}/get_leave_by_id_fail_invalid_id_test/http-response.adoc[]
+
+== 모든 연차/당직 조회 API
+
+=== 모든 연차/당직 조회 성공
+===== Request Example
+include::{snippets}/{leave}/get_all_leaves_success_test/http-request.adoc[]
+===== Response Example
+include::{snippets}/{leave}/get_all_leaves_success_test/http-response.adoc[]
+
+=== 모든 연차/당직 조회 실패 (인증되지 않은 사용자)
+===== Request Example
+include::{snippets}/{leave}/get_all_leaves_fail_unauthenticated_user_test/http-request.adoc[]
+===== Response Example
+include::{snippets}/{leave}/get_all_leaves_fail_unauthenticated_user_test/http-response.adoc[]

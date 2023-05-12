@@ -1,0 +1,32 @@
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
+:ref: refresh-controller-test
+
+= REST API
+:toc: left
+:toclevels: 2
+:source-highlighter: highlightjs
+
+
+== 리프레쉬토큰
+=== 요청 (성공)
+===== Request Example
+include::{snippets}/{ref}/refresh-token/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{ref}/refresh-token/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{ref}/refresh-token/curl-request.adoc[]
+
+=== 요청 (실패)
+===== Request Example
+include::{snippets}/{ref}/refresh-token_fail_token_expired/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{ref}/refresh-token_fail_token_expired/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{ref}/refresh-token_fail_token_expired/curl-request.adoc[]

@@ -1,0 +1,53 @@
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
+
+:sse: sse-controller-test
+
+= REST API
+:toc: left
+:toclevels: 2
+:source-highlighter: highlightjs
+
+
+== SSE 연결 API
+=== 요청 (성공)
+===== Request Example
+include::{snippets}/{sse}/test-connect/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{sse}/test-connect/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{sse}/test-connect/curl-request.adoc[]
+
+=== 요청 (실패)
+===== Request Example
+include::{snippets}/{sse}/test-connect-fail-unauthenticated-test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{sse}/test-connect-fail-unauthenticated-test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{sse}/test-connect-fail-unauthenticated-test/curl-request.adoc[]
+
+== SSE 연결종료 API
+=== 요청 (성공)
+===== Request Example
+include::{snippets}/{sse}/test-disconnect/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{sse}/test-disconnect/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{sse}/test-disconnect/curl-request.adoc[]
+
+=== 요청 (실패)
+===== Request Example
+include::{snippets}/{sse}/test-disconnect-fail-not-connected-test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{sse}/test-disconnect-fail-not-connected-test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{sse}/test-disconnect-fail-not-connected-test/curl-request.adoc[]

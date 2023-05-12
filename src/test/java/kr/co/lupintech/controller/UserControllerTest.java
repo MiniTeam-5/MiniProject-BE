@@ -2,7 +2,10 @@ package kr.co.lupintech.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.lupintech.core.MyRestDoc;
+import kr.co.lupintech.core.auth.jwt.MyJwtProviderTest;
 import kr.co.lupintech.dto.user.UserRequest;
+import kr.co.lupintech.model.token.RefreshTokenEntity;
+import kr.co.lupintech.model.token.TokenRepository;
 import kr.co.lupintech.model.user.User;
 import kr.co.lupintech.model.user.UserRepository;
 import kr.co.lupintech.model.user.UserRole;
@@ -14,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.util.Pair;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -36,9 +40,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.request.RequestDocumentation.partWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParts;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -65,16 +67,18 @@ public class UserControllerTest extends MyRestDoc {
     private EntityManager em;
     @Autowired
     private S3Service s3Service;
+    @Autowired
+    private TokenRepository tokenRepository;
 
     @BeforeEach
     public void setUp() {
-        userRepository.save(dummy.newUser("ssar", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
-        userRepository.save(dummy.newUser("cos", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
-        userRepository.save(dummy.newUser("resign", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
+        userRepository.save(dummy.newUser("김쌀쌀", "ssar@nate.com", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
+        userRepository.save(dummy.newUser("박코스", "cos@nate.com", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
+        userRepository.save(dummy.newUser("이퇴사", "abort@nate.com", true, LocalDate.now().minusYears(1).minusWeeks(1), 15));
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         userRepository.save(
                 User.builder()
-                        .username("update")
+                        .username("김수정")
                         .password(passwordEncoder.encode("1234"))
                         .email("update@nate.com")
                         .role(UserRole.ROLE_USER)
@@ -116,7 +120,7 @@ public class UserControllerTest extends MyRestDoc {
     public void join_fail_bad_request_test() throws Exception {
         // given
         UserRequest.JoinInDTO joinInDTO = new UserRequest.JoinInDTO();
-        joinInDTO.setUsername("ssar");
+        joinInDTO.setUsername("김");
         joinInDTO.setPassword("1234");
         joinInDTO.setEmail("ssar@nate.com");
         joinInDTO.setHireDate("2022-12-12");
@@ -132,7 +136,7 @@ public class UserControllerTest extends MyRestDoc {
         resultActions.andExpect(jsonPath("$.status").value(400));
         resultActions.andExpect(jsonPath("$.msg").value("badRequest"));
         resultActions.andExpect(jsonPath("$.data.key").value("username"));
-        resultActions.andExpect(jsonPath("$.data.value").value("이름은 2~20자 이내로 작성해주세요"));
+        resultActions.andExpect(jsonPath("$.data.value").value("이름은 한글로 2~20자 이내로 작성해주세요"));
         resultActions.andExpect(status().isBadRequest());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
@@ -142,7 +146,7 @@ public class UserControllerTest extends MyRestDoc {
     public void join_fail_valid_test() throws Exception {
         // given
         UserRequest.JoinInDTO joinInDTO = new UserRequest.JoinInDTO();
-        joinInDTO.setUsername("s");
+        joinInDTO.setUsername("ssar");
         joinInDTO.setPassword("1234");
         joinInDTO.setEmail("ssar@nate.com");
         joinInDTO.setHireDate("2023-05-05");//이게 없으면 Username, HireDate 에서 번갈아 가면서 오류가 발생합니다. JoinInDTO 객체를 참고하세요.
@@ -158,7 +162,7 @@ public class UserControllerTest extends MyRestDoc {
         resultActions.andExpect(jsonPath("$.status").value(400));
         resultActions.andExpect(jsonPath("$.msg").value("badRequest"));
         resultActions.andExpect(jsonPath("$.data.key").value("username"));
-        resultActions.andExpect(jsonPath("$.data.value").value("이름은 2~20자 이내로 작성해주세요"));
+        resultActions.andExpect(jsonPath("$.data.value").value("이름은 한글로 2~20자 이내로 작성해주세요"));
         resultActions.andExpect(status().isBadRequest());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
@@ -215,7 +219,7 @@ public class UserControllerTest extends MyRestDoc {
     // jwt token -> 인증필터 -> 시큐리티 세션생성
     // setupBefore=TEST_METHOD (setUp 메서드 실행전에 수행)
     // setupBefore=TEST_EXECUTION (saveAccount_test 메서드 실행전에 수행)
-    // @WithUserDetails(value = "ssar", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    // @WithUserDetails(value = "김쌀쌀", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     // authenticationManager.authenticate() 실행해서 MyUserDetailsService를 호출하고
     // usrename=ssar을 찾아서 세션에 담아주는 어노테이션
     @DisplayName("개인정보 가져오기 성공")
@@ -233,7 +237,7 @@ public class UserControllerTest extends MyRestDoc {
 
         // then
         resultActions.andExpect(jsonPath("$.data.id").value(4L));
-        resultActions.andExpect(jsonPath("$.data.username").value("update"));
+        resultActions.andExpect(jsonPath("$.data.username").value("김수정"));
         resultActions.andExpect(jsonPath("$.data.email").value("update@nate.com"));
         resultActions.andExpect(jsonPath("$.data.role").value("ROLE_USER"));
         resultActions.andExpect(jsonPath("$.data.profile").value("https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png"));
@@ -481,6 +485,42 @@ public class UserControllerTest extends MyRestDoc {
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
+    @DisplayName("개인 정보 수정 유효성 검사 실패 (사원명은 한글로 2~20자이어야 함)")
+    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void modify_valid_test_fail_username_format() throws Exception {
+
+        //Given
+        UserRequest.ModifiedInDTO modifiedInDTO = new UserRequest.ModifiedInDTO();
+        modifiedInDTO.setUsername("김");
+        modifiedInDTO.setEmail("asdf@nate.com");
+        modifiedInDTO.setNewPassword("1234");
+
+        //when
+        MockMultipartFile profile = new MockMultipartFile("profile", "".getBytes());
+
+        // modifiedInDTO 객체를 JSON 문자열로 변환
+        String modifiedInJson = om.writeValueAsString(modifiedInDTO);
+        MockMultipartFile json = new MockMultipartFile("modifiedInDTO", "modifiedInDTO", "application/json", modifiedInJson.getBytes(StandardCharsets.UTF_8));
+
+        // when
+        ResultActions resultActions = mvc
+                .perform(
+                        multipart("/auth/user")
+                                .file(profile)
+                                .file(json));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        //then
+        resultActions.andExpect(jsonPath("$.status").value(400));
+        resultActions.andExpect(jsonPath("$.msg").value("badRequest"));
+        resultActions.andExpect(jsonPath("$.data.key").value("username"));
+        resultActions.andExpect(jsonPath("$.data.value").value("이름은 한글로 2~20자 이내로 작성해주세요"));
+        resultActions.andExpect(status().isBadRequest());
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
     @DisplayName("개인 정보 수정 유효성 검사 실패 (이메일이 없는 경우)")
     @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
@@ -558,7 +598,7 @@ public class UserControllerTest extends MyRestDoc {
         //Given
         UserRequest.ModifiedInDTO modifiedInDTO = new UserRequest.ModifiedInDTO();
         modifiedInDTO.setEmail("ssar@nate.com");
-        modifiedInDTO.setUsername("ssar");
+        modifiedInDTO.setUsername("김쌀쌀");
 
         //when
         MockMultipartFile profile = new MockMultipartFile("profile", "".getBytes());
@@ -586,7 +626,7 @@ public class UserControllerTest extends MyRestDoc {
     }
 
     @DisplayName("유저 삭제(비활성) 성공")
-    @WithMockUser(username="admin", roles={"ADMIN"})
+    @WithMockUser(username="관리자", roles={"ADMIN"})
     @Test
     public void resign_test() throws Exception {
         // given
@@ -607,7 +647,7 @@ public class UserControllerTest extends MyRestDoc {
     }
 
     @DisplayName("유저 삭제(비활성) 실패 (없는 유저)")
-    @WithMockUser(username="admin", roles={"ADMIN"})
+    @WithMockUser(username="관리자", roles={"ADMIN"})
     @Test
     public void resign_fail_test() throws Exception {
         // given
@@ -624,6 +664,26 @@ public class UserControllerTest extends MyRestDoc {
         resultActions.andExpect(jsonPath("$.msg").value("serverError"));
         resultActions.andExpect(jsonPath("$.data").value("로그인 된 유저가 DB에 존재하지 않음"));
         resultActions.andExpect(status().is5xxServerError());
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @DisplayName("로그아웃 성공")
+    @Test
+    public void logoutTest() throws Exception {
+        // given
+        User user = userRepository.findByUsername("ssar").orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
+        String atoken = MyJwtProviderTest.testcreateAccess(user);
+        Pair<String, RefreshTokenEntity> pair = MyJwtProviderTest.testCreateRefresh();
+
+        tokenRepository.save(pair.getSecond());
+
+        // when
+        ResultActions resultActions = mvc.perform(post("/auth/logout")
+                .header(HEADER, atoken)
+                .header(HEADER_REFRESH, pair.getFirst()));
+
+        // then
+        resultActions.andExpect(status().isOk());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 }

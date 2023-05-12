@@ -26,7 +26,7 @@ public class MyScheduleUtil {
 
     @Scheduled(cron = "0 0 0 * * ?") // 매일 자정(0시)
     @Transactional
-    public void everydayWaitingRemove() { // 대기 상태인 leave 지우기
+    public void everydayWaitingRemove() { // 어제 날짜 이전 대기 상태 신청은 삭제
         List<Leave> leavePSs = leaveRepository.findByStartDateAndStatus(LocalDate.now(), LeaveStatus.WAITING);
 
         for(int i = 0; i < leavePSs.size(); i++){

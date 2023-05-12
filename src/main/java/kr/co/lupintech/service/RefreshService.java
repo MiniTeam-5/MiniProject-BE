@@ -46,13 +46,6 @@ public class RefreshService {
             throw new Exception401("리프레시 토큰 검증 실패");
         } catch (TokenExpiredException tee) {
             log.error("리프레시 토큰 만료됨");
-
-            String uuid = decodedJWT.getClaim("uuid").asString();
-            RefreshTokenEntity RefreshTokenPS = tokenRepository.findByUuid(uuid)
-                    .orElseThrow(() -> new Exception401("리프레시 토큰이 존재하지 않습니다."));
-            RefreshTokenPS.setStatus(TokenStatus.EXPIRED);
-            //tokenRepository.save(RefreshTokenPS);
-
             throw new Exception401("리프레시 토큰 만료");
         }
 
