@@ -1,7 +1,5 @@
 package kr.co.lupintech.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import kr.co.lupintech.core.auth.session.MyUserDetails;
 import kr.co.lupintech.dto.leave.LeaveResponse;
 import kr.co.lupintech.dto.manager.ManagerRequest;
 import kr.co.lupintech.dto.manager.ResponsePagenation;
@@ -12,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import kr.co.lupintech.dto.ResponseDTO;
 import kr.co.lupintech.model.leave.enums.LeaveStatus;
