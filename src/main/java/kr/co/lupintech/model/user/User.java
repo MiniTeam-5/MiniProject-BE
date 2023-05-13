@@ -28,6 +28,7 @@ public class User {
     private String email;
 
 
+    @Setter
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
