@@ -31,6 +31,7 @@ public class User {
 
     @Setter
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private UserRole role;
 
     private Boolean status; // true, false
@@ -96,12 +97,6 @@ public class User {
         this.profile = profile;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-    }
-
-    public void update(User user){
-        this.username = user.getUsername();
-        this.role = user.getRole();
-        this.hireDate = user.getHireDate();
     }
 
     public void resign() { // 퇴사

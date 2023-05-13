@@ -1,27 +1,13 @@
 package kr.co.lupintech.service;
 
-import kr.co.lupintech.dto.manager.ManagerRequest;
 import kr.co.lupintech.model.user.UserRepository;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import kr.co.lupintech.core.dummy.DummyEntity;
-import kr.co.lupintech.model.user.User;
-import kr.co.lupintech.model.user.UserRole;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -34,7 +20,7 @@ import static org.mockito.ArgumentMatchers.any;
 public class ManageUserServiceTest extends DummyEntity {
 
     @InjectMocks
-    private ManageService manageService;
+    private MasterService masterService;
 
     // 진짜 객체를 만들어서 Mockito 환경에 Load
     @Mock

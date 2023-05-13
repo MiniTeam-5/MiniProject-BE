@@ -8,17 +8,12 @@ import kr.co.lupintech.core.advice.MyValidAdvice;
 import kr.co.lupintech.core.config.MyFilterRegisterConfig;
 import kr.co.lupintech.core.config.MySecurityConfig;
 import kr.co.lupintech.dto.leave.LeaveResponse;
-import kr.co.lupintech.dto.manager.ManagerRequest;
 import kr.co.lupintech.model.leave.enums.LeaveStatus;
 import kr.co.lupintech.model.leave.enums.LeaveType;
-import kr.co.lupintech.model.user.User;
 import kr.co.lupintech.model.user.UserRepository;
 import kr.co.lupintech.model.user.UserRole;
 import kr.co.lupintech.service.LeaveService;
-import kr.co.lupintech.service.ManageService;
 import org.hamcrest.Matchers;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,18 +21,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import kr.co.lupintech.core.dummy.DummyEntity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -68,7 +58,7 @@ public class AdminControllerUnitTest extends DummyEntity{
     private MockMvc mvc;
 
     @MockBean
-    private ManageService manageService;
+    private MasterService masterService;
 
     @MockBean
     private LeaveService leaveService;
