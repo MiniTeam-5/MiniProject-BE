@@ -72,7 +72,7 @@ class RefreshControllerTest extends MyRestDoc {
                 .build());
 
         // 리프레시 토큰 생성 및 저장
-        Pair<String, RefreshTokenEntity> refreshInfo = MyJwtProvider.createRefresh();
+        Pair<String, RefreshTokenEntity> refreshInfo = MyJwtProvider.createRefresh(testUser);
         tokenRepository.save(refreshInfo.getSecond());
 
         // 헤더에 리프레시 토큰 추가

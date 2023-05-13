@@ -39,7 +39,7 @@ public class MyJwtProvider {
         return TOKEN_PREFIX + jwt;
     }
 
-    public static Pair<String, RefreshTokenEntity> createRefresh() {
+    public static Pair<String, RefreshTokenEntity> createRefresh(User user) {
 
         String uuid = UUID.randomUUID().toString();
 
@@ -49,6 +49,7 @@ public class MyJwtProvider {
                 .withSubject(SUBJECT)
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXP_REFRESH))
                 .withClaim("uuid", uuid)
+                .withClaim("id", user.getId())
                 .sign(Algorithm.HMAC512(REFRESH_SECRET));
         return Pair.of(TOKEN_PREFIX + jwt, refreshToken);
     }

@@ -77,7 +77,7 @@ public class UserService {
             MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
 
             String accessjwt = MyJwtProvider.createAccess(myUserDetails.getUser());
-            Pair<String, RefreshTokenEntity> rtInfo = MyJwtProvider.createRefresh();
+            Pair<String, RefreshTokenEntity> rtInfo = MyJwtProvider.createRefresh(myUserDetails.getUser());
 
             //로그인 성공하면 액세스 토큰, 리프레시 토큰 발급. 리프레시 토큰의 uuid은 DB에 저장
             tokenRepository.save(rtInfo.getSecond());
