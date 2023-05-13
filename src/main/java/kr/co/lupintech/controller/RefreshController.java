@@ -16,11 +16,11 @@ public class RefreshController
 {
     private final RefreshService refreshService;
 
-    @PostMapping("/refreshtoken/{id}")//id == userId
-    public ResponseEntity<?> refreshToken(@PathVariable Long id, HttpServletRequest request) {
+    @PostMapping("/refreshtoken")
+    public ResponseEntity<?> refreshToken(HttpServletRequest request) {
 
         // RefreshService를 통해 액세스 토큰 재발급
-        String accessjwt = refreshService.액세스재발급(id, request);
+        String accessjwt = refreshService.액세스재발급(request);
 
         return ResponseEntity.ok().header(MyJwtProvider.HEADER, accessjwt).build();
     }

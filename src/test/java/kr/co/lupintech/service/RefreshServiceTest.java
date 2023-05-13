@@ -39,18 +39,18 @@ class RefreshServiceTest {
     void 액세스재발급() {
 
         Long userId = 1L;
-        Pair<String, RefreshTokenEntity> refreshInfo = MyJwtProvider.createRefresh();
-
-        String uuid = refreshInfo.getSecond().getUuid();
 
         User testUser = User.builder().id(userId).username("testUser").role(UserRole.ROLE_USER).build();
+        Pair<String, RefreshTokenEntity> refreshInfo = MyJwtProvider.createRefresh(testUser);
+        String uuid = refreshInfo.getSecond().getUuid();
+
         when(tokenRepository.findByUuidAndStatus(uuid, TokenStatus.VALID)).thenReturn(Optional.of(refreshInfo.getSecond()));
         when(userRepository.findById(userId)).thenReturn(Optional.ofNullable(testUser));
 
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
         when(request.getHeader(MyJwtProvider.HEADER_REFRESH)).thenReturn(refreshInfo.getFirst());
 
-        String accessjwt = refreshService.액세스재발급(userId, request);
+        String accessjwt = refreshService.액세스재발급(request);
 
         Assertions.assertThat(accessjwt.startsWith("Bearer ")).isTrue();
 
@@ -59,8 +59,10 @@ class RefreshServiceTest {
     @Test
     void 리프레시토큰회수() {
 
-        Pair<String, RefreshTokenEntity> refreshInfo = MyJwtProvider.createRefresh();
+        Long userId = 1L;
 
+        User testUser = User.builder().id(userId).username("testUser").role(UserRole.ROLE_USER).build();
+        Pair<String, RefreshTokenEntity> refreshInfo = MyJwtProvider.createRefresh(testUser);
         String uuid = refreshInfo.getSecond().getUuid();
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
         when(request.getHeader(MyJwtProvider.HEADER_REFRESH)).thenReturn(refreshInfo.getFirst());

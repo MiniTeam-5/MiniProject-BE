@@ -39,11 +39,11 @@ public class MyJwtProvider {
         return TOKEN_PREFIX + jwt;
     }
 
-    public static Pair<String, RefreshTokenEntity> createRefresh() {
+    public static Pair<String, RefreshTokenEntity> createRefresh(User user) {
 
         String uuid = UUID.randomUUID().toString();
 
-        RefreshTokenEntity refreshToken = new RefreshTokenEntity(uuid, TokenStatus.VALID);
+        RefreshTokenEntity refreshToken = new RefreshTokenEntity(user, uuid, TokenStatus.VALID);
 
         String jwt = JWT.create()
                 .withSubject(SUBJECT)
