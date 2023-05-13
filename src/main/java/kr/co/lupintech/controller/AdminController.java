@@ -27,9 +27,9 @@ public class AdminController {
     private final ManageService manageService;
     private final LeaveService leaveService;
 
-    // 회원 정보 변경 로직
+    // 유저의 연차 일수 수정
     @PostMapping("/admin/annual/{id}")
-    public ResponseEntity<?> annualUpdate(@PathVariable Long id, @RequestBody @Valid ManagerRequest.AnnualInDTO annualInDTO) {
+    public ResponseEntity<?> annualUpdate(@PathVariable Long id, @RequestBody @Valid ManagerRequest.AnnualInDTO annualInDTO, Error error) {
         manageService.연차수정(id, annualInDTO);
         ResponseDTO<?>responseDTO = new ResponseDTO<>();
         return ResponseEntity.ok(responseDTO);
