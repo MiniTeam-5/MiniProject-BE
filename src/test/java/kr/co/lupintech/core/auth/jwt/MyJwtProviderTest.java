@@ -28,11 +28,11 @@ public class MyJwtProviderTest extends MyJwtProvider{
     }
 
     @Test
-    public static Pair<String, RefreshTokenEntity> testCreateRefresh() {
+    public static Pair<String, RefreshTokenEntity> testCreateRefresh(User user) {
 
         String uuid = UUID.randomUUID().toString();
 
-        RefreshTokenEntity refreshToken = new RefreshTokenEntity(uuid, TokenStatus.VALID);
+        RefreshTokenEntity refreshToken = new RefreshTokenEntity(user, uuid, TokenStatus.VALID);
 
         String jwt = JWT.create()
                 .withSubject(SUBJECT)
@@ -42,11 +42,11 @@ public class MyJwtProviderTest extends MyJwtProvider{
         return Pair.of(TOKEN_PREFIX + jwt, refreshToken);
     }
     @Test
-    public static Pair<String, RefreshTokenEntity> testCreateExpiredRefresh() {
+    public static Pair<String, RefreshTokenEntity> testCreateExpiredRefresh(User user) {
 
         String uuid = UUID.randomUUID().toString();
 
-        RefreshTokenEntity refreshToken = new RefreshTokenEntity(uuid, TokenStatus.VALID);
+        RefreshTokenEntity refreshToken = new RefreshTokenEntity(user, uuid, TokenStatus.VALID);
 
         String jwt = JWT.create()
                 .withSubject(SUBJECT)

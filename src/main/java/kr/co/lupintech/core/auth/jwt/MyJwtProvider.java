@@ -43,13 +43,12 @@ public class MyJwtProvider {
 
         String uuid = UUID.randomUUID().toString();
 
-        RefreshTokenEntity refreshToken = new RefreshTokenEntity(uuid, TokenStatus.VALID);
+        RefreshTokenEntity refreshToken = new RefreshTokenEntity(user, uuid, TokenStatus.VALID);
 
         String jwt = JWT.create()
                 .withSubject(SUBJECT)
                 .withExpiresAt(new Date(System.currentTimeMillis() + EXP_REFRESH))
                 .withClaim("uuid", uuid)
-                .withClaim("id", user.getId())
                 .sign(Algorithm.HMAC512(REFRESH_SECRET));
         return Pair.of(TOKEN_PREFIX + jwt, refreshToken);
     }

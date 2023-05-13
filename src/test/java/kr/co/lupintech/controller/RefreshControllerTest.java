@@ -80,7 +80,7 @@ class RefreshControllerTest extends MyRestDoc {
         headers.add(MyJwtProvider.HEADER_REFRESH, refreshInfo.getFirst());
 
         // refreshToken API 호출
-        ResultActions resultActions = mockMvc.perform(post("/refreshtoken/{id}",
+        ResultActions resultActions = mockMvc.perform(post("/refreshtoken",
                         testUser.getId()).headers(headers).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(header().exists(MyJwtProvider.HEADER));
@@ -101,14 +101,14 @@ class RefreshControllerTest extends MyRestDoc {
                 .role(UserRole.ROLE_USER)
                 .build());
 
-        Pair<String, RefreshTokenEntity> randomTokenPair = MyJwtProviderTest.testCreateExpiredRefresh();
+        Pair<String, RefreshTokenEntity> randomTokenPair = MyJwtProviderTest.testCreateExpiredRefresh(testUser);
 
             // 헤더에 가짜 토큰 추가
             HttpHeaders headers = new HttpHeaders();
             headers.add(MyJwtProvider.HEADER_REFRESH, randomTokenPair.getFirst());
 
             // refreshToken API 호출
-            ResultActions resultActions = mockMvc.perform(post("/refreshtoken/{id}", testUser.getId())
+            ResultActions resultActions = mockMvc.perform(post("/refreshtoken", testUser.getId())
                             .headers(headers)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isUnauthorized())

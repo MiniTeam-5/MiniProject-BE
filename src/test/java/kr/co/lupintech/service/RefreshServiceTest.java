@@ -50,7 +50,7 @@ class RefreshServiceTest {
         HttpServletRequest request = Mockito.mock(HttpServletRequest.class);
         when(request.getHeader(MyJwtProvider.HEADER_REFRESH)).thenReturn(refreshInfo.getFirst());
 
-        String accessjwt = refreshService.액세스재발급(userId, request);
+        String accessjwt = refreshService.액세스재발급(request);
 
         Assertions.assertThat(accessjwt.startsWith("Bearer ")).isTrue();
 
