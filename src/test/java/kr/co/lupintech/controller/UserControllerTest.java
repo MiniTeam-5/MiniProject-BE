@@ -662,7 +662,7 @@ public class UserControllerTest extends MyRestDoc {
         // then
         resultActions.andExpect(jsonPath("$.status").value(500));
         resultActions.andExpect(jsonPath("$.msg").value("serverError"));
-        resultActions.andExpect(jsonPath("$.data").value("로그인 된 유저가 DB에 존재하지 않음"));
+        resultActions.andExpect(jsonPath("$.data").value("해당 유저가 존재하지 않습니다."));
         resultActions.andExpect(status().is5xxServerError());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
