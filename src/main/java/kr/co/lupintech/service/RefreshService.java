@@ -20,6 +20,8 @@ import kr.co.lupintech.model.user.User;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.List;
+
 import static kr.co.lupintech.core.auth.jwt.MyJwtProvider.REFRESH_SECRET;
 
 @Slf4j
@@ -32,7 +34,7 @@ public class RefreshService {
     private final UserRepository userRepository;
 
     @Transactional
-    public String 액세스재발급(Long userId, HttpServletRequest request) {
+    public String 액세스재발급(HttpServletRequest request) {
 
         String prefixJwt = request.getHeader(MyJwtProvider.HEADER_REFRESH);
         String refreshjwt = prefixJwt.replace(MyJwtProvider.TOKEN_PREFIX, "");
@@ -51,10 +53,10 @@ public class RefreshService {
 
         String uuid = decodedJWT.getClaim("uuid").asString();
         // UUID로 리프레시 토큰 조회 및 검증
-        tokenRepository.findByUuidAndStatus(uuid, TokenStatus.VALID)
+        RefreshTokenEntity refreshTokenEntity = tokenRepository.findByUuidAndStatus(uuid, TokenStatus.VALID)
                 .orElseThrow(() -> new Exception401("유효한 리프레시 토큰이 존재하지 않습니다."));
 
-        User userPS = userRepository.findById(userId)
+        User userPS = userRepository.findById(refreshTokenEntity.getUser().getId())
                 .orElseThrow(() -> new Exception401("해당하는 사용자가 없습니다."));
 
         // 액세스 토큰 재발급
@@ -102,5 +104,15 @@ public class RefreshService {
         RefreshTokenPS.setStatus(TokenStatus.REVOKED);
 
         return true;
+    }
+
+    @Transactional
+    public void 만료리프레쉬삭제()
+    {
+        List<RefreshTokenEntity> expiredTokens = tokenRepository.findByStatus(TokenStatus.EXPIRED);
+        List<RefreshTokenEntity> revokedTokens = tokenRepository.findByStatus(TokenStatus.REVOKED);
+
+        tokenRepository.deleteInBatch(expiredTokens);
+        tokenRepository.deleteInBatch(revokedTokens);
     }
 }

@@ -673,7 +673,7 @@ public class UserControllerTest extends MyRestDoc {
         // given
         User user = userRepository.findByUsername("김쌀쌀").orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다."));
         String atoken = MyJwtProviderTest.testcreateAccess(user);
-        Pair<String, RefreshTokenEntity> pair = MyJwtProviderTest.testCreateRefresh();
+        Pair<String, RefreshTokenEntity> pair = MyJwtProviderTest.testCreateRefresh(user);
 
         tokenRepository.save(pair.getSecond());
 

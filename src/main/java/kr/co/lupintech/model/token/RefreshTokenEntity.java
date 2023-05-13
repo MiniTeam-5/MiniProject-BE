@@ -1,5 +1,6 @@
 package kr.co.lupintech.model.token;
 
+import kr.co.lupintech.model.user.User;
 import lombok.Getter;
 
 import javax.persistence.*;
@@ -15,6 +16,10 @@ public class RefreshTokenEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Column(nullable = false, unique = true)
     private String uuid;
 
@@ -25,7 +30,8 @@ public class RefreshTokenEntity {
     public RefreshTokenEntity() {
     }
 
-    public RefreshTokenEntity(String uuid, TokenStatus status) {
+    public RefreshTokenEntity(User user, String uuid, TokenStatus status) {
+        this.user = user;
         this.uuid = uuid;
         this.status = status;
     }
