@@ -4,6 +4,7 @@ import kr.co.lupintech.model.leave.Leave;
 import kr.co.lupintech.model.leave.LeaveRepository;
 import kr.co.lupintech.model.user.UserRepository;
 import kr.co.lupintech.service.DateService;
+import kr.co.lupintech.service.RefreshService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,8 @@ public class MyScheduleUtil {
     private final UserRepository userRepository;
 
     private final DateService dateService;
+
+    private final RefreshService refreshService;
 
     @Scheduled(cron = "0 0 0 * * ?") // 매일 자정(0시)
     @Transactional
@@ -65,4 +68,10 @@ public class MyScheduleUtil {
             userPS.increaseRemainDays(1);
         }
     }
+
+    @Scheduled(cron = "0 0 0 * * ?") // 매일 자정(0시)
+    public void everydayRemoveExpiredRefreshTokens() {
+        refreshService.만료리프레쉬삭제();
+    }
+
 }
