@@ -166,10 +166,21 @@ public class LeaveRepositoryTest extends DummyEntity {
         Long userId = 2L;
 
         // when
-        boolean result = leaveRepository.existsDuplicateDuty(type, startDate, userId);
+        //boolean result = leaveRepository.existsDuplicateDuty(type, startDate, userId);
+        List<Leave> duplicateDuty = leaveRepository.findDuplicateDuty(type, startDate, userId);
+        boolean isAllRecjection = true;
+        for(Leave duty : duplicateDuty)
+        {
+            if(LeaveStatus.REJECTION != duty.getStatus())
+            {
+                isAllRecjection = false;//
+                break;
+            }
+        }
 
         // then
-        Assertions.assertThat(result).isEqualTo(true);
+        //대기, 승인 상태가 있으면 isAllRecjection == false
+        Assertions.assertThat(isAllRecjection).isEqualTo(false);
     }
 
     @Test
@@ -188,9 +199,23 @@ public class LeaveRepositoryTest extends DummyEntity {
         Long userId = 2L;
 
         // when
-        boolean result = leaveRepository.existsDuplicateAnnual(type, startDate, endDate, userId);
+        //boolean result = leaveRepository.existsDuplicateAnnual(type, startDate, endDate, userId);
+        // 이미 신청한 연차 있는데 모두 거절 당한 경우는 통과
+        List<Leave> duplicateAnnual = leaveRepository.findDuplicateAnnual(type,
+                startDate,
+                endDate,
+                userId);
+        boolean isAllRecjection = true;
+        for(Leave annual : duplicateAnnual)
+        {
+            if(LeaveStatus.REJECTION != annual.getStatus())
+            {
+                isAllRecjection = false;
+                break;
+            }
+        }
 
         // then
-        Assertions.assertThat(result).isEqualTo(true);
+        Assertions.assertThat(isAllRecjection).isEqualTo(false);
     }
 }
