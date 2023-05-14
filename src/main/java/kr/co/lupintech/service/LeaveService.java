@@ -58,12 +58,14 @@ public class LeaveService {
             // 1) 당직 등록
             Leave leavePS = leaveRepository.save(applyInDTO.toEntity(userPS, 0));
 
-            // 2) 관리자들에게 알림 등록 및 실시간 알람 전송
+            // 2) 알람 등록
+            Alarm alarm = AlarmFactory.newAlarm(userPS, leavePS);
+            Alarm alarmPS = alarmRepository.save(alarm);
+
+            // 3) 관리자들에게 실시간 알람 전송
             Set<UserRole> adminAndMasterRoles = new HashSet<>(Arrays.asList(UserRole.ROLE_ADMIN, UserRole.ROLE_MASTER));
             List<User> managerList = userRepository.findByRoles(adminAndMasterRoles);
             for (User manager : managerList) {
-                Alarm alarm = AlarmFactory.newAlarm(manager, leavePS);
-                Alarm alarmPS = alarmRepository.save(alarm);
                 sseService.sendToUser(manager.getId(), "alarm", new AlarmResponse.AlarmOutDTO(alarmPS));
             }
 
@@ -96,11 +98,13 @@ public class LeaveService {
         // 4) 연차 등록
         Leave leavePS = leaveRepository.save(applyInDTO.toEntity(userPS, usingDays));
 
-        // 5) 관리자들에게 알림 등록 및 실시간 알람 전송
+        // 5) 알람 등록
+        Alarm alarm = AlarmFactory.newAlarm(userPS, leavePS);
+
+        // 5) 관리자들에게 실시간 알람 전송
         Set<UserRole> adminAndMasterRoles = new HashSet<>(Arrays.asList(UserRole.ROLE_ADMIN, UserRole.ROLE_MASTER));
         List<User> managerList = userRepository.findByRoles(adminAndMasterRoles);
         for (User manager : managerList) {
-            Alarm alarm = AlarmFactory.newAlarm(manager, leavePS);
             Alarm alarmPS = alarmRepository.save(alarm);
             sseService.sendToUser(manager.getId(), "alarm", new AlarmResponse.AlarmOutDTO(alarmPS));
         }
