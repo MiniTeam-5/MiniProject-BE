@@ -1,6 +1,5 @@
 package kr.co.lupintech.core.dummy;
 
-import kr.co.lupintech.dto.manager.ManagerRequest;
 import kr.co.lupintech.model.alarm.Alarm;
 import kr.co.lupintech.model.leave.Leave;
 import kr.co.lupintech.model.leave.enums.LeaveStatus;
