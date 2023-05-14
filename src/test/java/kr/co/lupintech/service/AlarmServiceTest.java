@@ -1,6 +1,8 @@
 package kr.co.lupintech.service;
 
 import kr.co.lupintech.model.alarm.Alarm;
+import kr.co.lupintech.model.leave.Leave;
+import kr.co.lupintech.model.leave.LeaveRepository;
 import kr.co.lupintech.model.leave.enums.LeaveStatus;
 import kr.co.lupintech.model.leave.enums.LeaveType;
 import kr.co.lupintech.model.user.User;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Transactional
 @ActiveProfiles("test")
@@ -31,6 +34,10 @@ public class AlarmServiceTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private LeaveRepository leaveRepository;
+
     private DummyEntity dummy = new DummyEntity();
 
     @Autowired
@@ -48,23 +55,27 @@ public class AlarmServiceTest {
     @Test
     public void saveAlarmTest() {
 
-        // given
-        Alarm alarm = dummy.newMockAlarm(
-                1L,
-                user,
-                LocalDate.now().plusDays(2),
-                LocalDate.now().plusDays(5),
-                3,
-                LeaveType.ANNUAL,
-                LeaveStatus.APPROVAL);
+        Leave leave = Leave.builder()
+                .type(LeaveType.ANNUAL)
+                .usingDays(3)
+                .startDate(LocalDate.now().plusDays(102))
+                .endDate(LocalDate.now().plusDays(105))
+                .createdAt(LocalDateTime.now())
+                .status(LeaveStatus.APPROVAL)
+                .build();
 
-        // when
+        // given
+        Leave leavePS = leaveRepository.save(leave);
+
+        Alarm alarm = dummy.newMockAlarm(1L, user, leavePS);
         Alarm result = alarmService.save(alarm);
+        // when
 
         // then
         Assertions.assertNotNull(result);
         Assertions.assertEquals(alarm.getId(), result.getId());
         Assertions.assertEquals(alarm.getUser().getId(), result.getUser().getId());
-        Assertions.assertEquals(alarm.getContent(), result.getContent());
+        Assertions.assertEquals(leave.getId(), result.getLeave().getId());
+
     }
 }

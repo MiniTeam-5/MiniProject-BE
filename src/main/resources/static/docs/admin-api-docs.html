@@ -445,16 +445,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#_sse_연결_api">SSE 연결 API</a>
+<li><a href="#_관리자">관리자</a>
 <ul class="sectlevel2">
-<li><a href="#_요청_성공">요청 (성공)</a></li>
-<li><a href="#_요청_실패">요청 (실패)</a></li>
-</ul>
-</li>
-<li><a href="#_sse_연결종료_api">SSE 연결종료 API</a>
-<ul class="sectlevel2">
-<li><a href="#_요청_성공_2">요청 (성공)</a></li>
-<li><a href="#_요청_실패_2">요청 (실패)</a></li>
+<li><a href="#_회원_목록_조회_디폴트_전체_사원_조회_0번_페이지_한_페이지에_10개">회원 목록 조회 (디폴트: 전체 사원 조회, 0번 페이지, 한 페이지에 10개)</a></li>
+<li><a href="#_회원_목록_조회_1번_페이지_한_페이지에_2개">회원 목록 조회 (1번 페이지, 한 페이지에 2개)</a></li>
+<li><a href="#_회원_목록_검색_전체_이름">회원 목록 검색 (전체 이름)</a></li>
+<li><a href="#_회원_목록_검색_부분_이름">회원 목록 검색 (부분 이름)</a></li>
 </ul>
 </li>
 </ul>
@@ -462,15 +458,15 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div id="content">
 <div class="sect1">
-<h2 id="_sse_연결_api">SSE 연결 API</h2>
+<h2 id="_관리자">관리자</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_요청_성공">요청 (성공)</h3>
+<h3 id="_회원_목록_조회_디폴트_전체_사원_조회_0번_페이지_한_페이지에_10개">회원 목록 조회 (디폴트: 전체 사원 조회, 0번 페이지, 한 페이지에 10개)</h3>
 <div class="sect4">
 <h5 id="_request_example">Request Example</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /auth/connect HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /admin HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -483,16 +479,74 @@ Host: localhost:8080</code></pre>
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Content-Type: text/event-stream;charset=UTF-8
+Content-Type: application/json;charset=UTF-8
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-Content-Length: 39
+Content-Length: 1811
 
-event:connect
-data:You are connected!</code></pre>
+{
+  "status" : 200,
+  "msg" : "성공",
+  "data" : {
+    "content" : [ {
+      "id" : 1,
+      "username" : "김쌀쌀",
+      "role" : "ROLE_USER",
+      "hireDate" : "2021-01-21",
+      "remainDays" : 15,
+      "profile" : "https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png"
+    }, {
+      "id" : 2,
+      "username" : "박코스",
+      "role" : "ROLE_USER",
+      "hireDate" : "2022-05-05",
+      "remainDays" : 15,
+      "profile" : "https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png"
+    }, {
+      "id" : 3,
+      "username" : "관리자",
+      "role" : "ROLE_ADMIN",
+      "hireDate" : "2020-03-14",
+      "remainDays" : 15,
+      "profile" : "https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png"
+    }, {
+      "id" : 4,
+      "username" : "마스터",
+      "role" : "ROLE_MASTER",
+      "hireDate" : "2020-01-14",
+      "remainDays" : 15,
+      "profile" : "https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png"
+    }, {
+      "id" : 5,
+      "username" : "일년차",
+      "role" : "ROLE_USER",
+      "hireDate" : "2022-04-14",
+      "remainDays" : 0,
+      "profile" : "https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png"
+    }, {
+      "id" : 6,
+      "username" : "김신입",
+      "role" : "ROLE_USER",
+      "hireDate" : "2023-03-10",
+      "remainDays" : 1,
+      "profile" : "https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png"
+    }, {
+      "id" : 7,
+      "username" : "김진진",
+      "role" : "ROLE_MASTER",
+      "hireDate" : "2013-05-01",
+      "remainDays" : 17,
+      "profile" : "https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png"
+    } ],
+    "pageNumber" : 0,
+    "pageSize" : 10,
+    "totalElements" : 7,
+    "totalPages" : 1
+  }
+}</code></pre>
 </div>
 </div>
 </div>
@@ -500,18 +554,18 @@ data:You are connected!</code></pre>
 <h5 id="_curl">Curl</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/connect' -i -X GET</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/admin' -i -X GET</code></pre>
 </div>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_요청_실패">요청 (실패)</h3>
+<h3 id="_회원_목록_조회_1번_페이지_한_페이지에_2개">회원 목록 조회 (1번 페이지, 한 페이지에 2개)</h3>
 <div class="sect4">
 <h5 id="_request_example_2">Request Example</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /auth/connect HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /admin?page=1&amp;size=2 HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -520,22 +574,42 @@ Host: localhost:8080</code></pre>
 <h5 id="_response_example_2">Response Example</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 401 Unauthorized
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Content-Type: application/json; charset=utf-8
+Content-Type: application/json;charset=UTF-8
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-Content-Length: 93
+Content-Length: 645
 
 {
-  "status" : 401,
-  "msg" : "unAuthorized",
-  "data" : "인증되지 않았습니다"
+  "status" : 200,
+  "msg" : "성공",
+  "data" : {
+    "content" : [ {
+      "id" : 3,
+      "username" : "관리자",
+      "role" : "ROLE_ADMIN",
+      "hireDate" : "2020-03-14",
+      "remainDays" : 15,
+      "profile" : "https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png"
+    }, {
+      "id" : 4,
+      "username" : "마스터",
+      "role" : "ROLE_MASTER",
+      "hireDate" : "2020-01-14",
+      "remainDays" : 15,
+      "profile" : "https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png"
+    } ],
+    "pageNumber" : 1,
+    "pageSize" : 2,
+    "totalElements" : 7,
+    "totalPages" : 4
+  }
 }</code></pre>
 </div>
 </div>
@@ -544,23 +618,18 @@ Content-Length: 93
 <h5 id="_curl_2">Curl</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/connect' -i -X GET</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/admin?page=1&amp;size=2' -i -X GET</code></pre>
 </div>
 </div>
 </div>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_sse_연결종료_api">SSE 연결종료 API</h2>
-<div class="sectionbody">
 <div class="sect2">
-<h3 id="_요청_성공_2">요청 (성공)</h3>
+<h3 id="_회원_목록_검색_전체_이름">회원 목록 검색 (전체 이름)</h3>
 <div class="sect4">
 <h5 id="_request_example_3">Request Example</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/disconnect HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /admin?query=%EA%B9%80%EC%8B%A0%EC%9E%85 HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -573,11 +642,32 @@ Host: localhost:8080</code></pre>
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
+Content-Type: application/json;charset=UTF-8
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
-Expires: 0</code></pre>
+Expires: 0
+Content-Length: 409
+
+{
+  "status" : 200,
+  "msg" : "성공",
+  "data" : {
+    "content" : [ {
+      "id" : 6,
+      "username" : "김신입",
+      "role" : "ROLE_USER",
+      "hireDate" : "2023-03-10",
+      "remainDays" : 1,
+      "profile" : "https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png"
+    } ],
+    "pageNumber" : 0,
+    "pageSize" : 10,
+    "totalElements" : 1,
+    "totalPages" : 1
+  }
+}</code></pre>
 </div>
 </div>
 </div>
@@ -585,18 +675,18 @@ Expires: 0</code></pre>
 <h5 id="_curl_3">Curl</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/disconnect' -i -X POST</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/admin?query=%EA%B9%80%EC%8B%A0%EC%9E%85' -i -X GET</code></pre>
 </div>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_요청_실패_2">요청 (실패)</h3>
+<h3 id="_회원_목록_검색_부분_이름">회원 목록 검색 (부분 이름)</h3>
 <div class="sect4">
 <h5 id="_request_example_4">Request Example</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/disconnect HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /admin?query=%EA%B9%80 HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -605,7 +695,7 @@ Host: localhost:8080</code></pre>
 <h5 id="_response_example_4">Response Example</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
@@ -615,14 +705,38 @@ X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-Content-Length: 140
+Content-Length: 877
 
 {
-  "status" : 400,
-  "msg" : "badRequest",
+  "status" : 200,
+  "msg" : "성공",
   "data" : {
-    "key" : "id",
-    "value" : "연결되지 않은 유저입니다."
+    "content" : [ {
+      "id" : 1,
+      "username" : "김쌀쌀",
+      "role" : "ROLE_USER",
+      "hireDate" : "2021-01-21",
+      "remainDays" : 15,
+      "profile" : "https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png"
+    }, {
+      "id" : 6,
+      "username" : "김신입",
+      "role" : "ROLE_USER",
+      "hireDate" : "2023-03-10",
+      "remainDays" : 1,
+      "profile" : "https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png"
+    }, {
+      "id" : 7,
+      "username" : "김진진",
+      "role" : "ROLE_MASTER",
+      "hireDate" : "2013-05-01",
+      "remainDays" : 17,
+      "profile" : "https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png"
+    } ],
+    "pageNumber" : 0,
+    "pageSize" : 10,
+    "totalElements" : 3,
+    "totalPages" : 1
   }
 }</code></pre>
 </div>
@@ -632,7 +746,7 @@ Content-Length: 140
 <h5 id="_curl_4">Curl</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/disconnect' -i -X POST</code></pre>
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/admin?query=%EA%B9%80' -i -X GET</code></pre>
 </div>
 </div>
 </div>
@@ -643,7 +757,7 @@ Content-Length: 140
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-05-12 10:34:57 +0900
+Last updated 2023-05-12 10:29:58 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

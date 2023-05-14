@@ -3,6 +3,8 @@ package kr.co.lupintech.controller;
 import kr.co.lupintech.core.MyRestDoc;
 import kr.co.lupintech.model.alarm.Alarm;
 import kr.co.lupintech.model.alarm.AlarmRepository;
+import kr.co.lupintech.model.leave.Leave;
+import kr.co.lupintech.model.leave.LeaveRepository;
 import kr.co.lupintech.model.leave.enums.LeaveStatus;
 import kr.co.lupintech.model.leave.enums.LeaveType;
 import kr.co.lupintech.model.user.User;
@@ -30,6 +32,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import javax.persistence.EntityManager;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -55,6 +58,9 @@ public class AlarmControllerTest extends MyRestDoc {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private LeaveRepository leaveRepository;
+
     private User user;
 
     @BeforeEach
@@ -71,9 +77,18 @@ public class AlarmControllerTest extends MyRestDoc {
     public void getUserAlarmsTest() throws Exception {
         // given
 
-        Alarm alarm1 = dummy.newMockAlarm(1L, user, LocalDate.now().plusDays(2), LocalDate.now().plusDays(5), 3, LeaveType.ANNUAL, LeaveStatus.APPROVAL);
-        alarmRepository.save(alarm1);
+         Leave leave = Leave.builder()
+                .type(LeaveType.ANNUAL)
+                .usingDays(3)
+                .startDate(LocalDate.now().plusDays(2))
+                .endDate(LocalDate.now().plusDays(5))
+                .createdAt(LocalDateTime.now())
+                .status(LeaveStatus.APPROVAL)
+                .build();
 
+        Leave leavePS = leaveRepository.save(leave);
+        Alarm alarm1 = dummy.newMockAlarm(1L, user, leavePS);
+        alarmRepository.save(alarm1);
 
         em.clear();
 
@@ -83,7 +98,8 @@ public class AlarmControllerTest extends MyRestDoc {
         System.out.println("테스트 : " + responseBody);
 
         resultActions.andExpect(status().isOk())
-                .andExpect(jsonPath("$.data[0].content").value(alarm1.getContent()));
+                .andExpect(jsonPath("$.data[0].username").value(user.getUsername()))
+                .andExpect(jsonPath("$.data[0].startDate").value(leavePS.getStartDate().toString()));
 
 
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);

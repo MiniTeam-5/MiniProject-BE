@@ -1,6 +1,5 @@
 package kr.co.lupintech.core.dummy;
 
-import kr.co.lupintech.dto.manager.ManagerRequest;
 import kr.co.lupintech.model.alarm.Alarm;
 import kr.co.lupintech.model.leave.Leave;
 import kr.co.lupintech.model.leave.enums.LeaveStatus;
@@ -65,12 +64,10 @@ public class DummyEntity {
                 .build();
     }
 
-    public Alarm newMockAlarm(Long id, User user, LocalDate startDate, LocalDate endDate, int usingDays, LeaveType type, LeaveStatus status){
-        return Alarm.builder()
-                .id(id)
-                .user(user)
-                .content(user.getUsername()+","+startDate.toString()+","+endDate.toString()+","+usingDays+","+type+","+status)
-                .createdAt(LocalDateTime.now())
-                .build();
+    public Alarm newMockAlarm(Long id, User user, Leave leave){
+        Alarm alarm = Alarm.builder().id(id).user(user).leave(leave).createdAt(LocalDateTime.now()).build();
+        leave.getAlarms().add(alarm);
+
+        return alarm;
     }
 }

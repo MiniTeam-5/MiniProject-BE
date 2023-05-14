@@ -49,7 +49,6 @@ public class SseService {
     {
         AlarmResponse.AlarmOutDTO alarmOutDTO = new AlarmResponse.AlarmOutDTO();
         alarmOutDTO.setId(99999999L);
-        alarmOutDTO.setContent(LocalDateTime.now().toString());
         alarmOutDTO.setCreatedAt(LocalDateTime.now());
         sendToUser(userId, "alarm", alarmOutDTO);
     }
