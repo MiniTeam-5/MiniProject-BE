@@ -37,7 +37,7 @@ public class MyJwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         String jwt = prefixJwt.replace(MyJwtProvider.TOKEN_PREFIX, "");
         try {
-            System.out.println("디버그 : 토큰 있음");
+            //System.out.println("디버그 : 토큰 있음");
             DecodedJWT decodedJWT = MyJwtProvider.verify(jwt);
             Long id = decodedJWT.getClaim("id").asLong();
             String role = decodedJWT.getClaim("role").asString();

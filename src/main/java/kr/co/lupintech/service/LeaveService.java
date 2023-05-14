@@ -50,10 +50,19 @@ public class LeaveService {
                 throw new Exception400("startDate, endDate", "startDate와 endDate가 같아야 합니다.");
             }
 
-            // 이미 신청한 날인 경우
-            if(leaveRepository.existsDuplicateDuty(applyInDTO.getType(), applyInDTO.getStartDate(), userId)){
-                throw new Exception400("startDate, endDate", "중복된 당직 신청입니다.");
+            // 이미 신청한 당직이 있는데 모두 거절 당한 경우는 통과
+            List<Leave> duplicateDuty = leaveRepository.findDuplicateDuty(applyInDTO.getType(), applyInDTO.getStartDate(), userId);
+            boolean isAllRecjection = true;
+            for(Leave duty : duplicateDuty)
+            {
+                if(LeaveStatus.REJECTION != duty.getStatus())
+                {
+                    isAllRecjection = false;
+                    break;
+                }
             }
+            if(false == isAllRecjection)//대기, 승인 상태 있으면 중복처리
+                throw new Exception400("startDate, endDate", "중복된 당직 신청입니다.");
 
             // 1) 당직 등록
             Leave leavePS = leaveRepository.save(applyInDTO.toEntity(userPS, 0));
@@ -87,10 +96,22 @@ public class LeaveService {
             throw new Exception400("startDate, endDate", "남은 연차보다 더 많이 신청했습니다.");
         }
 
-        // 이미 신청한 날이 껴있는 경우
-        if(leaveRepository.existsDuplicateAnnual(applyInDTO.getType(), applyInDTO.getStartDate(), applyInDTO.getEndDate(),userId)){
-            throw new Exception400("startDate, endDate", "이미 신청한 연차일이 포함된 신청입니다.");
+        // 이미 신청한 연차 있는데 모두 거절 당한 경우는 통과
+        List<Leave> duplicateAnnual = leaveRepository.findDuplicateAnnual(applyInDTO.getType(),
+                applyInDTO.getStartDate(),
+                applyInDTO.getEndDate(),
+                userId);
+        boolean isAllRecjection = true;
+        for(Leave annual : duplicateAnnual)
+        {
+            if(LeaveStatus.REJECTION != annual.getStatus())
+            {
+                isAllRecjection = false;
+                break;
+            }
         }
+        if(false == isAllRecjection)//대기, 승인 상태 있으면 중복처리
+            throw new Exception400("startDate, endDate", "중복된 연차 신청입니다.");
 
         // 3) 사용자의 남은 연차 일수 업데이트
         userPS.useAnnualLeave(usingDays);
