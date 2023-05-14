@@ -4,6 +4,7 @@ import kr.co.lupintech.core.exception.Exception500;
 import kr.co.lupintech.dto.alarm.AlarmResponse;
 import kr.co.lupintech.model.alarm.Alarm;
 import kr.co.lupintech.model.alarm.AlarmRepository;
+import kr.co.lupintech.model.leave.enums.LeaveStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +21,15 @@ public class AlarmService {
     public List<AlarmResponse.AlarmOutDTO> findByUserId(Long userId) {
         List<Alarm> alarms = alarmRepository.findByUserId(userId);
         return alarms.stream()
-                .map(AlarmResponse.AlarmOutDTO::new)
+                .map(alarm -> new AlarmResponse.AlarmOutDTO(alarm))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<AlarmResponse.AlarmOutDTO> findByUserIdAndLeaveStatus(Long userId, LeaveStatus status) {
+        List<Alarm> alarms = alarmRepository.findByUserIdAndLeaveStatus(userId, status);
+        return alarms.stream()
+                .map(alarm -> new AlarmResponse.AlarmOutDTO(alarm))
                 .collect(Collectors.toList());
     }
 

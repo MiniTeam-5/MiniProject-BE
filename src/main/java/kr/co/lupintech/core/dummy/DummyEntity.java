@@ -96,13 +96,11 @@ public class DummyEntity {
                 .build();
     }
 
-    public Alarm newMockAlarm(Long id, User user, LocalDate startDate, LocalDate endDate, int usingDays, LeaveType type, LeaveStatus status){
-        return Alarm.builder()
-                .id(id)
-                .user(user)
-                .content(user.getUsername()+","+startDate.toString()+","+endDate.toString()+","+usingDays+","+type+","+status)
-                .createdAt(LocalDateTime.now())
-                .build();
+    public Alarm newMockAlarm(Long id, User user, Leave leave){
+        Alarm alarm = Alarm.builder().id(id).user(user).leave(leave).createdAt(LocalDateTime.now()).build();
+        leave.getAlarms().add(alarm);
+
+        return alarm;
     }
 
     public ManagerRequest.ManageUserListDTO newMockChartUser(Long userId, UserRole role, String username, LocalDate hireDate, Integer remainDays, String profile){

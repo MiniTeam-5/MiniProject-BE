@@ -21,6 +21,7 @@ import kr.co.lupintech.core.dummy.DummyEntity;
 import kr.co.lupintech.model.leave.enums.LeaveStatus;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -60,12 +61,12 @@ public class LeaveServiceTest extends DummyEntity {
         Mockito.when(userRepository.findById(any())).thenReturn(Optional.of(cos));
 
         // stub 2
-        Alarm alarm = newMockAlarm(1L, cos, applyInDTO.getStartDate(), applyInDTO.getEndDate(), 1,LeaveType.DUTY, WAITING);
-        Mockito.when(alarmRepository.save(any())).thenReturn(alarm);
-
-        // stub 3
         Leave leave = newMockLeave(1L, cos, LeaveType.DUTY,  LocalDate.parse("2023-07-20"), LocalDate.parse("2023-07-20"), 0);
         Mockito.when(leaveRepository.save(any())).thenReturn(leave);
+
+        // stub 3
+        Alarm alarm = newMockAlarm(1L, cos, leave);
+        Mockito.when(alarmRepository.save(any())).thenReturn(alarm);
 
         // when
         LeaveResponse.ApplyOutDTO applyOutDTO = leaveService.연차당직신청하기(applyInDTO, 1L);
@@ -88,12 +89,12 @@ public class LeaveServiceTest extends DummyEntity {
         Mockito.when(userRepository.findById(any())).thenReturn(Optional.of(cos));
 
         // stub 2
-        Alarm alarm = newMockAlarm(1L, cos, LocalDate.parse("2023-07-20"), LocalDate.parse("2023-07-20"), 1, LeaveType.ANNUAL, LeaveStatus.REJECTION);
-        Mockito.when(alarmRepository.save(any())).thenReturn(alarm);
-
-        // stub 3
         Leave leave = newMockLeave(1L, cos, LeaveType.ANNUAL,  LocalDate.parse("2023-07-20"), LocalDate.parse("2023-07-20"), 1);
         Mockito.when(leaveRepository.findById(any())).thenReturn(Optional.of(leave));
+
+        // stub 3
+        Alarm alarm = newMockAlarm(1L, cos, leave);
+        Mockito.when(alarmRepository.save(any())).thenReturn(alarm);
 
         // when
         LeaveResponse.CancelOutDTO cancelOutDTO = leaveService.연차당직신청취소하기(1L, 1L);
@@ -112,12 +113,12 @@ public class LeaveServiceTest extends DummyEntity {
         Mockito.when(userRepository.findById(any())).thenReturn(Optional.of(cos));
 
         // stub 2
-        Alarm alarm = newMockAlarm(1L, cos, LocalDate.parse("2023-07-20"), LocalDate.parse("2023-07-20"), 1, LeaveType.DUTY, REJECTION);
-        Mockito.when(alarmRepository.save(any())).thenReturn(alarm);
-
-        // stub 3
         Leave leave = newMockLeave(1L, cos, LeaveType.DUTY,  LocalDate.parse("2023-07-20"), LocalDate.parse("2023-07-20"), 1);
         Mockito.when(leaveRepository.findById(any())).thenReturn(Optional.of(leave));
+
+        // stub 3
+        Alarm alarm = newMockAlarm(1L, cos, leave);
+        Mockito.when(alarmRepository.save(any())).thenReturn(alarm);
 
         // when
         LeaveResponse.CancelOutDTO cancelOutDTO = leaveService.연차당직신청취소하기(1L, 1L);
@@ -140,7 +141,7 @@ public class LeaveServiceTest extends DummyEntity {
         Mockito.when(leaveRepository.findById(any())).thenReturn(Optional.ofNullable(leave));
 
         // stub 2
-        Alarm alarm = newMockAlarm(1L, cos, leave.getStartDate(), leave.getEndDate(), leave.getUsingDays(), LeaveType.ANNUAL, APPROVAL);
+        Alarm alarm = newMockAlarm(1L, cos, leave);
         Mockito.when(alarmRepository.save(any())).thenReturn(alarm);
 
         // when
