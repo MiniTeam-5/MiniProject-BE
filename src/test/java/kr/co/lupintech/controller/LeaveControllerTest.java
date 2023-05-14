@@ -382,7 +382,7 @@ public class LeaveControllerTest extends MyRestDoc {
         resultActions.andExpect(jsonPath("$.status").value(400));
         resultActions.andExpect(jsonPath("$.msg").value("badRequest"));
         resultActions.andExpect(jsonPath("$.data.key").value("startDate, endDate"));
-        resultActions.andExpect(jsonPath("$.data.value").value("이미 신청한 연차일이 포함된 신청입니다."));
+        resultActions.andExpect(jsonPath("$.data.value").value("중복된 연차 신청입니다."));
         resultActions.andExpect(status().isBadRequest());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
