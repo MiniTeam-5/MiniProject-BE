@@ -1,11 +1,17 @@
 package kr.co.lupintech.controller;
 
+import kr.co.lupintech.core.annotation.MyErrorLog;
+import kr.co.lupintech.core.annotation.MyLog;
 import kr.co.lupintech.core.auth.session.MyUserDetails;
 import kr.co.lupintech.core.exception.Exception400;
 import kr.co.lupintech.dto.leave.LeaveRequest;
 import kr.co.lupintech.dto.leave.LeaveResponse;
 import kr.co.lupintech.service.LeaveService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -17,8 +23,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import kr.co.lupintech.dto.ResponseDTO;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Controller
 public class LeaveController {
@@ -66,5 +74,15 @@ public class LeaveController {
         return ResponseEntity.ok(responseDTO);
     }
 
-
+    @MyLog
+    @MyErrorLog
+    @GetMapping("/auth/leave/download")
+    public ResponseEntity<?> download() throws IOException {
+        Resource resource = leaveService.엑셀다운로드();
+        String filename = "annual_leave_duty.xlsx"; // 다운로드할 파일 이름
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"") // 다운로드, 이름지정
+                .contentType(MediaType.APPLICATION_OCTET_STREAM) // 일반적인 이진 데이터
+                .body(resource);
+    }
 }
