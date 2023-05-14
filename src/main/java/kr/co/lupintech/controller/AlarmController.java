@@ -3,6 +3,7 @@ package kr.co.lupintech.controller;
 import kr.co.lupintech.core.auth.session.MyUserDetails;
 import kr.co.lupintech.dto.alarm.AlarmResponse;
 import kr.co.lupintech.model.leave.enums.LeaveStatus;
+import kr.co.lupintech.model.user.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,9 +24,17 @@ public class AlarmController {
     public ResponseEntity<?> getUserAlarms(@AuthenticationPrincipal MyUserDetails myUserDetails)
     {
         List<AlarmResponse.AlarmOutDTO> alarmOutDTOS = new ArrayList<>();
-        alarmOutDTOS.addAll(alarmService.findByUserIdAndLeaveStatus(myUserDetails.getUser().getId(), LeaveStatus.APPROVAL));
-        alarmOutDTOS.addAll(alarmService.findByUserIdAndLeaveStatus(myUserDetails.getUser().getId(), LeaveStatus.REJECTION));
-
+        //ROLE_USER 는 승인/대기 알람만 보여주면 된다
+        if(myUserDetails.getUser().getRole() == UserRole.ROLE_USER)
+        {
+            alarmOutDTOS.addAll(alarmService.findByUserIdAndLeaveStatus(myUserDetails.getUser().getId(), LeaveStatus.APPROVAL));
+            alarmOutDTOS.addAll(alarmService.findByUserIdAndLeaveStatus(myUserDetails.getUser().getId(), LeaveStatus.REJECTION));
+        }
+        else //ROLE_ADMIN OR ROLE_MASTER
+        {
+            alarmOutDTOS.addAll(alarmService.findByUserId(myUserDetails.getUser().getId()));
+        }
+     
         ResponseDTO<?> responseDTO = new ResponseDTO<>(alarmOutDTOS);
         return ResponseEntity.ok(responseDTO);
     }
