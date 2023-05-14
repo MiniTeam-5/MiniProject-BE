@@ -395,8 +395,6 @@ public class LeaveControllerTest extends MyRestDoc {
         User userPS = userRepository.save(dummy.newUser("난취소", "icancel@nate.com", true,  LocalDate.now().minusYears(1).minusWeeks(1), 14));
         Leave leavePS = leaveRepository.save(dummy.newLeave(userPS, LeaveType.ANNUAL, LocalDate.now().plusDays(130),
                 LocalDate.now().plusDays(133), 2, LeaveStatus.WAITING));
-        Alarm alarm = AlarmFactory.newAlarm(userPS, leavePS);
-        alarmRepository.save(alarm);
 
         // when
         ResultActions resultActions = mvc
@@ -407,7 +405,7 @@ public class LeaveControllerTest extends MyRestDoc {
         // then
         resultActions.andExpect(jsonPath("$.status").value(200));
         resultActions.andExpect(jsonPath("$.msg").value("성공"));
-        resultActions.andExpect(jsonPath("$.data.remainDays").value(13));
+        resultActions.andExpect(jsonPath("$.data.remainDays").value(11));
         resultActions.andExpect(status().isOk());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }

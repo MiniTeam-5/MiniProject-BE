@@ -58,9 +58,14 @@ public class LeaveService {
             // 1) 당직 등록
             Leave leavePS = leaveRepository.save(applyInDTO.toEntity(userPS, 0));
 
-            // 2) 알림 등록
-            Alarm alarm = AlarmFactory.newAlarm(userPS, leavePS);
-            alarmRepository.save(alarm);
+            // 2) 관리자들에게 알림 등록 및 실시간 알람 전송
+            Set<UserRole> adminAndMasterRoles = new HashSet<>(Arrays.asList(UserRole.ROLE_ADMIN, UserRole.ROLE_MASTER));
+            List<User> managerList = userRepository.findByRoles(adminAndMasterRoles);
+            for (User manager : managerList) {
+                Alarm alarm = AlarmFactory.newAlarm(manager, leavePS);
+                Alarm alarmPS = alarmRepository.save(alarm);
+                sseService.sendToUser(manager.getId(), "alarm", new AlarmResponse.AlarmOutDTO(alarmPS));
+            }
 
             return new LeaveResponse.ApplyOutDTO(leavePS, userPS);
         }
@@ -91,15 +96,13 @@ public class LeaveService {
         // 4) 연차 등록
         Leave leavePS = leaveRepository.save(applyInDTO.toEntity(userPS, usingDays));
 
-        // 5) 알림 등록
-        Alarm alarm = AlarmFactory.newAlarm(userPS, leavePS);
-        Alarm alarmPS = alarmRepository.save(alarm);
-
-        // 6) 모든 관리자에게 실시간 알람 전송
+        // 5) 관리자들에게 알림 등록 및 실시간 알람 전송
         Set<UserRole> adminAndMasterRoles = new HashSet<>(Arrays.asList(UserRole.ROLE_ADMIN, UserRole.ROLE_MASTER));
         List<User> managerList = userRepository.findByRoles(adminAndMasterRoles);
         for (User manager : managerList) {
-            sseService.sendToUser(manager.getId(), "alarm", new AlarmResponse.AlarmOutDTO(alarm));
+            Alarm alarm = AlarmFactory.newAlarm(manager, leavePS);
+            Alarm alarmPS = alarmRepository.save(alarm);
+            sseService.sendToUser(manager.getId(), "alarm", new AlarmResponse.AlarmOutDTO(alarmPS));
         }
 
         return new LeaveResponse.ApplyOutDTO(leavePS, userPS);
@@ -120,17 +123,6 @@ public class LeaveService {
         if(leavePS.getStatus().equals(LeaveStatus.REJECTION)){
             throw new Exception400("id", "이미 거절된 신청입니다.");
         }
-
-        String content = "";
-        Alarm alarm = null;
-        if(leavePS.getType().equals(LeaveType.ANNUAL)){
-            userPS.increaseRemainDays(leavePS.getUsingDays());
-            alarm = AlarmFactory.newAlarm(userPS, leavePS);
-        } else {
-            alarm = AlarmFactory.newAlarm(userPS, leavePS);
-        }
-        if(alarm != null)
-            alarmRepository.save(alarm);
 
         leaveRepository.delete(leavePS);
 
@@ -161,9 +153,7 @@ public class LeaveService {
             isReject = true;
         }
 
-        String content = "";
         Alarm alarm = null;
-        String status = isReject ? "거절" : "승인";
         if (leavePS.getType().equals(LeaveType.ANNUAL)) {
             if (isReject) userPS.increaseRemainDays(leavePS.getUsingDays());
             alarm = AlarmFactory.newAlarm(userPS, leavePS);
