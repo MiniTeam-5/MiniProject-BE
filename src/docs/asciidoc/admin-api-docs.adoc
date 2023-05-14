@@ -50,3 +50,53 @@ include::{snippets}/{admin}/search_partial_name_test/http-response.adoc[]
 
 ===== Curl
 include::{snippets}/{admin}/search_partial_name_test/curl-request.adoc[]
+
+=== 유저의 연차 일수 수정 성공 (하루)
+===== Request Example
+include::{snippets}/{admin}/annual_update_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/annual_update_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/annual_update_test/curl-request.adoc[]
+
+=== 유저의 연차 일수 수정 실패 (0 미만)
+===== Request Example
+include::{snippets}/{admin}/annual_update_fail_min_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/annual_update_fail_min_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/annual_update_fail_min_test/curl-request.adoc[]
+
+=== 유저의 연차 일수 수정 실패 (25 초과)
+===== Request Example
+include::{snippets}/{admin}/annual_update_fail_max_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/annual_update_fail_max_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/annual_update_fail_max_test/curl-request.adoc[]
+
+=== 유저의 연차 일수 수정 실패 (퇴사한 회원이거나 존재하지 않는 회원 id인 경우)
+===== Request Example
+include::{snippets}/{admin}/annual_update_fail_not_exist_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/annual_update_fail_not_exist_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/annual_update_fail_not_exist_test/curl-request.adoc[]
+
+=== 권한 변경 (마스터만 가능)
+===== Request Example
+include::{snippets}/{admin}/master_test/http-request.adoc[]
+
+===== Response Example
+include::{snippets}/{admin}/master_test/http-response.adoc[]
+
+===== Curl
+include::{snippets}/{admin}/master_test/curl-request.adoc[]

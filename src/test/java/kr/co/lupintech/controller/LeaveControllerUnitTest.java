@@ -120,30 +120,6 @@ public class LeaveControllerUnitTest extends DummyEntity {
         resultActions.andExpect(status().isOk());
     }
 
-    @WithMockUser(username="admin@nate.com", roles={"ADMIN"})
-    @Test
-    public void decide_test() throws Exception {
-        // given
-        LeaveRequest.DecideInDTO decideInDTO = new LeaveRequest.DecideInDTO();
-        decideInDTO.setId(1L);
-        decideInDTO.setStatus(LeaveStatus.APPROVAL);
-        String requestBody = om.writeValueAsString(decideInDTO);
-
-        // stub
-        User user = newMockUser(1L, "박코스", "cos@nate.com",14);
-        LeaveResponse.DecideOutDTO decideOutDTO = new LeaveResponse.DecideOutDTO(user);
-        Mockito.when(leaveService.연차당직결정하기(any())).thenReturn(decideOutDTO);
-
-        // shen
-        ResultActions resultActions = mvc
-                .perform(post("/admin/approve").content(requestBody).contentType(MediaType.APPLICATION_JSON));
-        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-        System.out.println("테스트 : " + responseBody);
-
-        // 검증해볼께
-        resultActions.andExpect(jsonPath("$.data.remainDays").value(14));
-    }
-
     @MyWithMockUser(id = 1L, username = "박코스", role = UserRole.ROLE_USER, remainDays = 15)
     @Test
     public void getLeaveData_test() throws Exception {

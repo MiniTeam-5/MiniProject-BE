@@ -464,9 +464,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h5 id="_request_example">Request Example</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /refreshtoken/1 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /refreshtoken HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-RefreshToken: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsImV4cCI6MTY4NDQ1OTM1MCwidXVpZCI6IjM1NmQxMDYyLTJlNjktNDYzYS05YTBjLTYzODJlYzcwYjJiOCJ9.Fr5tSVUXvS3lotm1Ojf2zmmhECLsuHMFA-zLcIv6g4EVlw7itCRuFms79xnBtNpB_dzp_FRvnYM5uGEwinUu_w
+RefreshToken: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsImV4cCI6MTY4NDYzNzA5MCwidXVpZCI6IjgzNTcwNzU4LTM1N2EtNDFjYy05NjQyLWFkMTRiNTVlNDE4NCJ9.13OPn_hr7cB8NBDcRQNuluZh55yVImH3ZbUrOzhXON2zeLmpALPPz-eg98RnUdh9mUeX5RacxMf3hbEMrAgzRA
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -479,7 +479,7 @@ Host: localhost:8080</code></pre>
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJST0xFX1VTRVIiLCJpZCI6MSwiZXhwIjoxNjgzOTQwOTUwfQ.aocRRx-_5pSWrhzkoyv0FQ0IcuyU0V2xCbswPjukp-0HoEkAhHqH--RPJ9N2TD6AYEINce-zobbH6IHO4uMloQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJST0xFX1VTRVIiLCJpZCI6MSwiZXhwIjoxNjg0MTE4NjkwfQ.PhbA0DnvIaDHXsUIVc4mOW4vBgw1dtEWy4FcAxlxqd1aW33ouNyzYFp8xyiB8EBWl_j9lfiaCYUQmgd8RK6UAQ
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
@@ -492,9 +492,9 @@ Expires: 0</code></pre>
 <h5 id="_curl">Curl</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/refreshtoken/1' -i -X POST \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/refreshtoken' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'RefreshToken: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsImV4cCI6MTY4NDQ1OTM1MCwidXVpZCI6IjM1NmQxMDYyLTJlNjktNDYzYS05YTBjLTYzODJlYzcwYjJiOCJ9.Fr5tSVUXvS3lotm1Ojf2zmmhECLsuHMFA-zLcIv6g4EVlw7itCRuFms79xnBtNpB_dzp_FRvnYM5uGEwinUu_w'</code></pre>
+    -H 'RefreshToken: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsImV4cCI6MTY4NDYzNzA5MCwidXVpZCI6IjgzNTcwNzU4LTM1N2EtNDFjYy05NjQyLWFkMTRiNTVlNDE4NCJ9.13OPn_hr7cB8NBDcRQNuluZh55yVImH3ZbUrOzhXON2zeLmpALPPz-eg98RnUdh9mUeX5RacxMf3hbEMrAgzRA'</code></pre>
 </div>
 </div>
 </div>
@@ -505,9 +505,9 @@ Expires: 0</code></pre>
 <h5 id="_request_example_2">Request Example</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /refreshtoken/1 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /refreshtoken HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-RefreshToken: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsImV4cCI6MTY4Mzg1NDU0OSwidXVpZCI6IjI4NGE3MTc3LThiZjYtNGRhYS1iMTcxLWU2NTYzYTg2MDgyNiJ9.7t5GGXW5q9claptgPz7IS0VH0Ud8OR-6JRr_f6A_ZEPXnEwG6WuBArVGCHv3OivsQh-zCHELBDiLb9kkIWhNXA
+RefreshToken: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsImV4cCI6MTY4NDAzMjI4OSwidXVpZCI6IjYxZGMyZTE0LTJkMWUtNGQ2ZC05ODZmLTUwNGYwNTg2MTM5MyJ9._kv9Db2lqWR7JedRO8M_raZAo8Z8J2UtV0r-Af5McOgAmMbcxgvm0wot3kGSvL0ACg15abq_NCgCLJuWe2JqVQ
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -540,9 +540,9 @@ Content-Length: 91
 <h5 id="_curl_2">Curl</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/refreshtoken/1' -i -X POST \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/refreshtoken' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'RefreshToken: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsImV4cCI6MTY4Mzg1NDU0OSwidXVpZCI6IjI4NGE3MTc3LThiZjYtNGRhYS1iMTcxLWU2NTYzYTg2MDgyNiJ9.7t5GGXW5q9claptgPz7IS0VH0Ud8OR-6JRr_f6A_ZEPXnEwG6WuBArVGCHv3OivsQh-zCHELBDiLb9kkIWhNXA'</code></pre>
+    -H 'RefreshToken: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsImV4cCI6MTY4NDAzMjI4OSwidXVpZCI6IjYxZGMyZTE0LTJkMWUtNGQ2ZC05ODZmLTUwNGYwNTg2MTM5MyJ9._kv9Db2lqWR7JedRO8M_raZAo8Z8J2UtV0r-Af5McOgAmMbcxgvm0wot3kGSvL0ACg15abq_NCgCLJuWe2JqVQ'</code></pre>
 </div>
 </div>
 </div>
@@ -553,7 +553,7 @@ Content-Length: 91
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-05-12 10:03:19 +0900
+Last updated 2023-05-12 10:34:57 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

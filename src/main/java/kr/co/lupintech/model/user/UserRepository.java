@@ -22,6 +22,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // staus = true && status 사원만 조회
     @Query("select u from User u where u.status = :status and u.id = :id")
     Optional<User> findByStatusAndId(@Param("status") boolean status, @Param("id") Long id);
+
     @Query("select u from User u where u.status = true " +
             "and u.hireDate <= :date and month(u.hireDate) = :month and day(u.hireDate) = :day")
     List<User> findByHireDate(@Param("date") LocalDate date, @Param("month") int month, @Param("day") int day);
@@ -36,6 +37,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("select u from User u where u.status = true and u.username like %:query%") // 활성 상태인 것만 조회
     Page<User> findAllByQuery(@Param("query") String query, Pageable pageable);
 
-    @Query("select u from User u where u.status = true") // 활성 상태인 것만 조회
-    Page<User> findAll(Pageable pageable);
+    @Query("select u from User u where u.status = :status") // 활성 상태인 것만 조회
+    Page<User> findAllByStatus(@Param("status") boolean status, Pageable pageable);
 }

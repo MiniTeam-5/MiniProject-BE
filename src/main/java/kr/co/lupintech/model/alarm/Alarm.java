@@ -1,5 +1,6 @@
 package kr.co.lupintech.model.alarm;
 
+import kr.co.lupintech.model.leave.Leave;
 import lombok.*;
 import kr.co.lupintech.model.user.User;
 
@@ -21,8 +22,12 @@ public class Alarm {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(nullable = false, length = 60)
-    String content;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "leave_id")
+    private Leave leave;
+
+    //@Column(nullable = false, length = 60)
+    //String content;
 
     @Column(nullable = false)
     LocalDateTime createdAt;

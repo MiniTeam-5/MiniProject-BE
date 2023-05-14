@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.time.LocalDateTime;
 
@@ -30,6 +31,7 @@ public class User {
 
     @Setter
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private UserRole role;
 
     private Boolean status; // true, false
@@ -40,7 +42,7 @@ public class User {
     private String profile;
 
     @Setter
-    @Min(0)
+    @Min(0) @Max(25)
     private Integer remainDays; // 남은 연차수
 
     @Column(nullable = false)
@@ -95,12 +97,6 @@ public class User {
         this.profile = profile;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-    }
-
-    public void update(User user){
-        this.username = user.getUsername();
-        this.role = user.getRole();
-        this.hireDate = user.getHireDate();
     }
 
     public void resign() { // 퇴사
