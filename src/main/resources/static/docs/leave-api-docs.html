@@ -479,24 +479,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_연차당직_신청_승인거절_실패_관리자_권한이_아님">연차/당직 신청 승인/거절 실패 (관리자 권한이 아님)</a></li>
 </ul>
 </li>
-<li><a href="#_월별_연차당직_조회_api">월별 연차/당직 조회 API</a>
-<ul class="sectlevel2">
-<li><a href="#_월별_연차_조회_성공">월별 연차 조회 성공</a></li>
-<li><a href="#_월별_연차_조회_실패">월별 연차 조회 실패</a></li>
-</ul>
-</li>
-<li><a href="#_id로_연차당직_조회_api">ID로 연차/당직 조회 API</a>
-<ul class="sectlevel2">
-<li><a href="#_id로_연차_조회_성공">ID로 연차 조회 성공</a></li>
-<li><a href="#_id로_연차_조회_실패_잘못된_id">ID로 연차 조회 실패 (잘못된 ID)</a></li>
-</ul>
-</li>
-<li><a href="#_모든_연차당직_조회_api">모든 연차/당직 조회 API</a>
-<ul class="sectlevel2">
-<li><a href="#_모든_연차당직_조회_성공">모든 연차/당직 조회 성공</a></li>
-<li><a href="#_모든_연차당직_조회_실패_인증되지_않은_사용자">모든 연차/당직 조회 실패 (인증되지 않은 사용자)</a></li>
-</ul>
-</li>
 </ul>
 </div>
 </div>
@@ -543,7 +525,7 @@ Content-Length: 175
   "status" : 200,
   "msg" : "성공",
   "data" : {
-    "id" : 38,
+    "id" : 30,
     "type" : "ANNUAL",
     "usingDays" : 1,
     "remainDays" : 12,
@@ -593,7 +575,7 @@ Content-Length: 176
   "status" : 200,
   "msg" : "성공",
   "data" : {
-    "id" : 159,
+    "id" : 131,
     "type" : "ANNUAL",
     "usingDays" : 3,
     "remainDays" : 10,
@@ -643,7 +625,7 @@ Content-Length: 175
   "status" : 200,
   "msg" : "성공",
   "data" : {
-    "id" : 75,
+    "id" : 67,
     "type" : "ANNUAL",
     "usingDays" : 3,
     "remainDays" : 10,
@@ -693,7 +675,7 @@ Content-Length: 175
   "status" : 200,
   "msg" : "성공",
   "data" : {
-    "id" : 23,
+    "id" : 22,
     "type" : "ANNUAL",
     "usingDays" : 2,
     "remainDays" : 11,
@@ -743,7 +725,7 @@ Content-Length: 173
   "status" : 200,
   "msg" : "성공",
   "data" : {
-    "id" : 46,
+    "id" : 38,
     "type" : "DUTY",
     "usingDays" : 0,
     "remainDays" : 13,
@@ -1047,7 +1029,7 @@ Content-Length: 176
 <h5 id="_request_example_12">Request Example</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/leave/167/delete HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/leave/4/delete HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1085,7 +1067,7 @@ Content-Length: 86
 <h5 id="_request_example_13">Request Example</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/leave/189/delete HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/leave/3/delete HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1159,7 +1141,7 @@ Content-Length: 127
 <h5 id="_request_example_15">Request Example</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/leave/136/delete HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/leave/2/delete HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1198,7 +1180,7 @@ Content-Length: 137
 <h5 id="_request_example_16">Request Example</h5>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/leave/106/delete HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/leave/1/delete HTTP/1.1
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -1244,11 +1226,11 @@ Content-Length: 137
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /admin/approve HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 44
+Content-Length: 43
 Host: localhost:8080
 
 {
-  "id" : 90,
+  "id" : 6,
   "status" : "REJECTION"
 }</code></pre>
 </div>
@@ -1274,7 +1256,7 @@ Content-Length: 86
   "status" : 200,
   "msg" : "성공",
   "data" : {
-    "remainDays" : 16
+    "remainDays" : 15
   }
 }</code></pre>
 </div>
@@ -1332,11 +1314,11 @@ Content-Length: 127
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /admin/approve HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 44
+Content-Length: 42
 Host: localhost:8080
 
 {
-  "id" : 144,
+  "id" : 5,
   "status" : "APPROVAL"
 }</code></pre>
 </div>
@@ -1375,11 +1357,11 @@ Content-Length: 100
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /admin/approve HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 44
+Content-Length: 42
 Host: localhost:8080
 
 {
-  "id" : 128,
+  "id" : 2,
   "status" : "APPROVAL"
 }</code></pre>
 </div>
@@ -1421,11 +1403,11 @@ Content-Length: 137
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /admin/approve HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 44
+Content-Length: 43
 Host: localhost:8080
 
 {
-  "id" : 98,
+  "id" : 1,
   "status" : "REJECTION"
 }</code></pre>
 </div>
@@ -1504,374 +1486,11 @@ Content-Length: 84
 </div>
 </div>
 </div>
-<div class="sect1">
-<h2 id="_월별_연차당직_조회_api">월별 연차/당직 조회 API</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_월별_연차_조회_성공">월별 연차 조회 성공</h3>
-<div class="sect4">
-<h5 id="_request_example_23">Request Example</h5>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /auth/leave/month/2023-07 HTTP/1.1
-Host: localhost:8080</code></pre>
-</div>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_response_example_23">Response Example</h5>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json;charset=UTF-8
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-Content-Length: 908
-
-{
-  "status" : 200,
-  "msg" : "성공",
-  "data" : [ {
-    "id" : 168,
-    "userId" : 1,
-    "username" : "김쌀쌀",
-    "type" : "ANNUAL",
-    "status" : "REJECTION",
-    "startDate" : "2023-08-19",
-    "endDate" : "2023-08-19",
-    "profile" : null
-  }, {
-    "id" : 169,
-    "userId" : 2,
-    "username" : "박코스",
-    "type" : "ANNUAL",
-    "status" : "APPROVAL",
-    "startDate" : "2023-08-10",
-    "endDate" : "2023-08-11",
-    "profile" : null
-  }, {
-    "id" : 170,
-    "userId" : 1,
-    "username" : "김쌀쌀",
-    "type" : "DUTY",
-    "status" : "WAITING",
-    "startDate" : "2023-07-10",
-    "endDate" : "2023-07-10",
-    "profile" : null
-  }, {
-    "id" : 173,
-    "userId" : 1,
-    "username" : "김쌀쌀",
-    "type" : "ANNUAL",
-    "status" : "WAITING",
-    "startDate" : "2023-07-17",
-    "endDate" : "2023-07-18",
-    "profile" : null
-  } ]
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_월별_연차_조회_실패">월별 연차 조회 실패</h3>
-<div class="sect4">
-<h5 id="_request_example_24">Request Example</h5>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /auth/leave/month/2023-7 HTTP/1.1
-Host: localhost:8080</code></pre>
-</div>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_response_example_24">Response Example</h5>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json;charset=UTF-8
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-Content-Length: 153
-
-{
-  "status" : 400,
-  "msg" : "badRequest",
-  "data" : {
-    "key" : "InvalidFormat",
-    "value" : "날짜 형식은 yyyy-MM 이어야 함"
-  }
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_id로_연차당직_조회_api">ID로 연차/당직 조회 API</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_id로_연차_조회_성공">ID로 연차 조회 성공</h3>
-<div class="sect4">
-<h5 id="_request_example_25">Request Example</h5>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /auth/leave/id/1 HTTP/1.1
-Host: localhost:8080</code></pre>
-</div>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_response_example_25">Response Example</h5>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json;charset=UTF-8
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-Content-Length: 695
-
-{
-  "status" : 200,
-  "msg" : "성공",
-  "data" : [ {
-    "id" : 107,
-    "userId" : 1,
-    "username" : "김쌀쌀",
-    "type" : "ANNUAL",
-    "status" : "REJECTION",
-    "startDate" : "2023-08-19",
-    "endDate" : "2023-08-19",
-    "profile" : null
-  }, {
-    "id" : 109,
-    "userId" : 1,
-    "username" : "김쌀쌀",
-    "type" : "DUTY",
-    "status" : "WAITING",
-    "startDate" : "2023-07-10",
-    "endDate" : "2023-07-10",
-    "profile" : null
-  }, {
-    "id" : 112,
-    "userId" : 1,
-    "username" : "김쌀쌀",
-    "type" : "ANNUAL",
-    "status" : "WAITING",
-    "startDate" : "2023-07-17",
-    "endDate" : "2023-07-18",
-    "profile" : null
-  } ]
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_id로_연차_조회_실패_잘못된_id">ID로 연차 조회 실패 (잘못된 ID)</h3>
-<div class="sect4">
-<h5 id="_request_example_26">Request Example</h5>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /auth/leave/id/9999999999 HTTP/1.1
-Host: localhost:8080</code></pre>
-</div>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_response_example_26">Response Example</h5>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json;charset=UTF-8
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-Content-Length: 140
-
-{
-  "status" : 400,
-  "msg" : "badRequest",
-  "data" : {
-    "key" : "id",
-    "value" : "아이디를 찾을 수 없습니다"
-  }
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_모든_연차당직_조회_api">모든 연차/당직 조회 API</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_모든_연차당직_조회_성공">모든 연차/당직 조회 성공</h3>
-<div class="sect4">
-<h5 id="_request_example_27">Request Example</h5>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /auth/leave/all HTTP/1.1
-Host: localhost:8080</code></pre>
-</div>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_response_example_27">Response Example</h5>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json;charset=UTF-8
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-Content-Length: 1544
-
-{
-  "status" : 200,
-  "msg" : "성공",
-  "data" : [ {
-    "id" : 197,
-    "userId" : 1,
-    "username" : "김쌀쌀",
-    "type" : "ANNUAL",
-    "status" : "REJECTION",
-    "startDate" : "2023-08-19",
-    "endDate" : "2023-08-19",
-    "profile" : null
-  }, {
-    "id" : 198,
-    "userId" : 2,
-    "username" : "박코스",
-    "type" : "ANNUAL",
-    "status" : "APPROVAL",
-    "startDate" : "2023-08-10",
-    "endDate" : "2023-08-11",
-    "profile" : null
-  }, {
-    "id" : 199,
-    "userId" : 1,
-    "username" : "김쌀쌀",
-    "type" : "DUTY",
-    "status" : "WAITING",
-    "startDate" : "2023-07-10",
-    "endDate" : "2023-07-10",
-    "profile" : null
-  }, {
-    "id" : 200,
-    "userId" : 2,
-    "username" : "박코스",
-    "type" : "ANNUAL",
-    "status" : "WAITING",
-    "startDate" : "2023-09-18",
-    "endDate" : "2023-09-19",
-    "profile" : null
-  }, {
-    "id" : 201,
-    "userId" : 3,
-    "username" : "이삭제",
-    "type" : "ANNUAL",
-    "status" : "WAITING",
-    "startDate" : "2023-09-29",
-    "endDate" : "2023-09-29",
-    "profile" : null
-  }, {
-    "id" : 202,
-    "userId" : 1,
-    "username" : "김쌀쌀",
-    "type" : "ANNUAL",
-    "status" : "WAITING",
-    "startDate" : "2023-07-17",
-    "endDate" : "2023-07-18",
-    "profile" : null
-  }, {
-    "id" : 203,
-    "userId" : 2,
-    "username" : "박코스",
-    "type" : "ANNUAL",
-    "status" : "WAITING",
-    "startDate" : "2023-10-26",
-    "endDate" : "2023-10-27",
-    "profile" : null
-  } ]
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_모든_연차당직_조회_실패_인증되지_않은_사용자">모든 연차/당직 조회 실패 (인증되지 않은 사용자)</h3>
-<div class="sect4">
-<h5 id="_request_example_28">Request Example</h5>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /auth/leave/all HTTP/1.1
-Host: localhost:8080</code></pre>
-</div>
-</div>
-</div>
-<div class="sect4">
-<h5 id="_response_example_28">Response Example</h5>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 401 Unauthorized
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json; charset=utf-8
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-Content-Length: 93
-
-{
-  "status" : 401,
-  "msg" : "unAuthorized",
-  "data" : "인증되지 않았습니다"
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-</div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-05-12 10:34:57 +0900
+Last updated 2023-05-11 21:01:49 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
