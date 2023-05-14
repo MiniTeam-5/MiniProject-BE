@@ -1,12 +1,11 @@
 package kr.co.lupintech.dto.user;
 
+import kr.co.lupintech.model.user.UserRole;
 import lombok.Getter;
 import lombok.Setter;
 import kr.co.lupintech.model.user.User;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 import java.time.LocalDate;
 
@@ -73,5 +72,19 @@ public class UserRequest {
         private String newPassword;
         private String profileToDelete;
 
+    }
+
+    @Getter @Setter
+    public static class AnnualInDTO{
+        @NotNull
+        @Min(0)
+        @Max(25)
+        private Integer remainDays;
+    }
+
+    @Getter @Setter
+    public static class MasterInDTO {
+        @NotNull
+        private UserRole role;
     }
 }
