@@ -25,9 +25,15 @@ public class AlarmService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
     public List<AlarmResponse.AlarmOutDTO> findByUserIdAndLeaveStatus(Long userId, LeaveStatus status) {
         List<Alarm> alarms = alarmRepository.findByUserIdAndLeaveStatus(userId, status);
+        return alarms.stream()
+                .map(alarm -> new AlarmResponse.AlarmOutDTO(alarm))
+                .collect(Collectors.toList());
+    }
+
+    public List<AlarmResponse.AlarmOutDTO> findByLeaveStatus(LeaveStatus status) {
+        List<Alarm> alarms = alarmRepository.findByLeaveStatus(status);
         return alarms.stream()
                 .map(alarm -> new AlarmResponse.AlarmOutDTO(alarm))
                 .collect(Collectors.toList());
