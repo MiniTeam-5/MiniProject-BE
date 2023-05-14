@@ -52,7 +52,7 @@ public class AlarmRepositoryTest extends DummyEntity {
         // then (beforeEach에서 1건이 insert 되어 있음)
         Assertions.assertThat(alarmPS.getId()).isEqualTo(1L);
         Assertions.assertThat(alarmPS.getUser()).isEqualTo(cos);
-        //Assertions.assertThat(alarmPS.getContent()).isEqualTo("박코스,2023-05-14,2023-05-17,7,ANNUAL,WAITING");
+        Assertions.assertThat(alarmPS.getContent()).isEqualTo("박코스,2023-05-15,2023-05-18,7,ANNUAL,WAITING");
         Assertions.assertThat(alarmPS.getCreatedAt().toLocalDate()).isEqualTo(LocalDate.now());
         Assertions.assertThat(alarmPS.getUpdatedAt()).isNull();
     }

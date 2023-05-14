@@ -66,10 +66,5 @@ public class LeaveController {
         return ResponseEntity.ok(responseDTO);
     }
 
-    @PostMapping("/admin/approve")
-    public ResponseEntity<?> decide(@RequestBody @Valid LeaveRequest.DecideInDTO decideInDTO, Errors errors){
-        LeaveResponse.DecideOutDTO decideOutDTO = leaveService.연차당직결정하기(decideInDTO);
-        ResponseDTO<?> responseDTO = new ResponseDTO<>(decideOutDTO);
-        return ResponseEntity.ok(responseDTO);
-    }
+
 }

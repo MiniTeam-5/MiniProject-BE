@@ -7,18 +7,15 @@ import kr.co.lupintech.core.advice.MyLogAdvice;
 import kr.co.lupintech.core.advice.MyValidAdvice;
 import kr.co.lupintech.core.config.MyFilterRegisterConfig;
 import kr.co.lupintech.core.config.MySecurityConfig;
+import kr.co.lupintech.dto.leave.LeaveRequest;
 import kr.co.lupintech.dto.leave.LeaveResponse;
-import kr.co.lupintech.dto.manager.ManagerRequest;
 import kr.co.lupintech.model.leave.enums.LeaveStatus;
 import kr.co.lupintech.model.leave.enums.LeaveType;
 import kr.co.lupintech.model.user.User;
-import kr.co.lupintech.model.user.UserRepository;
 import kr.co.lupintech.model.user.UserRole;
 import kr.co.lupintech.service.LeaveService;
-import kr.co.lupintech.service.ManageService;
+import kr.co.lupintech.service.UserService;
 import org.hamcrest.Matchers;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,22 +23,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import kr.co.lupintech.core.dummy.DummyEntity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static junit.framework.TestCase.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -55,119 +47,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         MyValidAdvice.class,
         MyLogAdvice.class,
         MySecurityConfig.class,
-        MyFilterRegisterConfig.class,
+        MyFilterRegisterConfig.class
 }) // Advice 와 Security 설정 가져오기
 @WebMvcTest(
         // 필요한 Controller 가져오기, 특정 필터를 제외하기
         controllers = {AdminController.class}
 )
 public class AdminControllerUnitTest extends DummyEntity{
-
-
     @Autowired
     private MockMvc mvc;
-
-    @MockBean
-    private ManageService manageService;
-
-    @MockBean
-    private LeaveService leaveService;
-
-    @MockBean
-    private UserRepository userRepository;
-
     @Autowired
     private ObjectMapper om;
-
-
-    //@WithMockUser(roles = {"ADMIN"}) 이것도 된다.
-//    @MyWithMockUser(id = 1L, username = "박코스", role = UserRole.ROLE_ADMIN)
-//    @Test
-//    public void annualUpdate_test() throws Exception{
-//        // given
-//        Long id = 2L;
-//        ManagerRequest.AnnualRequestDTO annualRequestDTO = new ManagerRequest.AnnualRequestDTO(5);
-//        String requestBody = om.writeValueAsString(annualRequestDTO);
-//
-//
-//        User ssar = newMockUser(2L,"김쌀쌀", "ssar@nate.com", 5);
-//        ManagerRequest managerRequest = new ManagerRequest().toEntityOut(ssar);
-//        Mockito.when(manageService.연차수정(Mockito.any(Long.class), any(ManagerRequest.AnnualRequestDTO.class)))
-//                .thenReturn(managerRequest);
-//
-//        //.with(SecurityMockMvcRequestPostProcessors.user("박코스").roles("ADMIN"))
-//
-//        //when
-//        ResultActions resultActions = mvc
-//                .perform(post("/admin/annual/"+id)
-//                        .content(requestBody)
-//                        .contentType(MediaType.APPLICATION_JSON));
-//
-//        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
-//        System.out.println("테스트 : " + responseBody);
-//
-//
-//        //then
-//        resultActions.andExpect(jsonPath("$.data.userId").value(2L));
-//        resultActions.andExpect(jsonPath("$.data.remainDays").value(5));
-//        resultActions.andExpect(status().isOk());
-//    }
-
-//    @MyWithMockUser(id = 10L, username = "김젤다", role = UserRole.ROLE_ADMIN)
-//    @Test
-//    public void userChart_test() throws Exception {
-//
-//        // Given
-//        String img = "img";
-//        int expectedPageSize = 3;
-//        List<ManagerRequest.ManageUserListDTO> userList = new ArrayList<>();
-//        ManagerRequest.ManageUserListDTO userPS1 = newMockChartUser(1L, UserRole.ROLE_USER,"김감자", LocalDate.of(2023, 5, 10),2,img);
-//        ManagerRequest.ManageUserListDTO userPS2 = newMockChartUser(2L,UserRole.ROLE_USER,"이숙자", LocalDate.of(2023, 5, 10),2,img);
-//        ManagerRequest.ManageUserListDTO userPS3 = newMockChartUser(3L,UserRole.ROLE_USER,"이나나", LocalDate.of(2023, 5, 10),2,img);
-//        ManagerRequest.ManageUserListDTO userPS4 = newMockChartUser(4L,UserRole.ROLE_USER,"남궁포", LocalDate.of(2023, 5, 10),2,img);
-//        ManagerRequest.ManageUserListDTO userPS5 = newMockChartUser(5L,UserRole.ROLE_USER,"김보라", LocalDate.of(2023, 5, 10),2,img);
-//        ManagerRequest.ManageUserListDTO userPS6 = newMockChartUser(6L,UserRole.ROLE_USER,"김젤다", LocalDate.of(2023, 5, 10),2,img);
-//        ManagerRequest.ManageUserListDTO userPS7 = newMockChartUser(7L,UserRole.ROLE_USER,"이링크", LocalDate.of(2023, 5, 10),2,img);
-//        ManagerRequest.ManageUserListDTO userPS8 = newMockChartUser(8L,UserRole.ROLE_USER,"이리발", LocalDate.of(2023, 5, 10),2,img);
-//
-//
-//        Page<ManagerRequest.ManageUserListDTO> userListPG = new PageImpl<>(Arrays.asList(userPS1, userPS2, userPS3, userPS4, userPS5, userPS6, userPS7, userPS8));
-//
-//        Mockito.when(manageService.회원목록보기(any())).thenReturn(userListPG);
-//
-//        // when
-//        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/admin")
-//                        .param("page", "0")
-//                        .param("size", "3")
-//                        .accept(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk())
-//                .andReturn();
-//
-//        int pageValue = Integer.parseInt(mvcResult.getRequest().getParameter("page"));
-//        int sizeValue = Integer.parseInt(mvcResult.getRequest().getParameter("size"));
-//
-//        System.out.println(pageValue+ " " + sizeValue);
-//
-//
-//        String responseJson = mvcResult.getResponse().getContentAsString();
-//        JSONObject responseObject = new JSONObject(responseJson);
-//        JSONArray contentArray = responseObject.getJSONObject("data").getJSONArray("content");
-//
-//
-//
-//        // Then
-//        assertEquals(expectedPageSize,responseObject.getInt("size"));
-//        assertEquals(1L, contentArray.getJSONObject(0).getLong("userId"));
-//        assertEquals("ROLE_USER", contentArray.getJSONObject(0).getString("role"));
-//        assertEquals("김감자", contentArray.getJSONObject(0).getString("username"));
-//        assertEquals("2023-05-10", contentArray.getJSONObject(0).getString("hireDate"));
-//        assertEquals(2L, contentArray.getJSONObject(1).getLong("userId"));
-//        assertEquals("ROLE_USER", contentArray.getJSONObject(1).getString("role"));
-//        assertEquals("이숙자", contentArray.getJSONObject(1).getString("username"));
-//        assertEquals("2023-05-10", contentArray.getJSONObject(1).getString("hireDate"));
-//
-//
-//    }
+    @MockBean
+    private UserService userService;
+    @MockBean
+    private LeaveService leaveService;
 
     @MyWithMockUser(id = 1L, username = "박코스", role = UserRole.ROLE_ADMIN)
     @Test
@@ -210,6 +104,30 @@ public class AdminControllerUnitTest extends DummyEntity{
                 .andExpect(jsonPath("$.data[1].username").value("이유저"))
                 .andExpect(jsonPath("$.data[1].type").value("ANNUAL"))
                 .andExpect(jsonPath("$.data[1].status").value("WAITING"));
+    }
+
+    @WithMockUser(username="admin@nate.com", roles={"ADMIN"})
+    @Test
+    public void decide_test() throws Exception {
+        // given
+        LeaveRequest.DecideInDTO decideInDTO = new LeaveRequest.DecideInDTO();
+        decideInDTO.setId(1L);
+        decideInDTO.setStatus(LeaveStatus.APPROVAL);
+        String requestBody = om.writeValueAsString(decideInDTO);
+
+        // stub
+        User user = newMockUser(1L, "박코스", "cos@nate.com",14);
+        LeaveResponse.DecideOutDTO decideOutDTO = new LeaveResponse.DecideOutDTO(user);
+        Mockito.when(leaveService.연차당직결정하기(any())).thenReturn(decideOutDTO);
+
+        // shen
+        ResultActions resultActions = mvc
+                .perform(post("/admin/approve").content(requestBody).contentType(MediaType.APPLICATION_JSON));
+        String responseBody = resultActions.andReturn().getResponse().getContentAsString();
+        System.out.println("테스트 : " + responseBody);
+
+        // 검증해볼께
+        resultActions.andExpect(jsonPath("$.data.remainDays").value(14));
     }
 
 }
