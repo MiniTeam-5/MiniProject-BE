@@ -243,6 +243,8 @@ include::{snippets}/{leave}/get_all_leaves_fail_unauthenticated_user_test/http-r
 ===== Curl
 include::{snippets}/{leave}/get_all_leaves_fail_unauthenticated_user_test/curl-request.adoc[]
 
+== 다운로드 API
+
 === 엑셀 다운로드
 ===== Request Example
 include::{snippets}/{leave}/download_test/http-request.adoc[]
