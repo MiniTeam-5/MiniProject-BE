@@ -14,158 +14,180 @@ endif::[]
 === 연차 신청 성공 (하루)
 ===== Request Example
 include::{snippets}/{leave}/apply_annual_one_day_test/http-request.adoc[]
-
 ===== Response Example
 include::{snippets}/{leave}/apply_annual_one_day_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/apply_annual_one_day_test/curl-request.adoc[]
 
 === 연차 신청 성공 (여러 일)
 ===== Request Example
 include::{snippets}/{leave}/apply_annual_many_days_test/http-request.adoc[]
-
 ===== Response Example
 include::{snippets}/{leave}/apply_annual_many_days_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/apply_annual_many_days_test/curl-request.adoc[]
 
 === 연차 신청 성공 (주말 포함)
 ===== Request Example
 include::{snippets}/{leave}/apply_annual_including_weekend_test/http-request.adoc[]
-
 ===== Response Example
 include::{snippets}/{leave}/apply_annual_including_weekend_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/apply_annual_including_weekend_test/curl-request.adoc[]
 
 === 연차 신청 성공 (공휴일 포함)
 ===== Request Example
 include::{snippets}/{leave}/apply_annual_including_holidays_test/http-request.adoc[]
-
 ===== Response Example
 include::{snippets}/{leave}/apply_annual_including_holidays_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/apply_annual_including_holidays_test/curl-request.adoc[]
 
 === 당직 신청 성공
 ===== Request Example
 include::{snippets}/{leave}/apply_duty_test/http-request.adoc[]
-
 ===== Response Example
 include::{snippets}/{leave}/apply_duty_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/apply_duty_test/curl-request.adoc[]
 
 === 당직 신청 실패 (하루만 신청해야 함)
 ===== Request Example
 include::{snippets}/{leave}/apply_duty_fail_not_one_day_test/http-request.adoc[]
-
 ===== Response Example
 include::{snippets}/{leave}/apply_duty_fail_not_one_day_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/apply_duty_fail_not_one_day_test/curl-request.adoc[]
 
 === 연차/당직 신청 유효성 검사 실패 (startDate와 endDate는 과거 불가)
 ===== Request Example
-include::{snippets}/{leave}/apply_fail_valid_test/http-request.adoc[]
-
+include::{snippets}/{leave}/apply_fail_valid_test/http-request.adoc[]\
 ===== Response Example
 include::{snippets}/{leave}/apply_fail_valid_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/apply_fail_valid_test/curl-request.adoc[]
 
 === 연차 신청 실패 (0일 신청)
 ===== Request Example
 include::{snippets}/{leave}/apply_annual_fail_zero_day_test/http-request.adoc[]
-
 ===== Response Example
 include::{snippets}/{leave}/apply_annual_fail_zero_day_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/apply_annual_fail_zero_day_test/curl-request.adoc[]
 
 === 연차 신청 실패 (남은 연차 일수보다 많이 신청)
 ===== Request Example
 include::{snippets}/{leave}/apply_annual_fail_over_day_test/http-request.adoc[]
-
 ===== Response Example
 include::{snippets}/{leave}/apply_annual_fail_over_day_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/apply_annual_fail_over_day_test/curl-request.adoc[]
 
 === 당직 신청 실패 (중복 신청)
 ===== Request Example
 include::{snippets}/{leave}/apply_duty_fail_duplicate_test/http-request.adoc[]
-
 ===== Response Example
 include::{snippets}/{leave}/apply_duty_fail_duplicate_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/apply_duty_fail_duplicate_test/curl-request.adoc[]
 
 === 연차 신청 실패 (이미 신청된 날짜 포함)
 ===== Request Example
 include::{snippets}/{leave}/apply_annual_fail_duplicate_test/http-request.adoc[]
-
 ===== Response Example
 include::{snippets}/{leave}/apply_annual_fail_duplicate_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/apply_annual_fail_duplicate_test/curl-request.adoc[]
 
 == 연차/당직 신청 취소 API
 === 연차 신청 취소 성공
 ===== Request Example
 include::{snippets}/{leave}/cancel_annual_test/http-request.adoc[]
-
 ===== Response Example
 include::{snippets}/{leave}/cancel_annual_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/cancel_annual_test/curl-request.adoc[]
 
 === 당직 신청 취소 성공
 ===== Request Example
 include::{snippets}/{leave}/cancel_duty_test/http-request.adoc[]
-
 ===== Response Example
 include::{snippets}/{leave}/cancel_duty_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/cancel_duty_test/curl-request.adoc[]
 
 === 연차/당직 신청 취소 실패 (연차/당직 신청 정보가 없을 때)
 ===== Request Example
 include::{snippets}/{leave}/cancel_fail_no_leave_test/http-request.adoc[]
-
 ===== Response Example
 include::{snippets}/{leave}/cancel_fail_no_leave_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/cancel_fail_no_leave_test/curl-request.adoc[]
 
 === 연차/당직 신청 취소 실패 (이미 승인됨)
 ===== Request Example
 include::{snippets}/{leave}/cancel_fail_already_approved_test/http-request.adoc[]
-
 ===== Response Example
 include::{snippets}/{leave}/cancel_fail_already_approved_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/cancel_fail_already_approved_test/curl-request.adoc[]
 
 === 연차/당직 신청 취소 실패 (이미 거절됨)
 ===== Request Example
 include::{snippets}/{leave}/cancel_fail_already_rejected_test/http-request.adoc[]
-
 ===== Response Example
 include::{snippets}/{leave}/cancel_fail_already_rejected_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/cancel_fail_already_rejected_test/curl-request.adoc[]
 
 == 연차/당직 신청 승인/거절 API
 === 연차/당직 신청 승인/거절 성공
 ===== Request Example
 include::{snippets}/{leave}/decide_test/http-request.adoc[]
-
 ===== Response Example
 include::{snippets}/{leave}/decide_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/decide_test/curl-request.adoc[]
 
 === 연차/당직 신청 승인/거절 실패 (연차/당직 신청 정보가 없을 때)
 ===== Request Example
 include::{snippets}/{leave}/decide_fail_no_leave_test/http-request.adoc[]
-
 ===== Response Example
 include::{snippets}/{leave}/decide_fail_no_leave_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/decide_fail_no_leave_test/curl-request.adoc[]
 
 === 연차/당직 신청 승인/거절 실패 (이미 탈퇴한 회원의 신청)
 ===== Request Example
 include::{snippets}/{leave}/decide_fail_status_false_test/http-request.adoc[]
-
 ===== Response Example
 include::{snippets}/{leave}/decide_fail_status_false_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/decide_fail_status_false_test/curl-request.adoc[]
 
 === 연차/당직 신청 승인/거절 실패 (이미 승인됨)
 ===== Request Example
 include::{snippets}/{leave}/decide_fail_already_approved_test/http-request.adoc[]
-
 ===== Response Example
 include::{snippets}/{leave}/decide_fail_already_approved_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/decide_fail_already_approved_test/curl-request.adoc[]
 
 === 연차/당직 신청 승인/거절 실패 (이미 거절됨)
 ===== Request Example
 include::{snippets}/{leave}/decide_fail_already_rejected_test/http-request.adoc[]
-
 ===== Response Example
 include::{snippets}/{leave}/decide_fail_already_rejected_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/decide_fail_already_rejected_test/curl-request.adoc[]
 
 === 연차/당직 신청 승인/거절 실패 (관리자 권한이 아님)
 ===== Request Example
 include::{snippets}/{leave}/decide_fail_not_admin_or_master_test/http-request.adoc[]
-
 ===== Response Example
 include::{snippets}/{leave}/decide_fail_not_admin_or_master_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/decide_fail_not_admin_or_master_test/curl-request.adoc[]
 
 == 월별 연차/당직 조회 API
 
@@ -174,12 +196,16 @@ include::{snippets}/{leave}/decide_fail_not_admin_or_master_test/http-response.a
 include::{snippets}/{leave}/get_leaves_by_month_success_test/http-request.adoc[]
 ===== Response Example
 include::{snippets}/{leave}/get_leaves_by_month_success_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/get_leaves_by_month_success_test/curl-request.adoc[]
 
 === 월별 연차 조회 실패
 ===== Request Example
 include::{snippets}/{leave}/get_leaves_by_month_fail_invalid_month_test/http-request.adoc[]
 ===== Response Example
 include::{snippets}/{leave}/get_leaves_by_month_fail_invalid_month_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/get_leaves_by_month_fail_invalid_month_test/curl-request.adoc[]
 
 == ID로 연차/당직 조회 API
 
@@ -188,12 +214,16 @@ include::{snippets}/{leave}/get_leaves_by_month_fail_invalid_month_test/http-res
 include::{snippets}/{leave}/get_leave_by_id_success_test/http-request.adoc[]
 ===== Response Example
 include::{snippets}/{leave}/get_leave_by_id_success_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/get_leave_by_id_success_test/curl-request.adoc[]
 
 === ID로 연차 조회 실패 (잘못된 ID)
 ===== Request Example
 include::{snippets}/{leave}/get_leave_by_id_fail_invalid_id_test/http-request.adoc[]
 ===== Response Example
 include::{snippets}/{leave}/get_leave_by_id_fail_invalid_id_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/get_leave_by_id_fail_invalid_id_test/curl-request.adoc[]
 
 == 모든 연차/당직 조회 API
 
@@ -202,9 +232,21 @@ include::{snippets}/{leave}/get_leave_by_id_fail_invalid_id_test/http-response.a
 include::{snippets}/{leave}/get_all_leaves_success_test/http-request.adoc[]
 ===== Response Example
 include::{snippets}/{leave}/get_all_leaves_success_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/get_all_leaves_success_test/curl-request.adoc[]
 
 === 모든 연차/당직 조회 실패 (인증되지 않은 사용자)
 ===== Request Example
 include::{snippets}/{leave}/get_all_leaves_fail_unauthenticated_user_test/http-request.adoc[]
 ===== Response Example
 include::{snippets}/{leave}/get_all_leaves_fail_unauthenticated_user_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/get_all_leaves_fail_unauthenticated_user_test/curl-request.adoc[]
+
+=== 엑셀 다운로드
+===== Request Example
+include::{snippets}/{leave}/download_test/http-request.adoc[]
+===== Response Example
+include::{snippets}/{leave}/download_test/http-response.adoc[]
+===== Curl
+include::{snippets}/{leave}/download_test/curl-request.adoc[]

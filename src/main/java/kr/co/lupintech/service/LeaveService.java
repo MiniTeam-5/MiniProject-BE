@@ -1,5 +1,7 @@
 package kr.co.lupintech.service;
 
+import kr.co.lupintech.core.annotation.MyErrorLog;
+import kr.co.lupintech.core.annotation.MyLog;
 import kr.co.lupintech.core.factory.AlarmFactory;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Row;
@@ -7,6 +9,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import kr.co.lupintech.core.exception.Exception400;
@@ -253,8 +256,11 @@ public class LeaveService {
         return infoOutDTOList;
     }
 
+    @MyLog
+    @MyErrorLog
+    @Transactional
     public Resource 엑셀다운로드() throws IOException {
-        List<Leave> leaves = leaveRepository.findAll();
+        List<Leave> leaves = leaveRepository.findAll(); // 사용자가 100명 이상이 되면 join fetch 필요.
 
         // 액셀 파일 생성
         Workbook workbook = new XSSFWorkbook();
@@ -264,26 +270,24 @@ public class LeaveService {
         Row headerRow = sheet.createRow(0);
         headerRow.createCell(0).setCellValue("ID");
         headerRow.createCell(1).setCellValue("User ID");
-        headerRow.createCell(2).setCellValue("Type");
-        headerRow.createCell(3).setCellValue("Start Date");
-        headerRow.createCell(4).setCellValue("End Date");
-        headerRow.createCell(5).setCellValue("Using Days");
-        headerRow.createCell(6).setCellValue("Status");
-        headerRow.createCell(7).setCellValue("Created At");
-        headerRow.createCell(8).setCellValue("Updated At");
+        headerRow.createCell(2).setCellValue("User Name");
+        headerRow.createCell(3).setCellValue("Type");
+        headerRow.createCell(4).setCellValue("Start Date");
+        headerRow.createCell(5).setCellValue("End Date");
+        headerRow.createCell(6).setCellValue("Using Days");
+        headerRow.createCell(7).setCellValue("Status");
 
         int rowNum = 1;
         for (Leave leave : leaves) {
             Row row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(leave.getId());
             row.createCell(1).setCellValue(leave.getUser().getId());
-            row.createCell(2).setCellValue(leave.getType().toString());
-            row.createCell(3).setCellValue(leave.getStartDate().toString());
-            row.createCell(4).setCellValue(leave.getEndDate().toString());
-            row.createCell(5).setCellValue(leave.getUsingDays());
-            row.createCell(6).setCellValue(leave.getStatus().toString());
-            row.createCell(7).setCellValue(leave.getCreatedAt().toString());
-            row.createCell(8).setCellValue(leave.getUpdatedAt().toString());
+            row.createCell(2).setCellValue(leave.getUser().getUsername());
+            row.createCell(3).setCellValue(leave.getType().toString());
+            row.createCell(4).setCellValue(leave.getStartDate().toString());
+            row.createCell(5).setCellValue(leave.getEndDate().toString());
+            row.createCell(6).setCellValue(leave.getUsingDays());
+            row.createCell(7).setCellValue(leave.getStatus().toString());
         }
 
         // 액셀 파일을 임시 디렉토리에 저장
@@ -292,6 +296,6 @@ public class LeaveService {
             workbook.write(fos); // workbook 객체를 사용하여 액셀 파일 데이터를 FileOutputStream으로 출력하여 tempFile에 작성
         }
 
-        return new FileSystemResource(tempFile); // 파일 시스템에 있는 파일
+        return new FileSystemResource(tempFile); // 생성된 FileSystemResource 객체는 액셀 파일을 나타내는 리소스
     }
 }
