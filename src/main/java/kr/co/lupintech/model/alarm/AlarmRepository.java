@@ -15,4 +15,7 @@ public interface AlarmRepository extends JpaRepository<Alarm, Long> {
     @Query("SELECT a FROM Alarm a WHERE a.user.id = :userId AND a.leave.status = :status")
     List<Alarm> findByUserIdAndLeaveStatus(@Param("userId") Long userId, @Param("status") LeaveStatus status);
 
+    @Query("SELECT a FROM Alarm a WHERE a.leave.status = :status")
+    List<Alarm> findByLeaveStatus(@Param("status") LeaveStatus status);
+
 }

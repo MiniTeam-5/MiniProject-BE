@@ -32,7 +32,7 @@ public class AlarmController {
         }
         else //ROLE_ADMIN OR ROLE_MASTER
         {
-            alarmOutDTOS.addAll(alarmService.findByUserId(myUserDetails.getUser().getId()));
+            alarmOutDTOS.addAll(alarmService.findByLeaveStatus(LeaveStatus.WAITING));
         }
      
         ResponseDTO<?> responseDTO = new ResponseDTO<>(alarmOutDTOS);
