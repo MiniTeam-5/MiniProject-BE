@@ -17,14 +17,14 @@ import java.util.UUID;
 @Component
 public class MyJwtProvider {
 
-    private static final String SUBJECT = "jwtstudy";
-    private static final int EXP_ACCESS = 1000 * 60 * 60* 24; // 24시간
-    private static final int EXP_REFRESH = 1000 * 60 * 60* 24 * 7; // 7일
+    protected static final String SUBJECT = "jwtstudy";
+    protected static final int EXP_ACCESS = 1000 * 60 * 60* 24; // 24시간
+    protected static final int EXP_REFRESH = 1000 * 60 * 60* 24 * 7; // 7일
     public static final String TOKEN_PREFIX = "Bearer "; // 스페이스 필요함
     public static final String HEADER = "Authorization";
 
     public static final String HEADER_REFRESH = "RefreshToken";
-    private static final String ACCESS_SECRET = "lupintech";
+    protected static final String ACCESS_SECRET = "lupintech";
     public static final String REFRESH_SECRET = "miniproject";
 
     //private static final String SECRET = System.getenv("HS512_SECRET");
@@ -39,11 +39,11 @@ public class MyJwtProvider {
         return TOKEN_PREFIX + jwt;
     }
 
-    public static Pair<String, RefreshTokenEntity> createRefresh() {
+    public static Pair<String, RefreshTokenEntity> createRefresh(User user) {
 
         String uuid = UUID.randomUUID().toString();
 
-        RefreshTokenEntity refreshToken = new RefreshTokenEntity(uuid, TokenStatus.VALID);
+        RefreshTokenEntity refreshToken = new RefreshTokenEntity(user, uuid, TokenStatus.VALID);
 
         String jwt = JWT.create()
                 .withSubject(SUBJECT)

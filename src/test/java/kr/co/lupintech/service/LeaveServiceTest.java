@@ -9,6 +9,7 @@ import kr.co.lupintech.model.leave.LeaveRepository;
 import kr.co.lupintech.model.leave.enums.LeaveType;
 import kr.co.lupintech.model.user.User;
 import kr.co.lupintech.model.user.UserRepository;
+import kr.co.lupintech.model.user.UserRole;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,9 +22,8 @@ import kr.co.lupintech.core.dummy.DummyEntity;
 import kr.co.lupintech.model.leave.enums.LeaveStatus;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -55,17 +55,24 @@ public class LeaveServiceTest extends DummyEntity {
         applyInDTO.setStartDate(LocalDate.parse("2023-07-20"));
         applyInDTO.setEndDate(LocalDate.parse("2023-07-20"));
 
+        User manager1 = newMockUser(2L, "Manager1", "manager1@nate.com", 15);
+        List<User> managerList = Arrays.asList(manager1);
+
         // stub 1
         User cos = newMockUser(1L, "박코스", "cos@nate.com", 15);
         Mockito.when(userRepository.findById(any())).thenReturn(Optional.of(cos));
 
         // stub 2
-        Alarm alarm = newMockAlarm(1L, cos, "당직이 등록되었습니다.");
-        Mockito.when(alarmRepository.save(any())).thenReturn(alarm);
+        Set<UserRole> adminAndMasterRoles = new HashSet<>(Arrays.asList(UserRole.ROLE_ADMIN, UserRole.ROLE_MASTER));
+        Mockito.when(userRepository.findByRoles(adminAndMasterRoles)).thenReturn(managerList);
 
         // stub 3
         Leave leave = newMockLeave(1L, cos, LeaveType.DUTY,  LocalDate.parse("2023-07-20"), LocalDate.parse("2023-07-20"), 0);
         Mockito.when(leaveRepository.save(any())).thenReturn(leave);
+
+        // stub 4
+        Alarm alarm = newMockAlarm(1L, cos, leave);
+        Mockito.when(alarmRepository.save(any())).thenReturn(alarm);
 
         // when
         LeaveResponse.ApplyOutDTO applyOutDTO = leaveService.연차당직신청하기(applyInDTO, 1L);
@@ -88,10 +95,6 @@ public class LeaveServiceTest extends DummyEntity {
         Mockito.when(userRepository.findById(any())).thenReturn(Optional.of(cos));
 
         // stub 2
-        Alarm alarm = newMockAlarm(1L, cos, "박코스님의 2023-07-20부터 2023-07-20까지, 총 1일의 연차 신청이 취소되었습니다.");
-        Mockito.when(alarmRepository.save(any())).thenReturn(alarm);
-
-        // stub 3
         Leave leave = newMockLeave(1L, cos, LeaveType.ANNUAL,  LocalDate.parse("2023-07-20"), LocalDate.parse("2023-07-20"), 1);
         Mockito.when(leaveRepository.findById(any())).thenReturn(Optional.of(leave));
 
@@ -99,7 +102,7 @@ public class LeaveServiceTest extends DummyEntity {
         LeaveResponse.CancelOutDTO cancelOutDTO = leaveService.연차당직신청취소하기(1L, 1L);
 
         // then
-        Assertions.assertThat(cancelOutDTO.getRemainDays()).isEqualTo(9);
+        Assertions.assertThat(cancelOutDTO.getRemainDays()).isEqualTo(8);
     }
 
     @Test
@@ -112,10 +115,6 @@ public class LeaveServiceTest extends DummyEntity {
         Mockito.when(userRepository.findById(any())).thenReturn(Optional.of(cos));
 
         // stub 2
-        Alarm alarm = newMockAlarm(1L, cos, "cos님의 2023-07-20일 당직 신청이 취소되었습니다.");
-        Mockito.when(alarmRepository.save(any())).thenReturn(alarm);
-
-        // stub 3
         Leave leave = newMockLeave(1L, cos, LeaveType.DUTY,  LocalDate.parse("2023-07-20"), LocalDate.parse("2023-07-20"), 1);
         Mockito.when(leaveRepository.findById(any())).thenReturn(Optional.of(leave));
 
@@ -140,8 +139,7 @@ public class LeaveServiceTest extends DummyEntity {
         Mockito.when(leaveRepository.findById(any())).thenReturn(Optional.ofNullable(leave));
 
         // stub 2
-        Alarm alarm = newMockAlarm(1L, cos, cos.getUsername() + "님의 " + leave.getStartDate() + "부터 "
-                + leave.getEndDate() + "까지, 총 " + leave.getUsingDays() + "일의 연차 신청이 승인되었습니다.");
+        Alarm alarm = newMockAlarm(1L, cos, leave);
         Mockito.when(alarmRepository.save(any())).thenReturn(alarm);
 
         // when

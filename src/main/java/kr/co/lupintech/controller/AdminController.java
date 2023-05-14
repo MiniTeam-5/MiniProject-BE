@@ -1,19 +1,21 @@
 package kr.co.lupintech.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import kr.co.lupintech.core.auth.session.MyUserDetails;
+import kr.co.lupintech.dto.leave.LeaveRequest;
 import kr.co.lupintech.dto.leave.LeaveResponse;
-import kr.co.lupintech.dto.manage.ManageUserDTO;
-import kr.co.lupintech.dto.manage.ResponsePagenation;
+import kr.co.lupintech.core.annotation.MyErrorLog;
+import kr.co.lupintech.core.annotation.MyLog;
+import kr.co.lupintech.dto.PageDTO;
+import kr.co.lupintech.dto.user.UserRequest;
+import kr.co.lupintech.dto.user.UserResponse;
+import kr.co.lupintech.model.user.User;
 import kr.co.lupintech.service.LeaveService;
-import kr.co.lupintech.service.ManageService;
+import kr.co.lupintech.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import kr.co.lupintech.dto.ResponseDTO;
 import kr.co.lupintech.model.leave.enums.LeaveStatus;
@@ -24,53 +26,46 @@ import java.util.List;
 @RequiredArgsConstructor
 @RestController
 public class AdminController {
-
-
-    private final ManageService manageService;
-
     private final LeaveService leaveService;
+    private final UserService userService;
 
-    // 회원 정보 변경 로직
     @PostMapping("/admin/annual/{id}")
-    public ResponseEntity<?> annualUpdate(@PathVariable Long id, @RequestBody @Valid ManageUserDTO.AnnualRequestDTO annualRequestDTO) throws JsonProcessingException {
-
-        // 1. 바꾸려는 회원정보가 있는지 확인 후 회원 정보 업데이트
-            ManageUserDTO manageUserDTOPS = manageService.연차수정(id, annualRequestDTO);
-            ResponseDTO<?>responseDTO = new ResponseDTO<>(manageUserDTOPS);
-
-            return ResponseEntity.ok().body(responseDTO);
-
+    public ResponseEntity<?> annualUpdate(@PathVariable Long id, @RequestBody @Valid UserRequest.AnnualInDTO annualInDTO) {
+        userService.연차수정(id, annualInDTO);
+        ResponseDTO<?>responseDTO = new ResponseDTO<>();
+        return ResponseEntity.ok(responseDTO);
     }
 
-    @GetMapping("/admin") //  /admin?page=5&size=20
-    public ResponseEntity<?> userChart(@RequestParam(defaultValue = "0") int page,@RequestParam(defaultValue = "10") int size) {
-        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("id").descending());
-        Page<ManageUserDTO.ManageUserListDTO> userListPG = manageService.회원목록보기(pageRequest);
+    @MyLog
+    @MyErrorLog
+    @GetMapping("/admin") // /admin?query=김&page=0&size=10
+    public ResponseEntity<?> search(@RequestParam(defaultValue = "") String query,
+                                    @RequestParam(defaultValue = "0") int page,
+                                    @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.ASC, "id"));
+        PageDTO<UserResponse.UserOutDTO, User> pageDTO = userService.사원검색(query, pageable);
+        ResponseDTO<PageDTO<UserResponse.UserOutDTO, User>> responseDTO = new ResponseDTO<>(pageDTO);
+        return ResponseEntity.ok(responseDTO);
+    }
 
-        int pageSize = userListPG.getSize()/size;
-        if(userListPG.getSize()%size != 0){
-            pageSize++;
-        }
-        System.out.println(pageSize);
+    @PostMapping("/admin/resign/{id}")
+    public ResponseEntity<?> resign(@PathVariable Long id){
+        userService.퇴사(id);
+        ResponseDTO<?> responseDTO = new ResponseDTO<>();
+        return ResponseEntity.ok(responseDTO);
+    }
 
-        ResponsePagenation<?,?> responsePagenation = new ResponsePagenation<>(userListPG,pageSize);
-        return ResponseEntity.ok().body(responsePagenation);
+    @PostMapping("/admin/approve")
+    public ResponseEntity<?> decide(@RequestBody @Valid LeaveRequest.DecideInDTO decideInDTO, Errors errors){
+        LeaveResponse.DecideOutDTO decideOutDTO = leaveService.연차당직결정하기(decideInDTO);
+        ResponseDTO<?> responseDTO = new ResponseDTO<>(decideOutDTO);
+        return ResponseEntity.ok(responseDTO);
     }
 
     @GetMapping("/admin/leave")
     public ResponseEntity<?> getLeave() {
         List<LeaveResponse.InfoOutDTO> waitingLeaves = leaveService.상태선택연차당직정보가져오기(LeaveStatus.WAITING);
         ResponseDTO<List<LeaveResponse.InfoOutDTO>> responseDTO = new ResponseDTO<>(waitingLeaves);
-        return ResponseEntity.ok().body(responseDTO);
-    }
-
-    // role까지 변경가능, master로 접근해야, role변경이 가능하다.
-    @PostMapping("/master/{id}")
-    public ResponseEntity<?> roleUpdate(@PathVariable Long id,@RequestBody ManageUserDTO.MasterInDTO masterIn,
-                                        @AuthenticationPrincipal MyUserDetails myUserDetails){
-
-        ManageUserDTO.MasterOutDTO masterOut = manageService.권한수정(id,masterIn);
-        ResponseDTO<?>responseDTO = new ResponseDTO<>(HttpStatus.OK,"success",masterOut);
         return ResponseEntity.ok().body(responseDTO);
     }
 }

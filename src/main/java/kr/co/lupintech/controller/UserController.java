@@ -24,9 +24,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RestController
 public class UserController {
-
     private final UserService userService;
-
     private final RefreshService refreshService;
 
     @MyErrorLog
@@ -65,7 +63,6 @@ public class UserController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-
     @PostMapping("/auth/user")
     public ResponseEntity<?> modifyProfile(@RequestPart(value = "profile", required = false) MultipartFile profile,
                                            @RequestPart(value = "modifiedInDTO") @Valid UserRequest.ModifiedInDTO modifiedInDTO, Errors errors,
@@ -73,14 +70,6 @@ public class UserController {
 
         UserResponse.ModifiedOutDTO modifiedOutDTO = userService.개인정보수정(modifiedInDTO, profile, myUserDetails.getUser().getId());
         ResponseDTO<?> responseDTO = new ResponseDTO<>(modifiedOutDTO);
-        return ResponseEntity.ok(responseDTO);
-    }
-
-    @PostMapping("/admin/resign/{id}")
-    public ResponseEntity<?> resign(@PathVariable Long id){
-        userService.퇴사(id);
-        ResponseDTO<?> responseDTO = new ResponseDTO<>();
-
         return ResponseEntity.ok(responseDTO);
     }
 }

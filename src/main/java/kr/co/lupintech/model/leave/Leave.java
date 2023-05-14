@@ -1,5 +1,6 @@
 package kr.co.lupintech.model.leave;
 
+import kr.co.lupintech.model.alarm.Alarm;
 import lombok.*;
 import kr.co.lupintech.model.leave.enums.LeaveStatus;
 import kr.co.lupintech.model.leave.enums.LeaveType;
@@ -8,6 +9,8 @@ import kr.co.lupintech.model.user.User;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -22,6 +25,11 @@ public class Leave {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
+
+    //leave alarm 은 1 : N 관계.  Leave삭제시 관련된 alarm모두 삭제
+    @Builder.Default
+    @OneToMany(mappedBy = "leave", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Alarm> alarms = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private LeaveType type;

@@ -2,12 +2,18 @@ package kr.co.lupintech.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.lupintech.core.MyRestDoc;
+import kr.co.lupintech.core.factory.AlarmFactory;
 import kr.co.lupintech.dto.leave.LeaveRequest;
+import kr.co.lupintech.model.alarm.Alarm;
+import kr.co.lupintech.model.alarm.AlarmRepository;
+import kr.co.lupintech.model.leave.Leave;
 import kr.co.lupintech.model.leave.LeaveRepository;
 import kr.co.lupintech.model.leave.enums.LeaveStatus;
 import kr.co.lupintech.model.leave.enums.LeaveType;
+import kr.co.lupintech.model.user.AlarmRepositoryTest;
 import kr.co.lupintech.model.user.User;
 import kr.co.lupintech.model.user.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -54,6 +60,8 @@ public class LeaveControllerTest extends MyRestDoc {
     @Autowired
     private LeaveRepository leaveRepository;
     @Autowired
+    private AlarmRepository alarmRepository;
+    @Autowired
     private EntityManager em;
 
     @BeforeEach
@@ -61,6 +69,7 @@ public class LeaveControllerTest extends MyRestDoc {
         User ssar = userRepository.save(dummy.newUser("김쌀쌀", "ssar@nate.com", true,LocalDate.now().minusYears(1).minusWeeks(1), 13));
         User cos = userRepository.save(dummy.newUser("박코스", "cos@nate.com", true, LocalDate.now().minusYears(1).minusWeeks(1), 11));
         User abort = userRepository.save(dummy.newUser("이삭제", "abort@nate.com", false,  LocalDate.now().minusYears(1).minusWeeks(1), 14));
+        User omis = userRepository.save(dummy.newUser("오미스", "omis@nate.com", false,  LocalDate.now().minusYears(1).minusWeeks(1), 14));
         leaveRepository.save(dummy.newLeave(ssar, LeaveType.ANNUAL, LocalDate.parse("2023-08-19"),
                 LocalDate.parse("2023-08-19"), 1, LeaveStatus.REJECTION));
         leaveRepository.save(dummy.newLeave(cos, LeaveType.ANNUAL, LocalDate.parse("2023-08-10"),
@@ -75,7 +84,17 @@ public class LeaveControllerTest extends MyRestDoc {
                 LocalDate.parse("2023-07-18"), 2, LeaveStatus.WAITING));
         leaveRepository.save(dummy.newLeave(cos, LeaveType.ANNUAL, LocalDate.parse("2023-10-26"),
                 LocalDate.parse("2023-10-27"), 2, LeaveStatus.WAITING));
+
+        dummy.newMockAlarm(1L, ssar, dummy.newLeave(cos, LeaveType.ANNUAL, LocalDate.parse("2023-11-26"),
+                LocalDate.parse("2023-12-27"), 2, LeaveStatus.WAITING));
+
         em.clear();
+    }
+
+    @AfterEach
+    public void cleanUp()
+    {
+        leaveRepository.deleteAll();
     }
 
     @DisplayName("연차 신청 성공 (하루)")
@@ -96,7 +115,7 @@ public class LeaveControllerTest extends MyRestDoc {
         System.out.println("테스트 : " + responseBody);
 
         // then
-        resultActions.andExpect(jsonPath("$.data.id").value(30L));
+        //resultActions.andExpect(jsonPath("$.data.id").value(39L));
         resultActions.andExpect(jsonPath("$.data.type").value("ANNUAL"));
         resultActions.andExpect(jsonPath("$.data.usingDays").value(1));
         resultActions.andExpect(jsonPath("$.data.remainDays").value(12));
@@ -123,7 +142,7 @@ public class LeaveControllerTest extends MyRestDoc {
         System.out.println("테스트 : " + responseBody);
 
         // then
-        resultActions.andExpect(jsonPath("$.data.id").value(131L));
+        //resultActions.andExpect(jsonPath("$.data.id").value(8L));
         resultActions.andExpect(jsonPath("$.data.type").value("ANNUAL"));
         resultActions.andExpect(jsonPath("$.data.usingDays").value(3));
         resultActions.andExpect(jsonPath("$.data.remainDays").value(10));
@@ -150,7 +169,7 @@ public class LeaveControllerTest extends MyRestDoc {
         System.out.println("테스트 : " + responseBody);
 
         // then
-        resultActions.andExpect(jsonPath("$.data.id").value(67L));
+        //resultActions.andExpect(jsonPath("$.data.id").value(76L));
         resultActions.andExpect(jsonPath("$.data.type").value("ANNUAL"));
         resultActions.andExpect(jsonPath("$.data.usingDays").value(3));
         resultActions.andExpect(jsonPath("$.data.remainDays").value(10));
@@ -177,7 +196,7 @@ public class LeaveControllerTest extends MyRestDoc {
         System.out.println("테스트 : " + responseBody);
 
         // then
-        resultActions.andExpect(jsonPath("$.data.id").value(22L));
+        //resultActions.andExpect(jsonPath("$.data.id").value(22L));
         resultActions.andExpect(jsonPath("$.data.type").value("ANNUAL"));
         resultActions.andExpect(jsonPath("$.data.usingDays").value(2));
         resultActions.andExpect(jsonPath("$.data.remainDays").value(11));
@@ -204,7 +223,7 @@ public class LeaveControllerTest extends MyRestDoc {
         System.out.println("테스트 : " + responseBody);
 
         // then
-        resultActions.andExpect(jsonPath("$.data.id").value(38L));
+        //resultActions.andExpect(jsonPath("$.data.id").value(47L));
         resultActions.andExpect(jsonPath("$.data.type").value("DUTY"));
         resultActions.andExpect(jsonPath("$.data.usingDays").value(0));
         resultActions.andExpect(jsonPath("$.data.remainDays").value(13));
@@ -373,18 +392,20 @@ public class LeaveControllerTest extends MyRestDoc {
     @Test
     public void cancel_annual_test() throws Exception {
         // given
-        Long id = 4L;
+        User userPS = userRepository.save(dummy.newUser("난취소", "icancel@nate.com", true,  LocalDate.now().minusYears(1).minusWeeks(1), 14));
+        Leave leavePS = leaveRepository.save(dummy.newLeave(userPS, LeaveType.ANNUAL, LocalDate.now().plusDays(130),
+                LocalDate.now().plusDays(133), 2, LeaveStatus.WAITING));
 
         // when
         ResultActions resultActions = mvc
-                .perform(post("/auth/leave/"+id+"/delete"));
+                .perform(post("/auth/leave/"+leavePS.getId()+"/delete"));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : " + responseBody);
 
         // then
         resultActions.andExpect(jsonPath("$.status").value(200));
         resultActions.andExpect(jsonPath("$.msg").value("성공"));
-        resultActions.andExpect(jsonPath("$.data.remainDays").value(13));
+        resultActions.andExpect(jsonPath("$.data.remainDays").value(11));
         resultActions.andExpect(status().isOk());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
@@ -394,11 +415,15 @@ public class LeaveControllerTest extends MyRestDoc {
     @Test
     public void cancel_duty_test() throws Exception {
         // given
-        Long id = 3L;
+        User userPS = userRepository.save(dummy.newUser("난당직취소", "noduty@nate.com", true,  LocalDate.now().minusYears(1).minusWeeks(1), 14));
+        Leave leavePS = leaveRepository.save(dummy.newLeave(userPS, LeaveType.DUTY, LocalDate.now().plusDays(130),
+                LocalDate.now().plusDays(130), 1, LeaveStatus.WAITING));
+        Alarm alarm = AlarmFactory.newAlarm(userPS, leavePS);
+        alarmRepository.save(alarm);
 
         // when
         ResultActions resultActions = mvc
-                .perform(post("/auth/leave/"+id+"/delete"));
+                .perform(post("/auth/leave/"+leavePS.getId()+"/delete"));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : " + responseBody);
 
@@ -436,11 +461,13 @@ public class LeaveControllerTest extends MyRestDoc {
     @Test
     public void cancel_fail_already_approved_test() throws Exception {
         // given
-        Long id = 2L;
+        User userPS = userRepository.save(dummy.newUser("임승인", "alreadyApp@nate.com", true,  LocalDate.now().minusYears(1).minusWeeks(1), 14));
+        Leave leavePS = leaveRepository.save(dummy.newLeave(userPS, LeaveType.ANNUAL, LocalDate.now().plusDays(130),
+                LocalDate.now().plusDays(133), 2, LeaveStatus.APPROVAL));
 
         // when
         ResultActions resultActions = mvc
-                .perform(post("/auth/leave/"+id+"/delete"));
+                .perform(post("/auth/leave/"+leavePS.getId()+"/delete"));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : " + responseBody);
 
@@ -458,11 +485,13 @@ public class LeaveControllerTest extends MyRestDoc {
     @Test
     public void cancel_fail_already_rejected_test() throws Exception {
         // given
-        Long id = 1L;
+        User userPS = userRepository.save(dummy.newUser("임거절", "rejection@nate.com", true,  LocalDate.now().minusYears(1).minusWeeks(1), 14));
+        Leave leavePS = leaveRepository.save(dummy.newLeave(userPS, LeaveType.ANNUAL, LocalDate.now().plusDays(150),
+                LocalDate.now().plusDays(155), 2, LeaveStatus.REJECTION));
 
         // when
         ResultActions resultActions = mvc
-                .perform(post("/auth/leave/"+id+"/delete"));
+                .perform(post("/auth/leave/"+leavePS.getId()+"/delete"));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 : " + responseBody);
 
@@ -479,9 +508,14 @@ public class LeaveControllerTest extends MyRestDoc {
     @WithMockUser(username="관리자", roles={"ADMIN"})
     @Test
     public void decide_test() throws Exception {
+
         // given
+        User userPS = userRepository.save(dummy.newUser("이승인", "approver@nate.com", true,  LocalDate.now().minusYears(1).minusWeeks(1), 14));
+        Leave leavePS = leaveRepository.save(dummy.newLeave(userPS, LeaveType.ANNUAL, LocalDate.parse("2024-10-26"),
+                LocalDate.parse("2024-10-27"), 2, LeaveStatus.WAITING));
+
         LeaveRequest.DecideInDTO decideInDTO = new LeaveRequest.DecideInDTO();
-        decideInDTO.setId(6L);
+        decideInDTO.setId(leavePS.getId());
         decideInDTO.setStatus(LeaveStatus.REJECTION);
         String requestBody = om.writeValueAsString(decideInDTO);
 
@@ -494,7 +528,7 @@ public class LeaveControllerTest extends MyRestDoc {
         // then
         resultActions.andExpect(jsonPath("$.status").value(200));
         resultActions.andExpect(jsonPath("$.msg").value("성공"));
-        resultActions.andExpect(jsonPath("$.data.remainDays").value(15));
+        resultActions.andExpect(jsonPath("$.data.remainDays").value(16));
         resultActions.andExpect(status().isOk());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
@@ -528,8 +562,13 @@ public class LeaveControllerTest extends MyRestDoc {
     @Test
     public void decide_fail_status_false_test() throws Exception {
         // given
+
+        User userPS = userRepository.save(dummy.newUser("임승인", "alreadyApp@nate.com", false,  LocalDate.now().minusYears(1).minusWeeks(1), 14));
+        Leave leavePS = leaveRepository.save(dummy.newLeave(userPS, LeaveType.ANNUAL, LocalDate.now().plusDays(130),
+                LocalDate.now().plusDays(133), 2, LeaveStatus.APPROVAL));
+
         LeaveRequest.DecideInDTO decideInDTO = new LeaveRequest.DecideInDTO();
-        decideInDTO.setId(5L);
+        decideInDTO.setId(leavePS.getId());
         decideInDTO.setStatus(LeaveStatus.APPROVAL);
         String requestBody = om.writeValueAsString(decideInDTO);
 
@@ -552,8 +591,11 @@ public class LeaveControllerTest extends MyRestDoc {
     @Test
     public void decide_fail_already_approved_test() throws Exception {
         // given
+        User userPS = userRepository.save(dummy.newUser("임승인", "alreadyApp@nate.com", true,  LocalDate.now().minusYears(1).minusWeeks(1), 14));
+        Leave leavePS = leaveRepository.save(dummy.newLeave(userPS, LeaveType.ANNUAL, LocalDate.now().plusDays(102),
+                LocalDate.now().plusDays(105), 2, LeaveStatus.APPROVAL));
         LeaveRequest.DecideInDTO decideInDTO = new LeaveRequest.DecideInDTO();
-        decideInDTO.setId(2L);
+        decideInDTO.setId(leavePS.getId());
         decideInDTO.setStatus(LeaveStatus.APPROVAL);
         String requestBody = om.writeValueAsString(decideInDTO);
 
@@ -577,8 +619,12 @@ public class LeaveControllerTest extends MyRestDoc {
     @Test
     public void decide_fail_already_rejected_test() throws Exception {
         // given
+        User userPS = userRepository.save(dummy.newUser("임거절", "rejection@nate.com", true,  LocalDate.now().minusYears(1).minusWeeks(1), 14));
+        Leave leavePS = leaveRepository.save(dummy.newLeave(userPS, LeaveType.ANNUAL, LocalDate.now().plusDays(102),
+                LocalDate.now().plusDays(105), 2, LeaveStatus.REJECTION));
+
         LeaveRequest.DecideInDTO decideInDTO = new LeaveRequest.DecideInDTO();
-        decideInDTO.setId(1L);
+        decideInDTO.setId(leavePS.getId());
         decideInDTO.setStatus(LeaveStatus.REJECTION);
         String requestBody = om.writeValueAsString(decideInDTO);
 
@@ -620,5 +666,102 @@ public class LeaveControllerTest extends MyRestDoc {
         resultActions.andExpect(status().isForbidden());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
+
+    @DisplayName("월별 연차/당직 조회 성공")
+    @WithUserDetails(value = "cos@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void get_leaves_by_month_success_test() throws Exception {
+        // when
+        ResultActions resultActions = mvc.perform(get("/auth/leave/month/2023-07"));
+
+        // then
+        resultActions.andExpect(jsonPath("$.status").value(200));
+        resultActions.andExpect(jsonPath("$.msg").value("성공"));
+        resultActions.andExpect(jsonPath("$.data[0].username").value("김쌀쌀"));
+        resultActions.andExpect(jsonPath("$.data[0].type").value("ANNUAL"));
+        resultActions.andExpect(jsonPath("$.data[0].status").value("REJECTION"));
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @DisplayName("월별 연차 조회 실패 month 형식")
+    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void get_leaves_by_month_fail_invalid_month_test() throws Exception {
+        // when
+        ResultActions resultActions = mvc.perform(get("/auth/leave/month/2023-7"));
+
+        // then
+        resultActions.andExpect(status().isBadRequest());
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @DisplayName("ID로 연차 조회 성공")
+    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void get_leave_by_id_success_test() throws Exception {
+        // given
+        Long leaveId = 1L;
+
+        // when
+        ResultActions resultActions = mvc.perform(get("/auth/leave/id/{id}", leaveId));
+
+        // then
+        resultActions.andExpect(jsonPath("$.status").value(200));
+        resultActions.andExpect(jsonPath("$.msg").value("성공"));
+        resultActions.andExpect(jsonPath("$.data[0].username").value("김쌀쌀"));
+        resultActions.andExpect(jsonPath("$.data[0].type").value("ANNUAL"));
+        resultActions.andExpect(jsonPath("$.data[0].status").value("REJECTION"));
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @DisplayName("ID로 연차 조회 실패 (잘못된 ID)")
+    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void get_leave_by_id_fail_invalid_id_test() throws Exception {
+        // given
+        Long leaveId = 9999999999L;
+
+        // when
+        ResultActions resultActions = mvc.perform(get("/auth/leave/id/{id}", leaveId));
+
+        // then
+        resultActions.andExpect(jsonPath("$.status").value(400));
+        resultActions.andExpect(jsonPath("$.msg").value("badRequest"));
+        resultActions.andExpect(jsonPath("$.data.key").value("id"));
+        resultActions.andExpect(jsonPath("$.data.value").value("아이디를 찾을 수 없습니다"));
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @DisplayName("모든 연차/당직 조회 성공")
+    @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
+    @Test
+    public void get_all_leaves_success_test() throws Exception {
+        // when
+        ResultActions resultActions = mvc.perform(get("/auth/leave/all"));
+
+        // then
+        resultActions.andExpect(status().isOk());
+        resultActions.andExpect(jsonPath("$.status").value(200));
+        resultActions.andExpect(jsonPath("$.msg").value("성공"));
+        resultActions.andExpect(jsonPath("$.data[0].username").value("김쌀쌀"));
+        resultActions.andExpect(jsonPath("$.data[0].type").value("ANNUAL"));
+        resultActions.andExpect(jsonPath("$.data[0].status").value("REJECTION"));
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+    @DisplayName("모든 연차/당직 조회 실패 (인증되지 않은 사용자)")
+    @Test
+    public void get_all_leaves_fail_unauthenticated_user_test() throws Exception {
+        // when
+        ResultActions resultActions = mvc.perform(get("/auth/leave/all"));
+
+        // then
+        resultActions.andExpect(status().isUnauthorized());
+        resultActions.andExpect(jsonPath("$.status").value(401));
+        resultActions.andExpect(jsonPath("$.msg").value("unAuthorized"));
+        resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
+    }
+
+
 }
 

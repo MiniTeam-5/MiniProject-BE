@@ -452,6 +452,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_회원가입_유효성_검사_실패">회원가입 (유효성 검사 실패)</a></li>
 <li><a href="#_로그인_성공">로그인 (성공)</a></li>
 <li><a href="#_로그인_인증_실패">로그인 (인증 실패)</a></li>
+<li><a href="#_로그아웃_성공">로그아웃 성공</a></li>
 <li><a href="#_회원상세보기_성공">회원상세보기 (성공)</a></li>
 <li><a href="#_회원상세보기_인증_안됨_실패">회원상세보기 (인증 안됨 실패)</a></li>
 <li><a href="#_프로필_사원명_이메일_비밀번호_변경">프로필, 사원명, 이메일, 비밀번호 변경</a></li>
@@ -688,8 +689,8 @@ Host: localhost:8080
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJST0xFX1VTRVIiLCJpZCI6MSwiZXhwIjoxNjgzOTY1MjI4fQ.WdXbLeLgqNTKuxdivZPcf-0C786iT_RBOnWN7oZglagnB9qvY0yuWcXf-UJzK9D00fnZJJ3mtLcDJO32S2O5Hg
-RefreshToken: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsImV4cCI6MTY4NDQ4MzYyOCwidXVpZCI6ImQxMGM2MzAwLTFhMzMtNDg5Zi1iY2M1LWMwYTg2NjRlMWFiZiJ9.WqRXaUgBBkV3HmwHp-65I0qoKtRLFpl6Xy4cWIF9lbeZZWzzxRjDau1r0g3hA5UiaD2WM-hBt7biM3J9RRMmYA
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJST0xFX1VTRVIiLCJpZCI6MSwiZXhwIjoxNjg0MTMyOTAxfQ.NbHnje3WASFohJM9Uuo3kygWxnQH8llHTLV5RzjnSqizuv2AyelOsHwjeySXNgqo-OfqOaEPHvgbYa5kFZ7tWg
+RefreshToken: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsImV4cCI6MTY4NDY1MTMwMSwidXVpZCI6ImIwNmNjOGZmLTMyNjMtNDFhMy05ODAzLWZlOWE2ZGVkMmY0OCJ9.llaJTYe9OQGJQSCDhIwoXUek6_HAa4CXXuO5-7bpwfOlE-fLqvDClJl5rzkmuhVkNmvyulMiWkMxN5faYxMomQ
 Content-Type: application/json;charset=UTF-8
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -780,9 +781,49 @@ Content-Length: 93
 </div>
 </div>
 <div class="sect2">
-<h3 id="_회원상세보기_성공">회원상세보기 (성공)</h3>
+<h3 id="_로그아웃_성공">로그아웃 성공</h3>
 <div class="sect4">
 <h5 id="_request_example_6">Request Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/logout HTTP/1.1
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJST0xFX1VTRVIiLCJpZCI6MSwiZXhwIjoxNjg0MTMyOTAzfQ.t5KTKLptfmZzDyJWHMLkU2HDAP689eA0vkcytC0NIDwRM_XPuIU5TUtzLHILeqdPmM_v_-b0bSev-s_r-8K60Q
+RefreshToken: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsImV4cCI6MTY4NDY1MTMwMywidXVpZCI6IjdiNmIwMWQ0LTI4MzItNGU4MS1iNDRhLWQxMTQ2NjhlZGE2OSJ9.TOisn0tMf-rz5pKPwg1j173Chjwz5pZxAnJujP5Jj1FfnaiWyTzfp2RpTV2ebAZDNPygYFt7d_djcUPEyRZnBA
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_response_example_6">Response Example</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0</code></pre>
+</div>
+</div>
+</div>
+<div class="sect4">
+<h5 id="_curl_6">Curl</h5>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/logout' -i -X POST \
+    -H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJST0xFX1VTRVIiLCJpZCI6MSwiZXhwIjoxNjg0MTMyOTAzfQ.t5KTKLptfmZzDyJWHMLkU2HDAP689eA0vkcytC0NIDwRM_XPuIU5TUtzLHILeqdPmM_v_-b0bSev-s_r-8K60Q' \
+    -H 'RefreshToken: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsImV4cCI6MTY4NDY1MTMwMywidXVpZCI6IjdiNmIwMWQ0LTI4MzItNGU4MS1iNDRhLWQxMTQ2NjhlZGE2OSJ9.TOisn0tMf-rz5pKPwg1j173Chjwz5pZxAnJujP5Jj1FfnaiWyTzfp2RpTV2ebAZDNPygYFt7d_djcUPEyRZnBA'</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_회원상세보기_성공">회원상세보기 (성공)</h3>
+<div class="sect4">
+<h5 id="_request_example_7">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /auth/user HTTP/1.1
@@ -791,7 +832,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_6">Response Example</h5>
+<h5 id="_response_example_7">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -823,7 +864,7 @@ Content-Length: 308
 </div>
 </div>
 <div class="sect4">
-<h5 id="_curl_6">Curl</h5>
+<h5 id="_curl_7">Curl</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user' -i -X GET</code></pre>
@@ -834,7 +875,7 @@ Content-Length: 308
 <div class="sect2">
 <h3 id="_회원상세보기_인증_안됨_실패">회원상세보기 (인증 안됨 실패)</h3>
 <div class="sect4">
-<h5 id="_request_example_7">Request Example</h5>
+<h5 id="_request_example_8">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /auth/user HTTP/1.1
@@ -843,7 +884,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_7">Response Example</h5>
+<h5 id="_response_example_8">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 401 Unauthorized
@@ -867,7 +908,7 @@ Content-Length: 93
 </div>
 </div>
 <div class="sect4">
-<h5 id="_curl_7">Curl</h5>
+<h5 id="_curl_8">Curl</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user' -i -X GET</code></pre>
@@ -878,7 +919,7 @@ Content-Length: 93
 <div class="sect2">
 <h3 id="_프로필_사원명_이메일_비밀번호_변경">프로필, 사원명, 이메일, 비밀번호 변경</h3>
 <div class="sect4">
-<h5 id="_request_example_8">Request Example</h5>
+<h5 id="_request_example_9">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/user HTTP/1.1
@@ -919,7 +960,7 @@ Content-Type: application/json
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_8">Response Example</h5>
+<h5 id="_response_example_9">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -942,14 +983,14 @@ Content-Length: 302
     "username" : "김이박",
     "passwordReset" : true,
     "profileReset" : true,
-    "profile" : "https://lupinbucket.s3.ap-northeast-2.amazonaws.com/00ded45a-1135-4302-bb32-2ba799081d07_person.png"
+    "profile" : "https://lupinbucket.s3.ap-northeast-2.amazonaws.com/5a390d8e-31f5-4c3c-b5ec-a7cbd96fe658_person.png"
   }
 }</code></pre>
 </div>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_curl_8">Curl</h5>
+<h5 id="_curl_9">Curl</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user' -i -X POST \
@@ -963,7 +1004,7 @@ Content-Length: 302
 <div class="sect2">
 <h3 id="_프로필_삭제_사원명_이메일_비밀번호_변경">프로필 삭제, 사원명, 이메일, 비밀번호 변경</h3>
 <div class="sect4">
-<h5 id="_request_example_9">Request Example</h5>
+<h5 id="_request_example_10">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/user HTTP/1.1
@@ -978,13 +1019,13 @@ Content-Disposition: form-data; name=profile
 Content-Disposition: form-data; name=modifiedInDTO; filename=modifiedInDTO
 Content-Type: application/json
 
-{"email":"asdf@nate.com","username":"김이박","newPassword":"1234","profileToDelete":"https://lupinbucket.s3.ap-northeast-2.amazonaws.com/c973fc2c-44b9-444a-8390-efcdc9338251_person.png"}
+{"email":"asdf@nate.com","username":"김이박","newPassword":"1234","profileToDelete":"https://lupinbucket.s3.ap-northeast-2.amazonaws.com/16eacd64-42cd-4fe7-a85c-7041cee3c2b7_person.png"}
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm--</code></pre>
 </div>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_9">Response Example</h5>
+<h5 id="_response_example_10">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -1014,7 +1055,7 @@ Content-Length: 265
 </div>
 </div>
 <div class="sect4">
-<h5 id="_curl_9">Curl</h5>
+<h5 id="_curl_10">Curl</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user' -i -X POST \
@@ -1028,7 +1069,7 @@ Content-Length: 265
 <div class="sect2">
 <h3 id="_사원명_이메일_비밀번호_변경">사원명, 이메일, 비밀번호 변경</h3>
 <div class="sect4">
-<h5 id="_request_example_10">Request Example</h5>
+<h5 id="_request_example_11">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/user HTTP/1.1
@@ -1049,7 +1090,7 @@ Content-Type: application/json
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_10">Response Example</h5>
+<h5 id="_response_example_11">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -1079,7 +1120,7 @@ Content-Length: 266
 </div>
 </div>
 <div class="sect4">
-<h5 id="_curl_10">Curl</h5>
+<h5 id="_curl_11">Curl</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user' -i -X POST \
@@ -1093,7 +1134,7 @@ Content-Length: 266
 <div class="sect2">
 <h3 id="_사원명_이메일만_변경">사원명, 이메일만 변경</h3>
 <div class="sect4">
-<h5 id="_request_example_11">Request Example</h5>
+<h5 id="_request_example_12">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/user HTTP/1.1
@@ -1114,7 +1155,7 @@ Content-Type: application/json
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_11">Response Example</h5>
+<h5 id="_response_example_12">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -1144,7 +1185,7 @@ Content-Length: 264
 </div>
 </div>
 <div class="sect4">
-<h5 id="_curl_11">Curl</h5>
+<h5 id="_curl_12">Curl</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user' -i -X POST \
@@ -1158,7 +1199,7 @@ Content-Length: 264
 <div class="sect2">
 <h3 id="_개인_정보_수정_유효성_검사_실패_사원명이_없는_경우">개인 정보 수정 유효성 검사 실패 (사원명이 없는 경우)</h3>
 <div class="sect4">
-<h5 id="_request_example_12">Request Example</h5>
+<h5 id="_request_example_13">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/user HTTP/1.1
@@ -1179,7 +1220,7 @@ Content-Type: application/json
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_12">Response Example</h5>
+<h5 id="_response_example_13">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
@@ -1206,7 +1247,7 @@ Content-Length: 127
 </div>
 </div>
 <div class="sect4">
-<h5 id="_curl_12">Curl</h5>
+<h5 id="_curl_13">Curl</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user' -i -X POST \
@@ -1220,7 +1261,7 @@ Content-Length: 127
 <div class="sect2">
 <h3 id="_개인_정보_수정_유효성_검사_실패_이메일이_없는_경우">개인 정보 수정 유효성 검사 실패 (이메일이 없는 경우)</h3>
 <div class="sect4">
-<h5 id="_request_example_13">Request Example</h5>
+<h5 id="_request_example_14">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/user HTTP/1.1
@@ -1241,7 +1282,7 @@ Content-Type: application/json
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_13">Response Example</h5>
+<h5 id="_response_example_14">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
@@ -1268,7 +1309,7 @@ Content-Length: 124
 </div>
 </div>
 <div class="sect4">
-<h5 id="_curl_13">Curl</h5>
+<h5 id="_curl_14">Curl</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user' -i -X POST \
@@ -1282,7 +1323,7 @@ Content-Length: 124
 <div class="sect2">
 <h3 id="_개인_정보_수정_유효성_검사_실패_이메일_형식_오류">개인 정보 수정 유효성 검사 실패 (이메일 형식 오류)</h3>
 <div class="sect4">
-<h5 id="_request_example_14">Request Example</h5>
+<h5 id="_request_example_15">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/user HTTP/1.1
@@ -1303,7 +1344,7 @@ Content-Type: application/json
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_14">Response Example</h5>
+<h5 id="_response_example_15">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
@@ -1330,7 +1371,7 @@ Content-Length: 148
 </div>
 </div>
 <div class="sect4">
-<h5 id="_curl_14">Curl</h5>
+<h5 id="_curl_15">Curl</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user' -i -X POST \
@@ -1344,7 +1385,7 @@ Content-Length: 148
 <div class="sect2">
 <h3 id="_개인_정보_수정_실패_수정_사항이_없는_경우">개인 정보 수정 실패 (수정 사항이 없는 경우)</h3>
 <div class="sect4">
-<h5 id="_request_example_15">Request Example</h5>
+<h5 id="_request_example_16">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/user HTTP/1.1
@@ -1365,7 +1406,7 @@ Content-Type: application/json
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_15">Response Example</h5>
+<h5 id="_response_example_16">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
@@ -1392,7 +1433,7 @@ Content-Length: 185
 </div>
 </div>
 <div class="sect4">
-<h5 id="_curl_15">Curl</h5>
+<h5 id="_curl_16">Curl</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/user' -i -X POST \
@@ -1406,7 +1447,7 @@ Content-Length: 185
 <div class="sect2">
 <h3 id="_유저_삭제비활성_성공">유저 삭제(비활성) 성공</h3>
 <div class="sect4">
-<h5 id="_request_example_16">Request Example</h5>
+<h5 id="_request_example_17">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /admin/resign/3 HTTP/1.1
@@ -1415,7 +1456,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_16">Response Example</h5>
+<h5 id="_response_example_17">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -1439,7 +1480,7 @@ Content-Length: 61
 </div>
 </div>
 <div class="sect4">
-<h5 id="_curl_16">Curl</h5>
+<h5 id="_curl_17">Curl</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/admin/resign/3' -i -X POST</code></pre>
@@ -1450,7 +1491,7 @@ Content-Length: 61
 <div class="sect2">
 <h3 id="_유저_삭제비활성_실패_없는_유저">유저 삭제(비활성) 실패 (없는 유저)</h3>
 <div class="sect4">
-<h5 id="_request_example_17">Request Example</h5>
+<h5 id="_request_example_18">Request Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /admin/resign/5 HTTP/1.1
@@ -1459,7 +1500,7 @@ Host: localhost:8080</code></pre>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_response_example_17">Response Example</h5>
+<h5 id="_response_example_18">Response Example</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 500 Internal Server Error
@@ -1472,18 +1513,18 @@ X-XSS-Protection: 1; mode=block
 Cache-Control: no-cache, no-store, max-age=0, must-revalidate
 Pragma: no-cache
 Expires: 0
-Content-Length: 113
+Content-Length: 107
 
 {
   "status" : 500,
   "msg" : "serverError",
-  "data" : "로그인 된 유저가 DB에 존재하지 않음"
+  "data" : "해당 유저가 존재하지 않습니다."
 }</code></pre>
 </div>
 </div>
 </div>
 <div class="sect4">
-<h5 id="_curl_17">Curl</h5>
+<h5 id="_curl_18">Curl</h5>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/admin/resign/5' -i -X POST</code></pre>
@@ -1497,7 +1538,7 @@ Content-Length: 113
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-05-11 18:45:08 +0900
+Last updated 2023-05-12 22:44:06 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

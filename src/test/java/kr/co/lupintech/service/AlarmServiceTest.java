@@ -1,6 +1,10 @@
 package kr.co.lupintech.service;
 
 import kr.co.lupintech.model.alarm.Alarm;
+import kr.co.lupintech.model.leave.Leave;
+import kr.co.lupintech.model.leave.LeaveRepository;
+import kr.co.lupintech.model.leave.enums.LeaveStatus;
+import kr.co.lupintech.model.leave.enums.LeaveType;
 import kr.co.lupintech.model.user.User;
 import kr.co.lupintech.model.user.UserRepository;
 import org.junit.jupiter.api.Assertions;
@@ -18,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Transactional
 @ActiveProfiles("test")
@@ -29,6 +34,10 @@ public class AlarmServiceTest {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private LeaveRepository leaveRepository;
+
     private DummyEntity dummy = new DummyEntity();
 
     @Autowired
@@ -45,19 +54,28 @@ public class AlarmServiceTest {
     @DisplayName("알람 DB저장")
     @Test
     public void saveAlarmTest() {
-        // given
-        Alarm alarm = Alarm.builder()
-                .user(user)
-                .content("등록되었습니다")
+
+        Leave leave = Leave.builder()
+                .type(LeaveType.ANNUAL)
+                .usingDays(3)
+                .startDate(LocalDate.now().plusDays(102))
+                .endDate(LocalDate.now().plusDays(105))
+                .createdAt(LocalDateTime.now())
+                .status(LeaveStatus.APPROVAL)
                 .build();
 
-        // when
+        // given
+        Leave leavePS = leaveRepository.save(leave);
+
+        Alarm alarm = dummy.newMockAlarm(1L, user, leavePS);
         Alarm result = alarmService.save(alarm);
+        // when
 
         // then
         Assertions.assertNotNull(result);
         Assertions.assertEquals(alarm.getId(), result.getId());
         Assertions.assertEquals(alarm.getUser().getId(), result.getUser().getId());
-        Assertions.assertEquals(alarm.getContent(), result.getContent());
+        Assertions.assertEquals(leave.getId(), result.getLeave().getId());
+
     }
 }

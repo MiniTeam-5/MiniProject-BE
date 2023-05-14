@@ -2,6 +2,7 @@ package kr.co.lupintech.controller;
 
 import com.amazonaws.auth.policy.Resource;
 import kr.co.lupintech.core.auth.session.MyUserDetails;
+import kr.co.lupintech.core.exception.Exception400;
 import kr.co.lupintech.dto.leave.LeaveRequest;
 import kr.co.lupintech.dto.leave.LeaveResponse;
 import kr.co.lupintech.service.LeaveService;
@@ -49,20 +50,24 @@ public class LeaveController {
         return ResponseEntity.ok(responseDTO);
     }
 
-    @GetMapping("/auth/leave/id/{id}")
-    public ResponseEntity<?> getById(@PathVariable(required = true) Long id) {
-        List<LeaveResponse.InfoOutDTO> leaveDataList = leaveService.특정유저연차당직정보가져오기(id);
+    @GetMapping("/auth/leave/all")
+    public ResponseEntity<?> getByMonth() {
+        List<LeaveResponse.InfoOutDTO> leaveDataList = leaveService.모두의모든연차당직가져오기();
         ResponseDTO<List<LeaveResponse.InfoOutDTO>> responseDTO = new ResponseDTO<>(leaveDataList);
         return ResponseEntity.ok(responseDTO);
     }
 
-    @PostMapping("/admin/approve")
-    public ResponseEntity<?> decide(@RequestBody @Valid LeaveRequest.DecideInDTO decideInDTO, Errors errors){
-        LeaveResponse.DecideOutDTO decideOutDTO = leaveService.연차당직결정하기(decideInDTO);
-        ResponseDTO<?> responseDTO = new ResponseDTO<>(decideOutDTO);
+    @GetMapping("/auth/leave/id/{id}")
+    public ResponseEntity<?> getById(@PathVariable(required = true) Long id) {
+        List<LeaveResponse.InfoOutDTO> leaveDataList = leaveService.특정유저연차당직정보가져오기(id);
+
+        if(leaveDataList.isEmpty())
+            throw new Exception400("id", "아이디를 찾을 수 없습니다");
+
+        ResponseDTO<List<LeaveResponse.InfoOutDTO>> responseDTO = new ResponseDTO<>(leaveDataList);
+
         return ResponseEntity.ok(responseDTO);
     }
-
     @GetMapping("/auth/leave/download")
     public ResponseEntity<?> download(){
         Resource resource = leaveService.엑셀다운로드();

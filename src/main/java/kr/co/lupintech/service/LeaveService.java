@@ -1,5 +1,6 @@
 package kr.co.lupintech.service;
 
+import kr.co.lupintech.core.factory.AlarmFactory;
 import lombok.RequiredArgsConstructor;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -62,12 +63,20 @@ public class LeaveService {
                 throw new Exception400("startDate, endDate", "중복된 당직 신청입니다.");
             }
 
-            // 1) 알림 등록
-            String content = userPS.getUsername()+"님의 "+applyInDTO.getStartDate()+"일 당직 신청이 완료되었습니다.";
-            alarmRepository.save(Alarm.builder().user(userPS).content(content).build());
-
-            // 2) 당직 등록
+            // 1) 당직 등록
             Leave leavePS = leaveRepository.save(applyInDTO.toEntity(userPS, 0));
+
+            // 2) 알람 등록
+            Alarm alarm = AlarmFactory.newAlarm(userPS, leavePS);
+            Alarm alarmPS = alarmRepository.save(alarm);
+
+            // 3) 관리자들에게 실시간 알람 전송
+            Set<UserRole> adminAndMasterRoles = new HashSet<>(Arrays.asList(UserRole.ROLE_ADMIN, UserRole.ROLE_MASTER));
+            List<User> managerList = userRepository.findByRoles(adminAndMasterRoles);
+            for (User manager : managerList) {
+                sseService.sendToUser(manager.getId(), "alarm", new AlarmResponse.AlarmOutDTO(alarmPS));
+            }
+
             return new LeaveResponse.ApplyOutDTO(leavePS, userPS);
         }
         // 3. 연차인 경우
@@ -94,20 +103,20 @@ public class LeaveService {
         // 3) 사용자의 남은 연차 일수 업데이트
         userPS.useAnnualLeave(usingDays);
 
-        // 4) 알림 등록
-        String content = userPS.getUsername()+"님의 "+applyInDTO.getStartDate().toString()+"부터 "
-                +applyInDTO.getEndDate()+"까지, 총 "+usingDays+"일의 연차 신청이 완료되었습니다.";
-        Alarm alarmPS = alarmRepository.save(Alarm.builder().user(userPS).content(content).build());
+        // 4) 연차 등록
+        Leave leavePS = leaveRepository.save(applyInDTO.toEntity(userPS, usingDays));
 
-        // 5) 모든 관리자에게 실시간 알람 전송
+        // 5) 알람 등록
+        Alarm alarm = AlarmFactory.newAlarm(userPS, leavePS);
+
+        // 5) 관리자들에게 실시간 알람 전송
         Set<UserRole> adminAndMasterRoles = new HashSet<>(Arrays.asList(UserRole.ROLE_ADMIN, UserRole.ROLE_MASTER));
         List<User> managerList = userRepository.findByRoles(adminAndMasterRoles);
         for (User manager : managerList) {
+            Alarm alarmPS = alarmRepository.save(alarm);
             sseService.sendToUser(manager.getId(), "alarm", new AlarmResponse.AlarmOutDTO(alarmPS));
         }
 
-        // 6) 연차 등록
-        Leave leavePS = leaveRepository.save(applyInDTO.toEntity(userPS, usingDays));
         return new LeaveResponse.ApplyOutDTO(leavePS, userPS);
     }
 
@@ -127,17 +136,8 @@ public class LeaveService {
             throw new Exception400("id", "이미 거절된 신청입니다.");
         }
 
-        String content = "";
-        if(leavePS.getType().equals(LeaveType.ANNUAL)){
-            userPS.increaseRemainDays(leavePS.getUsingDays());
-            content = userPS.getUsername()+"님의 "+leavePS.getStartDate().toString()+"부터 "
-                    +leavePS.getEndDate()+"까지, 총 "+leavePS.getUsingDays()+"일의 연차 신청이 취소되었습니다.";
-        } else {
-            content = userPS.getUsername()+"님의 "+leavePS.getStartDate()+"일 당직 신청이 취소되었습니다.";
-        }
-
         leaveRepository.delete(leavePS);
-        alarmRepository.save(Alarm.builder().user(userPS).content(content).build());
+
         return new LeaveResponse.CancelOutDTO(userPS);
     }
 
@@ -165,18 +165,15 @@ public class LeaveService {
             isReject = true;
         }
 
-        String content = "";
-        String status = isReject ? "거절" : "승인";
+        Alarm alarm = null;
         if (leavePS.getType().equals(LeaveType.ANNUAL)) {
             if (isReject) userPS.increaseRemainDays(leavePS.getUsingDays());
-            content = userPS.getUsername() + "님의 " + leavePS.getStartDate().toString() + "부터 "
-                    + leavePS.getEndDate() + "까지, 총 " + leavePS.getUsingDays() + "일의 연차 신청이 " +
-                    status + "되었습니다.";
+            alarm = AlarmFactory.newAlarm(userPS, leavePS);
         } else {
-            content = userPS.getUsername() + "님의 " + leavePS.getStartDate() + "일 당직 신청이 " + status + "되었습니다.";
+            alarm = AlarmFactory.newAlarm(userPS, leavePS);
         }
 
-        Alarm alarmPS = alarmRepository.save(Alarm.builder().user(userPS).content(content).build());
+        Alarm alarmPS = alarmRepository.save(alarm);
         sseService.sendToUser(userPS.getId(), "alarm", new AlarmResponse.AlarmOutDTO(alarmPS));
 
         return new LeaveResponse.DecideOutDTO(userPS);
@@ -224,6 +221,17 @@ public class LeaveService {
                 .collect(Collectors.toList());
 
         // 반환할 DTO 리스트 생성
+        List<LeaveResponse.InfoOutDTO> infoOutDTOList = leaves.stream()
+                .map(leave -> new LeaveResponse.InfoOutDTO(leave, leave.getUser()))
+                .collect(Collectors.toList());
+
+        return infoOutDTOList;
+    }
+
+    @Transactional(readOnly = true)
+    public List<LeaveResponse.InfoOutDTO> 모두의모든연차당직가져오기() {
+        List<Leave> leaves = leaveRepository.findAll();
+
         List<LeaveResponse.InfoOutDTO> infoOutDTOList = leaves.stream()
                 .map(leave -> new LeaveResponse.InfoOutDTO(leave, leave.getUser()))
                 .collect(Collectors.toList());
