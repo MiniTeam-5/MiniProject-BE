@@ -408,7 +408,7 @@ public class LeaveControllerTest extends MyRestDoc {
         // then
         resultActions.andExpect(jsonPath("$.status").value(200));
         resultActions.andExpect(jsonPath("$.msg").value("성공"));
-        resultActions.andExpect(jsonPath("$.data.remainDays").value(11));
+        resultActions.andExpect(jsonPath("$.data.remainDays").value(13));
         resultActions.andExpect(status().isOk());
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }

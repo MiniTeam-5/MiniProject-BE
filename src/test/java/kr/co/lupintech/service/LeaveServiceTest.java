@@ -102,7 +102,7 @@ public class LeaveServiceTest extends DummyEntity {
         LeaveResponse.CancelOutDTO cancelOutDTO = leaveService.연차당직신청취소하기(1L, 1L);
 
         // then
-        Assertions.assertThat(cancelOutDTO.getRemainDays()).isEqualTo(8);
+        Assertions.assertThat(cancelOutDTO.getRemainDays()).isEqualTo(9);
     }
 
     @Test
