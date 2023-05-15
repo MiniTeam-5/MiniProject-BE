@@ -717,7 +717,7 @@ public class LeaveControllerTest extends MyRestDoc {
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 
-    @DisplayName("ID로 연차 조회 실패 (잘못된 ID)")
+    @DisplayName("ID로 연차 조회 성공 (잘못된 ID, 찾은게 없어도 성공)")
     @WithUserDetails(value = "ssar@nate.com", setupBefore = TestExecutionEvent.TEST_EXECUTION)
     @Test
     public void get_leave_by_id_fail_invalid_id_test() throws Exception {
@@ -728,10 +728,8 @@ public class LeaveControllerTest extends MyRestDoc {
         ResultActions resultActions = mvc.perform(get("/auth/leave/id/{id}", leaveId));
 
         // then
-        resultActions.andExpect(jsonPath("$.status").value(400));
-        resultActions.andExpect(jsonPath("$.msg").value("badRequest"));
-        resultActions.andExpect(jsonPath("$.data.key").value("id"));
-        resultActions.andExpect(jsonPath("$.data.value").value("아이디를 찾을 수 없습니다"));
+        resultActions.andExpect(jsonPath("$.status").value(200));
+        resultActions.andExpect(jsonPath("$.msg").value("성공"));
         resultActions.andDo(MockMvcResultHandlers.print()).andDo(document);
     }
 

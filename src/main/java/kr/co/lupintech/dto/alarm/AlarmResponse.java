@@ -20,6 +20,8 @@ public class AlarmResponse {
     public static class AlarmOutDTO {
         private Long id;
 
+        private Long leaveId;
+
         private String username;
         private LeaveType type;
 
@@ -33,6 +35,7 @@ public class AlarmResponse {
 
         public AlarmOutDTO(Alarm alarm) {
             this.id = alarm.getId();
+            this.leaveId = alarm.getLeave().getId();
             this.username = alarm.getUser().getUsername();
             this.type = alarm.getLeave().getType();
             this.startDate = alarm.getLeave().getStartDate();
