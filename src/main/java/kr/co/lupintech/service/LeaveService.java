@@ -89,9 +89,14 @@ public class LeaveService {
             Set<UserRole> adminAndMasterRoles = new HashSet<>(Arrays.asList(UserRole.ROLE_ADMIN, UserRole.ROLE_MASTER));
             List<User> managerList = userRepository.findByRoles(adminAndMasterRoles);
             for (User manager : managerList) {
-                sseService.sendToUser(manager.getId(), "alarm", new AlarmResponse.AlarmOutDTO(alarmPS));
-                log.info("realtime alarm send to {}: {}, {}, {}", manager.getUsername(), leavePS.getType(), leavePS.getStatus(), leavePS.getStartDate());
 
+                try {
+                    sseService.sendToUser(manager.getId(), "alarm", new AlarmResponse.AlarmOutDTO(alarmPS));
+                    log.info("realtime alarm send to {}: {}, {}, {}", manager.getUsername(), leavePS.getType(), leavePS.getStatus(), leavePS.getStartDate());
+                }
+                catch (Exception e) {
+                    log.error("realtime alram failed to {} : {}, {}, {}", manager.getUsername(), leavePS.getType(), leavePS.getStatus(), leavePS.getStartDate());
+                }
             }
 
             return new LeaveResponse.ApplyOutDTO(leavePS, userPS);
@@ -144,8 +149,14 @@ public class LeaveService {
         Set<UserRole> adminAndMasterRoles = new HashSet<>(Arrays.asList(UserRole.ROLE_ADMIN, UserRole.ROLE_MASTER));
         List<User> managerList = userRepository.findByRoles(adminAndMasterRoles);
         for (User manager : managerList) {
-            sseService.sendToUser(manager.getId(), "alarm", new AlarmResponse.AlarmOutDTO(alarmPS));
-            log.info("realtime alarm send to {}: {}, {}, {}", manager.getUsername(), leavePS.getType(), leavePS.getStatus(), leavePS.getStartDate());
+
+            try {
+                sseService.sendToUser(manager.getId(), "alarm", new AlarmResponse.AlarmOutDTO(alarmPS));
+                log.info("realtime alarm send to {}: {}, {}, {}", manager.getUsername(), leavePS.getType(), leavePS.getStatus(), leavePS.getStartDate());
+            }
+            catch (Exception e) {
+                log.error("realtime alram failed to {} : {}, {}, {}", manager.getUsername(), leavePS.getType(), leavePS.getStatus(), leavePS.getStartDate());
+            }
         }
 
         return new LeaveResponse.ApplyOutDTO(leavePS, userPS);
@@ -209,8 +220,13 @@ public class LeaveService {
         }
 
         Alarm alarmPS = alarmRepository.save(alarm);
-        sseService.sendToUser(userPS.getId(), "alarm", new AlarmResponse.AlarmOutDTO(alarmPS));
-        log.info("realtime alarm send to {}: {}, {}, {}", userPS.getUsername(), leavePS.getType(), leavePS.getStatus(), leavePS.getStartDate());
+        try {
+            sseService.sendToUser(userPS.getId(), "alarm", new AlarmResponse.AlarmOutDTO(alarmPS));
+            log.info("realtime alarm send to {}: {}, {}, {}", userPS.getUsername(), leavePS.getType(), leavePS.getStatus(), leavePS.getStartDate());
+        }
+        catch (Exception e) {
+            log.error("realtime alram failed to {} : {}, {}, {}", userPS.getUsername(), leavePS.getType(), leavePS.getStatus(), leavePS.getStartDate());
+        }
 
         return new LeaveResponse.DecideOutDTO(userPS);
     }
