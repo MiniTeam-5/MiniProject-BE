@@ -167,6 +167,10 @@ public class LeaveService {
             throw new Exception400("id", "이미 거절된 신청입니다.");
         }
 
+        if(leavePS.getType().equals(LeaveType.ANNUAL)) {
+            userPS.increaseRemainDays(leavePS.getUsingDays());
+        }
+
         leaveRepository.delete(leavePS);
 
         return new LeaveResponse.CancelOutDTO(userPS);
