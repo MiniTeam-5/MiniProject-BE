@@ -2,6 +2,7 @@ package kr.co.lupintech.service;
 
 import kr.co.lupintech.core.annotation.MyErrorLog;
 import kr.co.lupintech.core.annotation.MyLog;
+import kr.co.lupintech.core.exception.Exception401;
 import kr.co.lupintech.core.factory.AlarmFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +58,11 @@ public class LeaveService {
         User userPS = userRepository.findById(userId).orElseThrow(
                 () -> new Exception500("로그인 된 유저가 DB에 존재하지 않음")
         );
-        // 2. 당직인 경우
+        // 2. 탈퇴한 회원인지 확인
+        if(userPS.getStatus().equals(false)){
+            throw new Exception401("탈퇴한 회원입니다");
+        }
+        // 3. 당직인 경우
         if(applyInDTO.getType().equals(LeaveType.DUTY)){
             if(!applyInDTO.getStartDate().equals(applyInDTO.getEndDate())){
                 throw new Exception400("startDate, endDate", "startDate와 endDate가 같아야 합니다.");
@@ -101,7 +106,7 @@ public class LeaveService {
 
             return new LeaveResponse.ApplyOutDTO(leavePS, userPS);
         }
-        // 3. 연차인 경우
+        // 4. 연차인 경우
         // 1) 사용할 연차 일수 계산하기: 평일만 계산 + 공휴일 계산 by 공공 API
         Integer usingDays = -1;
         try{
@@ -170,6 +175,9 @@ public class LeaveService {
         User userPS = userRepository.findById(userId).orElseThrow(
                 () -> new Exception500("로그인 된 유저가 DB에 존재하지 않음")
         );
+        if(userPS.getStatus().equals(false)){
+            throw new Exception401("탈퇴한 회원입니다");
+        }
 
         if(leavePS.getStatus().equals(LeaveStatus.APPROVAL)){
             throw new Exception400("id", "이미 승인된 신청입니다.");

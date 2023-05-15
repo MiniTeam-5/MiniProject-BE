@@ -689,8 +689,8 @@ Host: localhost:8080
 Vary: Origin
 Vary: Access-Control-Request-Method
 Vary: Access-Control-Request-Headers
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJST0xFX1VTRVIiLCJpZCI6MSwiZXhwIjoxNjg0MTMyOTAxfQ.NbHnje3WASFohJM9Uuo3kygWxnQH8llHTLV5RzjnSqizuv2AyelOsHwjeySXNgqo-OfqOaEPHvgbYa5kFZ7tWg
-RefreshToken: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsImV4cCI6MTY4NDY1MTMwMSwidXVpZCI6ImIwNmNjOGZmLTMyNjMtNDFhMy05ODAzLWZlOWE2ZGVkMmY0OCJ9.llaJTYe9OQGJQSCDhIwoXUek6_HAa4CXXuO5-7bpwfOlE-fLqvDClJl5rzkmuhVkNmvyulMiWkMxN5faYxMomQ
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJST0xFX1VTRVIiLCJpZCI6MSwiZXhwIjoxNjg0MTU4NzE4fQ.pKkvn-UmCx-oGFOvqJrZIMTi2Hfp6leRq6nUvqhas_Ze1rALFCQifo5jsuxQvxOG3v6MoPSlD3dWeAU35uzYSQ
+RefreshToken: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsImV4cCI6MTY4NDY3NzExOCwidXVpZCI6IjIzODAyOWNhLTliM2MtNGZmNi05ZWQ2LTYxZTc5NTg2NDA2MSJ9.eY7Ih4B-THXYqqFHcSJfZOr1foaJ48HBmTcHX89mjMvF8dXAwY7UUzZFGtBB1lZPPJZ5k3p2O1sCkHtsJ4fiYQ
 Content-Type: application/json;charset=UTF-8
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 1; mode=block
@@ -787,8 +787,8 @@ Content-Length: 93
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /auth/logout HTTP/1.1
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJST0xFX1VTRVIiLCJpZCI6MSwiZXhwIjoxNjg0MTMyOTAzfQ.t5KTKLptfmZzDyJWHMLkU2HDAP689eA0vkcytC0NIDwRM_XPuIU5TUtzLHILeqdPmM_v_-b0bSev-s_r-8K60Q
-RefreshToken: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsImV4cCI6MTY4NDY1MTMwMywidXVpZCI6IjdiNmIwMWQ0LTI4MzItNGU4MS1iNDRhLWQxMTQ2NjhlZGE2OSJ9.TOisn0tMf-rz5pKPwg1j173Chjwz5pZxAnJujP5Jj1FfnaiWyTzfp2RpTV2ebAZDNPygYFt7d_djcUPEyRZnBA
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJST0xFX1VTRVIiLCJpZCI6MSwiZXhwIjoxNjg0MTU4NzIwfQ.v7mkDrNaCZoci-R7EagolPGKpjrYojiGJT1FnpPY0Ptr4G8evz89xVAFPnIz1exggDFGyrb4HCx2wBFM-zlnXA
+RefreshToken: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsImV4cCI6MTY4NDY3NzEyMCwidXVpZCI6IjA4N2E5NDE1LTFmMTMtNDg2Ny04MDIzLWM4NjZiY2ZkNzc4NSJ9.E20JuD812x73ozmtpetT6CkbWylMf2PYEWDzQRVxZMBBYtQc5g0t0v1ucA0rq5CgTWgKiV96JodaA3Qmed7BeQ
 Host: localhost:8080</code></pre>
 </div>
 </div>
@@ -814,8 +814,8 @@ Expires: 0</code></pre>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/auth/logout' -i -X POST \
-    -H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJST0xFX1VTRVIiLCJpZCI6MSwiZXhwIjoxNjg0MTMyOTAzfQ.t5KTKLptfmZzDyJWHMLkU2HDAP689eA0vkcytC0NIDwRM_XPuIU5TUtzLHILeqdPmM_v_-b0bSev-s_r-8K60Q' \
-    -H 'RefreshToken: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsImV4cCI6MTY4NDY1MTMwMywidXVpZCI6IjdiNmIwMWQ0LTI4MzItNGU4MS1iNDRhLWQxMTQ2NjhlZGE2OSJ9.TOisn0tMf-rz5pKPwg1j173Chjwz5pZxAnJujP5Jj1FfnaiWyTzfp2RpTV2ebAZDNPygYFt7d_djcUPEyRZnBA'</code></pre>
+    -H 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsInJvbGUiOiJST0xFX1VTRVIiLCJpZCI6MSwiZXhwIjoxNjg0MTU4NzIwfQ.v7mkDrNaCZoci-R7EagolPGKpjrYojiGJT1FnpPY0Ptr4G8evz89xVAFPnIz1exggDFGyrb4HCx2wBFM-zlnXA' \
+    -H 'RefreshToken: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqd3RzdHVkeSIsImV4cCI6MTY4NDY3NzEyMCwidXVpZCI6IjA4N2E5NDE1LTFmMTMtNDg2Ny04MDIzLWM4NjZiY2ZkNzc4NSJ9.E20JuD812x73ozmtpetT6CkbWylMf2PYEWDzQRVxZMBBYtQc5g0t0v1ucA0rq5CgTWgKiV96JodaA3Qmed7BeQ'</code></pre>
 </div>
 </div>
 </div>
@@ -983,7 +983,7 @@ Content-Length: 302
     "username" : "김이박",
     "passwordReset" : true,
     "profileReset" : true,
-    "profile" : "https://lupinbucket.s3.ap-northeast-2.amazonaws.com/5a390d8e-31f5-4c3c-b5ec-a7cbd96fe658_person.png"
+    "profile" : "https://lupinbucket.s3.ap-northeast-2.amazonaws.com/dd96d63c-c6c8-469c-a7fe-93d2dd251418_person.png"
   }
 }</code></pre>
 </div>
@@ -1019,7 +1019,7 @@ Content-Disposition: form-data; name=profile
 Content-Disposition: form-data; name=modifiedInDTO; filename=modifiedInDTO
 Content-Type: application/json
 
-{"email":"asdf@nate.com","username":"김이박","newPassword":"1234","profileToDelete":"https://lupinbucket.s3.ap-northeast-2.amazonaws.com/16eacd64-42cd-4fe7-a85c-7041cee3c2b7_person.png"}
+{"email":"asdf@nate.com","username":"김이박","newPassword":"1234","profileToDelete":"https://lupinbucket.s3.ap-northeast-2.amazonaws.com/b02e1c82-48da-4ee3-af9c-dab30bf83570_person.png"}
 --6o2knFse3p53ty9dmcQvWAIx1zInP11uCfbm--</code></pre>
 </div>
 </div>
@@ -1538,7 +1538,7 @@ Content-Length: 107
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2023-05-12 22:44:06 +0900
+Last updated 2023-05-14 16:36:56 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
