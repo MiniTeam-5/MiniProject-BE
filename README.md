@@ -22,8 +22,8 @@
 
 ## :family: 멤버 구성
 - <b>임진묵(팀장)</b> : 연차 당직 조회 API, SSE 실시간 알람 기능, 리프레시 토큰, 서버 구축, 배포 자동화
-- <b>김지수(https://github.com/CHITSOO)</b> : 연차 당직 신청, 취소, 결정 API, 관리자 권한 API, 액셀 다운로드 API, S3연동
-- <b>변창우(https://github.com/wuchangb)</b> : 회원 가입, 로그인, 개인정보 조회 및 수정
+- <b>김지수</b> : 연차 당직 신청, 취소, 결정 API, 관리자 권한 API, 액셀 다운로드 API, S3연동
+- <b>변창우</b> : 회원 가입, 로그인, 개인정보 조회 및 수정
 </br>
 </br>
 
@@ -70,7 +70,7 @@
 </br>
 
 ## :bookmark_tabs: 주요기능
-### [백엔드 기능명세](https://documenter.getpostman.com/view/12462798/UVC3kTUu)
+### [백엔드 기능명세](https://deeply-case-3b9.notion.site/9a411fe4fcac46c9abb5686bd8a5520c)
 ### [API RestDocs](https://deeply-case-3b9.notion.site/API-b8599f574f74494ba79a5aa3001e9fbc)
 
 </br>
@@ -90,7 +90,7 @@ $ ./gradlew clean build
 </br>
 </br>
 
-## 시스템 구성
+## 시스템 구성도
 
 </br>
 </br>
