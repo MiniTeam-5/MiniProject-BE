@@ -4,6 +4,7 @@ import kr.co.lupintech.core.annotation.MyErrorLog;
 import kr.co.lupintech.core.annotation.MyLog;
 import kr.co.lupintech.core.factory.AlarmFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -38,6 +39,7 @@ import java.time.temporal.TemporalAccessor;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class LeaveService {
@@ -82,11 +84,14 @@ public class LeaveService {
             Alarm alarm = AlarmFactory.newAlarm(userPS, leavePS);
             Alarm alarmPS = alarmRepository.save(alarm);
 
-            // 3) 관리자들에게 실시간 알람 전송
+            // 3) 관리자들에게 실시간 알람 전송 관리자를 향한 알람저장은 안함(알람은 신청자의 정보만 저장한다, 결재자의 정보는 없다).
+            //    관리자는 모든 사원의 신청대기 상태의 알람을 불러온다.
             Set<UserRole> adminAndMasterRoles = new HashSet<>(Arrays.asList(UserRole.ROLE_ADMIN, UserRole.ROLE_MASTER));
             List<User> managerList = userRepository.findByRoles(adminAndMasterRoles);
             for (User manager : managerList) {
                 sseService.sendToUser(manager.getId(), "alarm", new AlarmResponse.AlarmOutDTO(alarmPS));
+                log.debug("realtime alarm send to {}: {}, {}, {}", manager.getUsername(), leavePS.getType(), leavePS.getStatus(), leavePS.getStartDate());
+
             }
 
             return new LeaveResponse.ApplyOutDTO(leavePS, userPS);
@@ -132,13 +137,15 @@ public class LeaveService {
 
         // 5) 알람 등록
         Alarm alarm = AlarmFactory.newAlarm(userPS, leavePS);
+        Alarm alarmPS = alarmRepository.save(alarm);
 
-        // 5) 관리자들에게 실시간 알람 전송
+        // 5) 관리자들에게 실시간 알람 전송. 관리자를 향한 알람저장은 안함(알람은 신청자의 정보만 저장한다, 결재자의 정보는 없다).
+        // 관리자는 모든 사원의 신청대기 상태의 알람을 불러온다.
         Set<UserRole> adminAndMasterRoles = new HashSet<>(Arrays.asList(UserRole.ROLE_ADMIN, UserRole.ROLE_MASTER));
         List<User> managerList = userRepository.findByRoles(adminAndMasterRoles);
         for (User manager : managerList) {
-            Alarm alarmPS = alarmRepository.save(alarm);
             sseService.sendToUser(manager.getId(), "alarm", new AlarmResponse.AlarmOutDTO(alarmPS));
+            log.debug("realtime alarm send to {}: {}, {}, {}", manager.getUsername(), leavePS.getType(), leavePS.getStatus(), leavePS.getStartDate());
         }
 
         return new LeaveResponse.ApplyOutDTO(leavePS, userPS);
@@ -199,6 +206,7 @@ public class LeaveService {
 
         Alarm alarmPS = alarmRepository.save(alarm);
         sseService.sendToUser(userPS.getId(), "alarm", new AlarmResponse.AlarmOutDTO(alarmPS));
+        log.debug("realtime alarm send to {}: {}, {}, {}", userPS.getUsername(), leavePS.getType(), leavePS.getStatus(), leavePS.getStartDate());
 
         return new LeaveResponse.DecideOutDTO(userPS);
     }
