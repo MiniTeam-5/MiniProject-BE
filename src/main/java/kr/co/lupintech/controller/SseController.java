@@ -1,5 +1,7 @@
 package kr.co.lupintech.controller;
 
+import kr.co.lupintech.model.user.User;
+import kr.co.lupintech.model.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -15,6 +17,7 @@ import kr.co.lupintech.core.exception.Exception500;
 import kr.co.lupintech.service.SseService;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -22,6 +25,8 @@ import java.io.IOException;
 public class SseController {
 
     private final SseService sseService;
+
+    private final UserRepository userRepository;
 
     @GetMapping(value = "/auth/connect", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public ResponseEntity<SseEmitter> connect( @AuthenticationPrincipal MyUserDetails myUserDetails) {
@@ -33,7 +38,9 @@ public class SseController {
             emitter.send(SseEmitter.event()
                     .name("connect")
                     .data("You are connected!"));
-            log.info("{} connected", myUserDetails.getUser().getUsername());
+
+            Optional<User> userPS = userRepository.findById(myUserDetails.getUser().getId());
+            log.info("{} connected", userPS.get().getUsername());
         }
         catch (IOException e)
         {
@@ -50,7 +57,8 @@ public class SseController {
         boolean disconnected = sseService.remove(userId);
 
         if (disconnected) {
-            log.info("{} disconnected", myUserDetails.getUser().getUsername());
+            Optional<User> userPS = userRepository.findById(myUserDetails.getUser().getId());
+            log.info("{} disconnected", userPS.get().getUsername());
             return ResponseEntity.ok().build();
         } else {
             throw new Exception400("id", "연결되지 않은 유저입니다.");
