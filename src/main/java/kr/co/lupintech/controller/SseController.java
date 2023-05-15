@@ -33,7 +33,7 @@ public class SseController {
             emitter.send(SseEmitter.event()
                     .name("connect")
                     .data("You are connected!"));
-            log.debug("{} connected", myUserDetails.getUser().getUsername());
+            log.info("{} connected", myUserDetails.getUser().getUsername());
         }
         catch (IOException e)
         {
@@ -50,7 +50,7 @@ public class SseController {
         boolean disconnected = sseService.remove(userId);
 
         if (disconnected) {
-            log.debug("{} disconnected", myUserDetails.getUser().getUsername());
+            log.info("{} disconnected", myUserDetails.getUser().getUsername());
             return ResponseEntity.ok().build();
         } else {
             throw new Exception400("id", "연결되지 않은 유저입니다.");
