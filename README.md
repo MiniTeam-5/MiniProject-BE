@@ -7,11 +7,11 @@
 
 
 <p align="center">
-<img width="500" height="350" alt="로그인" src="https://github.com/MiniTeam-5/MiniProject-BE/assets/33537820/23b333da-6b52-4112-9c3e-9600ba73e825"><img width="500" height="350" alt="회원가입" src="https://github.com/MiniTeam-5/MiniProject-BE/assets/33537820/814f7d19-ba26-4643-bfac-a4624abc3118">
+<img width="1000" alt="로그인+회원가입" src="https://github.com/MiniTeam-5/MiniProject-BE/assets/33537820/d090d180-f131-4b57-bbff-206a28ee57b2">
+
 </p>
 <p align="center">
-<img width="500" height="500" alt="메인화면" src="https://github.com/MiniTeam-5/MiniProject-BE/assets/33537820/15ca4704-a341-4cc4-af22-48c1ccaa6d6b"> 
-<img  width="500" height="500" alt="어드민" src="https://github.com/MiniTeam-5/MiniProject-BE/assets/33537820/d88b1527-77c1-4821-80c4-5a120783ff8e">
+<img width="1000" alt="메인+어드민" src="https://github.com/MiniTeam-5/MiniProject-BE/assets/33537820/aaa3ad04-f7d5-479a-b1b8-dbefb6d4409e">
 </p>
 
 ## :paperclip:개발 기간
@@ -22,8 +22,8 @@
 
 ## :family: 멤버 구성
 - <b>임진묵(팀장)</b> : 연차 당직 조회 API, SSE 실시간 알람 기능, 리프레시 토큰, 서버 구축, 배포 자동화
-- <b>김지수</b> : 연차 당직 신청, 취소, 결정 API, 관리자 권한 API, 액셀 다운로드 API, S3연동
-- <b>변창우</b> : 회원 가입, 로그인, 개인정보 조회 및 수정
+- <b>김지수(https://github.com/CHITSOO)</b> : 연차 당직 신청, 취소, 결정 API, 관리자 권한 API, 액셀 다운로드 API, S3연동
+- <b>변창우(https://github.com/wuchangb)</b> : 회원 가입, 로그인, 개인정보 조회 및 수정
 </br>
 </br>
 
