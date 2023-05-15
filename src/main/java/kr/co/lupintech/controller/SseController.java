@@ -1,6 +1,7 @@
 package kr.co.lupintech.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,6 +16,7 @@ import kr.co.lupintech.service.SseService;
 
 import java.io.IOException;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 public class SseController {
@@ -31,6 +33,7 @@ public class SseController {
             emitter.send(SseEmitter.event()
                     .name("connect")
                     .data("You are connected!"));
+            log.debug("{} connected", myUserDetails.getUser().getUsername());
         }
         catch (IOException e)
         {
@@ -47,6 +50,7 @@ public class SseController {
         boolean disconnected = sseService.remove(userId);
 
         if (disconnected) {
+            log.debug("{} disconnected", myUserDetails.getUser().getUsername());
             return ResponseEntity.ok().build();
         } else {
             throw new Exception400("id", "연결되지 않은 유저입니다.");
