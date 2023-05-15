@@ -90,7 +90,7 @@ public class LeaveService {
             List<User> managerList = userRepository.findByRoles(adminAndMasterRoles);
             for (User manager : managerList) {
                 sseService.sendToUser(manager.getId(), "alarm", new AlarmResponse.AlarmOutDTO(alarmPS));
-                log.debug("realtime alarm send to {}: {}, {}, {}", manager.getUsername(), leavePS.getType(), leavePS.getStatus(), leavePS.getStartDate());
+                log.info("realtime alarm send to {}: {}, {}, {}", manager.getUsername(), leavePS.getType(), leavePS.getStatus(), leavePS.getStartDate());
 
             }
 
@@ -145,7 +145,7 @@ public class LeaveService {
         List<User> managerList = userRepository.findByRoles(adminAndMasterRoles);
         for (User manager : managerList) {
             sseService.sendToUser(manager.getId(), "alarm", new AlarmResponse.AlarmOutDTO(alarmPS));
-            log.debug("realtime alarm send to {}: {}, {}, {}", manager.getUsername(), leavePS.getType(), leavePS.getStatus(), leavePS.getStartDate());
+            log.info("realtime alarm send to {}: {}, {}, {}", manager.getUsername(), leavePS.getType(), leavePS.getStatus(), leavePS.getStartDate());
         }
 
         return new LeaveResponse.ApplyOutDTO(leavePS, userPS);
@@ -206,7 +206,7 @@ public class LeaveService {
 
         Alarm alarmPS = alarmRepository.save(alarm);
         sseService.sendToUser(userPS.getId(), "alarm", new AlarmResponse.AlarmOutDTO(alarmPS));
-        log.debug("realtime alarm send to {}: {}, {}, {}", userPS.getUsername(), leavePS.getType(), leavePS.getStatus(), leavePS.getStartDate());
+        log.info("realtime alarm send to {}: {}, {}, {}", userPS.getUsername(), leavePS.getType(), leavePS.getStatus(), leavePS.getStartDate());
 
         return new LeaveResponse.DecideOutDTO(userPS);
     }
