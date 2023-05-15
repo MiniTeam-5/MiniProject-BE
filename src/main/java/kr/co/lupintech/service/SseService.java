@@ -19,7 +19,7 @@ public class SseService {
 
     public SseEmitter add(Long userId) {
 
-        SseEmitter emitter = new SseEmitter(5 * 60 * 1000L);//5분
+        SseEmitter emitter = new SseEmitter(20 * 60 * 1000L);//20분
 
         emitters.put(userId, emitter);
         emitter.onCompletion(() -> {
