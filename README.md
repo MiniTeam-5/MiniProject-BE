@@ -3,8 +3,9 @@
 
 ![Generic badge](https://img.shields.io/badge/version-1.0.0-blue.svg)
 ![Generic badge](https://img.shields.io/github/issues-pr-closed/MiniTeam-5/MiniProject-BE)
-![Generic badge](https://img.shields.io/github/license/MiniTeam-5/MiniProject-BE)
-
+<a href="https://github.com/MiniTeam-5/MiniProject-BE/blob/develop/LICENSE" target="_blank">
+    ![Generic badge](https://img.shields.io/github/license/MiniTeam-5/MiniProject-BE)
+</a>
 
 <p align="center">
 <img width="1000" alt="로그인+회원가입" src="https://github.com/MiniTeam-5/MiniProject-BE/assets/33537820/d090d180-f131-4b57-bbff-206a28ee57b2">
@@ -24,6 +25,22 @@
 - <b>임진묵(팀장)</b> : 연차 당직 조회 API, SSE 실시간 알람 기능, 리프레시 토큰, 서버 구축, 배포 자동화
 - <b>김지수</b> : 연차 당직 신청, 취소, 결정 API, 관리자 권한 API, 액셀 다운로드 API, S3연동
 - <b>변창우</b> : 회원 가입, 로그인, 개인정보 조회 및 수정
+</br>
+</br>
+
+## :bookmark_tabs: 주요기능
+### [백엔드 기능명세](https://deeply-case-3b9.notion.site/9a411fe4fcac46c9abb5686bd8a5520c)
+### [API RestDocs](https://deeply-case-3b9.notion.site/API-b8599f574f74494ba79a5aa3001e9fbc)
+
+</br>
+</br>
+
+## :mega: 사용법
+```sh
+$ ./gradlew clean build
+```
+### [:office:Lupintech.netlify.app:office:](https://lupintech.netlify.app/)
+
 </br>
 </br>
 
@@ -65,23 +82,6 @@
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
 ```
-
-</br>
-</br>
-
-## :bookmark_tabs: 주요기능
-### [백엔드 기능명세](https://deeply-case-3b9.notion.site/9a411fe4fcac46c9abb5686bd8a5520c)
-### [API RestDocs](https://deeply-case-3b9.notion.site/API-b8599f574f74494ba79a5aa3001e9fbc)
-
-</br>
-</br>
-
-## :mega: 사용법
-```sh
-$ ./gradlew clean build
-```
-### [:office:Lupintech.netlify.app:office:](https://lupintech.netlify.app/)
-
 </br>
 </br>
 
@@ -96,6 +96,16 @@ $ ./gradlew clean build
 </br>
 
 ## 개발일지
+- 백엔드 프로젝트 파일 세팅 (23/04/29) - `commit` : [9d7c567](https://github.com/MiniTeam-5/MiniProject-BE/commit/9d7c567144f8bffca1a306aa9a650601beaf6038)
+- github action, s3, ec2 배포 (23/04/29) - `commit` : [8b249a7]
+- appsepc.yml 파일추가 (23/04/29) - `commit` : 
+- 배포스크립트파일 반영 (23/04/29) - `commit` : 
+- 빌드작업 반영 (23/04/29) - `commit` : 
+- gh_deploy.sh 수정 (23/04/29) - `commit` : 
+- 배포 관련 작업 반영 (23/04/29) - `commit` : 
+- gh_deploy prod 모드 실행 (23/04/29) - `commit` : 
+- 개발환경작업 반영 (23/04/29) - `commit` : 
+
 
 </br>
 </br>
