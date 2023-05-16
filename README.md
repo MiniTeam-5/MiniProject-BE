@@ -54,8 +54,7 @@ $ ./gradlew clean build
 - CI/CD : `github action`, `code deploy`, `IAM`
 - Server : `aws EC2`, `route53`, `load balancer`
 
-![backend skillset](https://github.com/MiniTeam-5/MiniProject-BE/assets/12468516/146b0aa8-da32-40bf-920d-bb300e2e840e)
-
+<img width="400" alt="backend skillset (4)" src="https://github.com/MiniTeam-5/MiniProject-BE/assets/12468516/146b0aa8-da32-40bf-920d-bb300e2e840e">
 
 </br>
 
@@ -89,7 +88,7 @@ $ ./gradlew clean build
 </br>
 
 ## ERD
-<img width="5645" alt="미니프로젝트 BE (2)" src="https://github.com/MiniTeam-5/MiniProject-BE/assets/33537820/9533917d-9f0d-489d-9f78-eac51feb817c">
+<img width="5645" alt="미니프로젝트 BE (4)" src="https://github.com/MiniTeam-5/MiniProject-BE/assets/33537820/4a3c7c6e-348f-4c80-8d4b-230220117093">
 </br>
 </br>
 
