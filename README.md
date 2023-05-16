@@ -46,14 +46,13 @@ $ ./gradlew clean build
 
 ## :computer: 개발 환경
 ### Languages and Tools
- - pigma <a href="https://www.figma.com/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/figma/figma-icon.svg" alt="figma" width="15" height="15"/> </a>
- - java 11 <a href="https://www.java.com" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg" alt="java" width="15" height="15"/></a>
- - gradle
- - spring-boot2.7.11  </a> <a href="https://spring.io/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/springio/springio-icon.svg" alt="spring" width="15" height="15"/></a>
- - mariaDB <a href="https://mariadb.org/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/mariadb/mariadb-icon.svg" alt="mariadb" width="15" height="15"/></a>
- - S3
- - github action
- - aws EC2 <a href="https://aws.amazon.com" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" alt="aws" width="20" height="20"/> </a>
+- Language : `java 11`
+- Build Tool : `gradle`
+- Framework : `spring-boot 2.7.11`
+- Database : `mariaDB`
+- Storage : `S3`, `cloudFront`
+- CI/CD : `github action`, `code deploy`, `IAM`
+- Server : `aws EC2`, `route53`, `load balancer`
 
 ![backend skillset](https://github.com/MiniTeam-5/MiniProject-BE/assets/12468516/146b0aa8-da32-40bf-920d-bb300e2e840e)
 
