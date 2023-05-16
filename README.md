@@ -134,7 +134,7 @@ $ ./gradlew clean build
 
 ## 📖 커밋 규약
 
-프로젝트 [위키](https://github.com/create-go-app/cli/wiki](https://github.com/MiniTeam-5/MiniProject-BE/wiki) 참조.
+프로젝트 [위키](https://github.com/MiniTeam-5/MiniProject-BE/wiki) 참조.
 
 
 ## 기여 방법
