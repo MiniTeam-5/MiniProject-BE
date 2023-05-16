@@ -55,7 +55,11 @@ $ ./gradlew clean build
  - github action
  - aws EC2 <a href="https://aws.amazon.com" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" alt="aws" width="20" height="20"/> </a>
 
+![backend skillset](https://github.com/MiniTeam-5/MiniProject-BE/assets/12468516/146b0aa8-da32-40bf-920d-bb300e2e840e)
+
+
 </br>
+
 
 ### dependencies
 ```
