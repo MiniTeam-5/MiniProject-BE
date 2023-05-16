@@ -1,4 +1,4 @@
-# :calendar: LupinTech 연차 관리 프로그램 
+# :calendar: LupinTech 연차 관리 프로그램 BackEnd
 > 사용자들의 연차와 당직 요청을 관리하고, 관리자가 승인 또는 거절할 수 있는 시스템을 구축한 백엔드 프로젝트입니다.
 
 ![Generic badge](https://img.shields.io/badge/version-1.0.0-blue.svg)
@@ -105,6 +105,28 @@ $ ./gradlew clean build
 - 배포 관련 작업 반영 (23/04/29) - `commit` : 
 - gh_deploy prod 모드 실행 (23/04/29) - `commit` : 
 - 개발환경작업 반영 (23/04/29) - `commit` : 
+- 스크립트 수정
+- run_server.sh 파일 수정
+- AWS EC2 mariadb 연동
+- db접속정보보안
+- login 기능 구현 및 완료
+- Feature/login 구현완료
+- alarm API 구현
+- 회원가입 기능 구현 완료
+- 연차/당직 신청 구현 완료
+- 연차 당직 신청 전체 테스트 완료
+- alarm 기능 구현(저장, 불러오기 구현 및 테스트 완료)
+- alarm testcode 프로파일세팅, 계정등록 중복 제거
+- fullName 전체 삭제
+- Leave에 usingDays 추가
+- 회원가입 시 연차 수 계산 로직 구현
+- 연차/당직 신청 취소 API 구현 완료
+- 연차당직정보 가져오기
+- 연차당직월주일단위API
+- 매일 날짜 지난 대기 상태 연차 신청 삭제 및 유저 남은 연차 수 증가 기능
+- 개인정보 수정 구현
+- 관리자의 연차/당직 승인 여부 결정 API 구현 완료
+- 연차에서 공휴일 제외 기능 추가 - 공공 API 사용
 
 
 </br>
