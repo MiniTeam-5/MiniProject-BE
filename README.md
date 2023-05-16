@@ -93,7 +93,7 @@ $ ./gradlew clean build
 </br>
 
 ## 시스템 구성도
-
+![제목 없는 다이어그램 drawio (1)](https://github.com/MiniTeam-5/MiniProject-BE/assets/33537820/c5f538f4-2e42-40ad-9230-3aa0f9771e72)
 </br>
 </br>
 
@@ -138,7 +138,6 @@ $ ./gradlew clean build
 - 모든연차당직API추가 - `commit` : [b253856](https://github.com/MiniTeam-5/MiniProject-BE/commit/b2538563aea2286844d6a8702cd1591253d5b3fe)
 - 유저의 연차 일수 수정 API - `commit` : [f6b4731](https://github.com/MiniTeam-5/MiniProject-BE/commit/f6b473193e91b1123aa59fb3e48980747bd7b732)
 - excel download - `commit` : [a8c1bc0](https://github.com/MiniTeam-5/MiniProject-BE/commit/a8c1bc00c76e6d16a2eabd8375d1842f20d51023)
-#### Bug Fix 및 log
 
 </br>
 </br>
@@ -149,14 +148,6 @@ $ ./gradlew clean build
 
 </br>
 </br>
-
-## 기여 방법
-
-1. ([https://github.com/yourname/yourproject/fork](https://github.com/MiniTeam-5/MiniProject-BE))을 포크합니다.
-2. (`git checkout -b feature/fooBar`) 명령어로 새 브랜치를 만드세요.
-3. (`git commit -am 'Add some fooBar'`) 명령어로 커밋하세요.
-4. (`git push origin feature/fooBar`) 명령어로 브랜치에 푸시하세요. 
-5. 풀리퀘스트를 보내주세요.
 
 <!-- Markdown link & img dfn's -->
 [wiki]: https://github.com/yourname/yourproject/wiki
