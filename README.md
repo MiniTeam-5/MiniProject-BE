@@ -96,6 +96,7 @@ $ ./gradlew clean build
 </br>
 
 ## 개발일지
+#### 서버구축
 - 백엔드 프로젝트 파일 세팅 (23/04/29) - `commit` : [9d7c567](https://github.com/MiniTeam-5/MiniProject-BE/commit/9d7c567144f8bffca1a306aa9a650601beaf6038)
 - github action, s3, ec2 배포 (23/04/29) - `commit` : [8b249a7]
 - appsepc.yml 파일추가 (23/04/29) - `commit` : 
@@ -109,6 +110,7 @@ $ ./gradlew clean build
 - run_server.sh 파일 수정
 - AWS EC2 mariadb 연동
 - db접속정보보안
+#### API 기능구현 및 테스트
 - login 기능 구현 및 완료
 - Feature/login 구현완료
 - alarm API 구현
@@ -138,7 +140,8 @@ $ ./gradlew clean build
 - 유저 조회 및 검색 API
 - 모든연차당직API추가
 - 유저의 연차 일수 수정 API
-- alarmAPI 버그 픽
+- excel download
+#### Bug Fix 및 log
 
 
 </br>
@@ -148,6 +151,8 @@ $ ./gradlew clean build
 
 프로젝트 [위키](https://github.com/MiniTeam-5/MiniProject-BE/wiki) 참조.
 
+</br>
+</br>
 
 ## 기여 방법
 
