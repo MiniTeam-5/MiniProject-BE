@@ -89,7 +89,7 @@ $ ./gradlew clean build
 </br>
 
 ## ERD
-
+<img width="5645" alt="미니프로젝트 BE (2)" src="https://github.com/MiniTeam-5/MiniProject-BE/assets/33537820/9533917d-9f0d-489d-9f78-eac51feb817c">
 </br>
 </br>
 
