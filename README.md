@@ -149,5 +149,8 @@ $ ./gradlew clean build
 </br>
 </br>
 
+## 프로젝트 페이지별 소개 및 정리
+:star: [프로젝트 소개 노션](https://www.notion.so/fce75e2e16014f8c902a73cfca327e8a?pvs=4)
+
 <!-- Markdown link & img dfn's -->
 [wiki]: https://github.com/yourname/yourproject/wiki
