@@ -93,7 +93,7 @@ $ ./gradlew clean build
 </br>
 
 ## 시스템 구성도
-![제목 없는 다이어그램 drawio (1)](https://github.com/MiniTeam-5/MiniProject-BE/assets/33537820/c5f538f4-2e42-40ad-9230-3aa0f9771e72)
+![미니프로젝트 시스템 구성도 drawio](https://github.com/MiniTeam-5/MiniProject-BE/assets/33537820/e6b03fa8-2010-4578-a5d6-03645444d9f0)
 </br>
 </br>
 
