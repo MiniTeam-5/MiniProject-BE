@@ -88,8 +88,6 @@ $ ./gradlew clean build
 </br>
 
 ## ERD
-![ERD](https://github.com/MiniTeam-5/MiniProject-BE/assets/33537820/121c46c5-2649-4900-8dfd-5bfc8b214d1b)
-</br>
 ![architecture](https://github.com/MiniTeam-5/MiniProject-BE/assets/12468516/dac870c5-96e5-47c1-9013-7ed3418e27f7)
 </br>
 
