@@ -80,6 +80,10 @@ public class UserService {
             Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
             MyUserDetails myUserDetails = (MyUserDetails) authentication.getPrincipal();
 
+            if(myUserDetails.getUser().getStatus().equals(false)){
+                throw new Exception401("탈퇴한 회원입니다");
+            }
+
             String accessjwt = MyJwtProvider.createAccess(myUserDetails.getUser());
             Pair<String, RefreshTokenEntity> rtInfo = MyJwtProvider.createRefresh(myUserDetails.getUser());
 
@@ -97,6 +101,9 @@ public class UserService {
         User userPS = userRepository.findById(id).orElseThrow(
                 () -> new Exception400("id", "해당 유저를 찾을 수 없습니다")
         );
+        if(userPS.getStatus().equals(false)){
+            throw new Exception401("탈퇴한 회원입니다");
+        }
         return new UserResponse.DetailOutDTO(userPS);
     }
 
@@ -112,8 +119,11 @@ public class UserService {
     public UserResponse.ModifiedOutDTO 개인정보수정(UserRequest.ModifiedInDTO modifiedInDTO, MultipartFile profile, Long id) {
         // 1. 아이디로 회원 조회
         User user = userRepository.findById(id).orElseThrow(() -> new Exception400("id", "해당 유저가 존재하지 않습니다"));
-
-        // 2. 수정사항 없는 경우
+        // 2. 탈퇴한 회원인 경우
+        if(user.getStatus().equals(false)){
+            throw new Exception401("탈퇴한 회원입니다");
+        }
+        // 3. 수정사항 없는 경우
         if ((profile == null || profile.isEmpty()) &&
                 (modifiedInDTO.getProfileToDelete() == null || modifiedInDTO.getProfileToDelete().isEmpty()) &&
                 (user.getEmail().equals(modifiedInDTO.getEmail())) &&
@@ -121,9 +131,8 @@ public class UserService {
                 (modifiedInDTO.getNewPassword() == null || modifiedInDTO.getNewPassword().isEmpty())){
             throw new Exception400("profile, profileToDelete, email, username, newPassword", "수정사항이 없습니다.");
         }
-
         boolean isProfileReset = false;
-        // 3. 프로필 사진 등록 시
+        // 4. 프로필 사진 등록 시
         if (profile != null && !profile.isEmpty()) {
             // 서버에 사진 저장
             try {
@@ -134,7 +143,7 @@ public class UserService {
                 throw new Exception500("프로필사진 변경 실패 : " + e.getMessage());
             }
         }
-        // 4. 프로필 사진 삭제 시
+        // 5. 프로필 사진 삭제 시
         if (modifiedInDTO.getProfileToDelete() != null && !modifiedInDTO.getProfileToDelete().equals("https://lupinbucket.s3.ap-northeast-2.amazonaws.com/person.png")) {
            try{
                s3Service.delete(modifiedInDTO.getProfileToDelete());
@@ -144,22 +153,22 @@ public class UserService {
                throw new Exception500("프로필사진 삭제 실패 : " + e.getMessage());
            }
         }
-        // 5. 이메일 주소 변경 시
+        // 6. 이메일 주소 변경 시
         if (user.getEmail() != modifiedInDTO.getEmail()) {
             user.changeEmail(modifiedInDTO.getEmail());
         }
-        // 6. 사원명 변경 시
+        // 7. 사원명 변경 시
         if (user.getUsername() != modifiedInDTO.getUsername()) {
             user.changeUsername(modifiedInDTO.getUsername());
         }
-        // 7. 비밀번호 변경 시
+        // 8. 비밀번호 변경 시
         boolean isPasswordReset = false;
         if (modifiedInDTO.getNewPassword() != null && !modifiedInDTO.getNewPassword().isEmpty()) {
                 String encodePassword = passwordEncoder.encode(modifiedInDTO.getNewPassword());
                 user.changePassword(encodePassword);
                 isPasswordReset = true;
         }
-        // 8. ModifiedOutDTO 생성
+        // 9. ModifiedOutDTO 생성
         return new UserResponse.ModifiedOutDTO(user, isPasswordReset, isProfileReset);
     }
 
@@ -169,6 +178,10 @@ public class UserService {
     public void 연차수정(Long id, UserRequest.AnnualInDTO annualInDTO) {
         User userPS = userRepository.findByStatusAndId(true, id)
                 .orElseThrow(()->new Exception400("id", "해당 유저가 존재하지 않습니다."));
+        // 탈퇴한 회원인 경우
+        if(userPS.getStatus().equals(false)){
+            throw new Exception401("탈퇴한 회원입니다");
+        }
         // 정보 수정
         userPS.setRemainDays(annualInDTO.getRemainDays());
     }
@@ -202,6 +215,10 @@ public class UserService {
     public void 권한수정(Long id, UserRequest.MasterInDTO masterInDTO) {
         User userPS = userRepository.findByStatusAndId(true, id)
                 .orElseThrow(()->new Exception400("id", "해당 유저가 존재하지 않습니다."));
+        // 탈퇴한 회원이면 권한 수정 불가
+        if(userPS.getStatus().equals(false)){
+            throw new Exception401("탈퇴한 회원입니다");
+        }
         // 정보 수정
         userPS.setRole(masterInDTO.getRole());
     }
